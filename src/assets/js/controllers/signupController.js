@@ -1,16 +1,16 @@
 /**
- * Controller responsible for all events in login view
- * @author Pim Meijer
+ * Controller responsible for all events in signup view
+ * @author Othaim Iboualaisen
  */
 
 import { UsersRepository } from "../repositories/usersRepository.js";
 import { App } from "../app.js";
 import { Controller } from "./controller.js";
 
-export class LoginController extends Controller{
+export class SignupController extends Controller {
     //# is a private field in Javascript
     #usersRepository
-    #loginView
+    #signupView
 
     constructor() {
         super();
@@ -25,10 +25,10 @@ export class LoginController extends Controller{
      */
     async #setupView() {
         //await for when HTML is loaded, never skip this method call in a controller
-        this.#loginView = await super.loadHtmlIntoContent("html_views/login.html")
+        this.#signupView = await super.loadHtmlIntoContent("html_views/signup.html")
 
         //from here we can safely get elements from the view via the right getter
-        this.#loginView.querySelector(".btn").addEventListener("click", event => this.#handleLogin(event));
+        this.#signupView.querySelector("#btn").addEventListener("click", event => this.#handleLogin(event));
     }
     /**
      * Async function that does a login request via repository
@@ -39,11 +39,24 @@ export class LoginController extends Controller{
         event.preventDefault();
 
         //get the input field elements from the view and retrieve the value
-        const username = this.#loginView.querySelector("#exampleInputUsername").value;
-        const password = this.#loginView.querySelector("#exampleInputPassword").value;
+        const firstname = this.#signupView.querySelector("#firstname").value;
+        const lastname  = this.#signupView.querySelector("#lastname").value;
+        const phoneNr   = this.#signupView.querySelector("#phoneNr").value;
+        const email     = this.#signupView.querySelector("#email").value;
+        const psw       = this.#signupView.querySelector("#psw").value;
+        const pswRepeat = this.#signupView.querySelector("#pswRepeat").value;
+
+        let data = {
+            firstname,
+            lastname,
+            phoneNr,
+            email,
+            psw,
+            pswRepeat
+        }
 
         try{
-            const user = await this.#usersRepository.login(username, password);
+            const user = await this.#usersRepository.signup(data);
 
             //let the session manager know we are logged in by setting the username, never set the password in localstorage
             App.sessionManager.set("username", user.username);
@@ -51,7 +64,7 @@ export class LoginController extends Controller{
         } catch(error) {
             //if unauthorized error code, show error message to the user
             if(error.code === 401) {
-                this.#loginView.querySelector(".error").innerHTML = error.reason
+                this.#signupView.querySelector(".error").innerHTML = error.reason
             } else {
                 console.error(error);
             }

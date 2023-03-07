@@ -35,16 +35,18 @@ export class UsersRepository {
             .doRequest(`${this.#route}/login`, "POST", {"username": username, "password": password});
     }
 
-    async delete() {
-
-    }
-
-    //example endpoint would be: /users/register
-    async register(username, password) {
+    //example endpoint would be: /users/signup
+    async signup(data) {
+        return await this.#networkManager
+            .doRequest(`${this.#route}/signup`, "POST", data);
 
     }
 
     async update(id, values = {}) {
+
+    }
+
+    async delete() {
 
     }
 }

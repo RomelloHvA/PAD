@@ -19,6 +19,7 @@ class UsersRoutes {
 
         //call method per route for the users entity
         this.#login()
+        this.#signup()
     }
 
     /**
@@ -48,6 +49,31 @@ class UsersRoutes {
                 }
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        });
+    }
+
+    #signup() {
+        this.#app.post("/users/signup", async (req, res) => {
+            const { firstname, lastname, phoneNr, email, password } = req.body;
+
+            // hash the password
+
+            // insert the new user into the database
+            try {
+                await this.#databaseHelper.handleQuery({
+                    query:
+                        "INSERT INTO user (firstname, lastname, phoneNr, email, password) VALUES (?, ?, ?, ?, ?)",
+                    values: [firstname, lastname, phoneNr, email, password],
+                });
+
+                res.status(this.#errorCodes.HTTP_OK_CODE).json({
+                    message: "User created successfully.",
+                });
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
+                    reason: e,
+                });
             }
         });
     }
