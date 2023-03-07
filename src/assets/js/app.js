@@ -12,8 +12,7 @@ import { LoginController } from "./controllers/loginController.js"
 import { NavbarController }  from "./controllers/navbarController.js"
 import { UploadController }  from "./controllers/uploadController.js"
 import { WelcomeController }  from "./controllers/welcomeController.js"
-// import { homescreenController } from "./controllers/homescreenController.js"
-import { HomescreenController } from "./controllers/homescreenController.js";
+import { FooterController } from "./controllers/footerController.js";
 
 export class App {
     //we only need one instance of the sessionManager, thus static use here
@@ -26,11 +25,12 @@ export class App {
     static CONTROLLER_LOGOUT = "logout";
     static CONTROLLER_WELCOME = "welcome";
     static CONTROLLER_UPLOAD = "upload";
-    static CONTROLLER_HOMESCREEN = "homescreenTest";
+    static CONTROLLER_FOOTER = "footer";
 
     constructor() {
         //Always load the navigation
         App.loadController(App.CONTROLLER_NAVBAR);
+        App.CONTROLLER_FOOTER = new FooterController();
 
         //Attempt to load the controller from the URL, if it fails, fall back to the welcome controller.
         App.loadControllerFromUrl(App.CONTROLLER_WELCOME);
@@ -70,15 +70,12 @@ export class App {
                 break;
 
             case App.CONTROLLER_WELCOME:
-                App.isLoggedIn(() => new WelcomeController(), () => new LoginController());
+                App.setCurrentController(name)
+                App.isLoggedIn(() => new WelcomeController(), () => new WelcomeController());
                 break;
 
             case App.CONTROLLER_UPLOAD:
                 App.isLoggedIn(() => new UploadController(), () => new LoginController());
-                break;
-            case App.CONTROLLER_HOMESCREEN:
-                App.setCurrentController(name);
-                App.isLoggedIn(() => new HomescreenController(), () => new HomescreenController());
                 break;
 
             default:

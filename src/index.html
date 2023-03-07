@@ -16,12 +16,13 @@
     <!-- Load bootstrap, UI framework -->
     <script src="assets/vendors/bootstrap/bootstrap.bundle.min.js"></script>
 
+
     <!-- Only load the config of the API and the entry point of the app via regular script tags -->
     <!-- Added .js files loaded via ES6 modules should not be added here but be referenced via ímport statement -->
     <script src="api/config.js"></script>
     <script src="assets/js/app.js" type="module"></script>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     <!-- Navigation -->
     <div class="navigation">
         <!-- Loads navigation via JS -->
@@ -31,7 +32,10 @@
     <main class="content">
         <!-- Loads content via JS -->
     </main>
-
+    <!-- Footer content  -->
+    <footer class="footer mt-auto py-3 bg-dark p-0">
+        <!-- Loads content into footer -->
+    </footer>
 
 </body>
 </html>

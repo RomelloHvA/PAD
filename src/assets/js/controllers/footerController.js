@@ -3,7 +3,7 @@
  */
 import {Controller} from "./controller.js";
 
-export class HomescreenController extends Controller {
+export class FooterController extends Controller {
     #createHomescreenView;
 
     constructor() {
@@ -13,8 +13,8 @@ export class HomescreenController extends Controller {
     }
 
     async #setupView() {
-        this.#createHomescreenView = await super.loadHtmlIntoContent("html_views/homeScreenTest.html");
-
+        this.#createHomescreenView = await super.loadHtmlIntoCustomElement(
+            "html_views/footer.html", document.querySelector("footer"));
         console.log();
     }
 }
