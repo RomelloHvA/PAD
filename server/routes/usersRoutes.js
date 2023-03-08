@@ -53,6 +53,11 @@ class UsersRoutes {
         });
     }
 
+    /**
+     * Handles user signup requests
+     *
+     * @private
+     */
     #signup() {
         this.#app.post("/users/signup", async (req, res) => {
             const { firstname, lastname, phoneNr, email, password } = req.body;
