@@ -15,7 +15,11 @@ class storyRoutes {
         this.#addStory()
     }
 
-
+    /**
+     * Adds a new story to the database.
+     *
+     * @function addStory
+     */
     #addStory() {
         this.#app.post("/story/add", async (req, res) => {
             const subject = req.body.subject;
