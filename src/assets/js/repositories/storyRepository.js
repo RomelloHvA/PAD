@@ -1,3 +1,6 @@
+/**
+ * repository for interacting with stories. Also interacts with networkmanager
+ */
 import { NetworkManager } from "../framework/utils/networkManager.js";
 
 export class storyRepository {
@@ -16,6 +19,9 @@ export class storyRepository {
 
     async addNewStory(requestBody) {
         return await this.#networkManager.doRequest(`${this.#route}/add`, "POST", requestBody);
+    }
+    async getHighestRatedStory() {
+        return await this.#networkManager.doRequest(`${this.#route}/highestRated`, "GET");
     }
 
     async delete() {

@@ -5,18 +5,17 @@
  * @author Lennard Fonteijn & Pim Meijer
  */
 
-import {RoomsExampleRepository} from "../repositories/roomsExampleRepository.js";
 import {App} from "../app.js";
 import {Controller} from "./controller.js";
+import {storyRepository} from "../repositories/storyRepository.js";
 
 export class WelcomeController extends Controller{
-    #roomExampleRepository
     #welcomeView
+    #storyRepository;
 
     constructor() {
         super();
-        this.#roomExampleRepository = new RoomsExampleRepository();
-
+        this.#storyRepository = new storyRepository();
         this.#setupView();
     }
 
@@ -31,7 +30,7 @@ export class WelcomeController extends Controller{
 
         const anchors = this.#welcomeView.querySelectorAll("a");
         anchors.forEach(anchor => anchor.addEventListener("click", (event) => this.#handleClickTimelineButton(event)))
-
+        await this.#getHighestRatedStory()
     }
 
     #handleClickTimelineButton(event) {
@@ -53,5 +52,16 @@ export class WelcomeController extends Controller{
 
         //Return false to prevent reloading the page
         return false;
+    }
+
+    async #getHighestRatedStory() {
+        const storyTitle = this.#welcomeView.querySelector("#storyTitle");
+        const storyText = this.#welcomeView.querySelector("#storyText");
+
+        const data = await this.#storyRepository.getHighestRatedStory();
+        console.log(data);
+
+        storyTitle.innerText = data.data.body;
+        storyText.innerText = data.data.body;
     }
 }
