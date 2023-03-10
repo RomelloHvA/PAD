@@ -1,5 +1,8 @@
+/**
+ * Class for handling all the story routes
+ */
 class storyRoutes {
-    #errorCodes = require("../framework/utils/httpErrorCodes")
+    #httpErrorCodes = require("../framework/utils/httpErrorCodes")
     #databaseHelper = require("../framework/utils/databaseHelper")
     #cryptoHelper = require("../framework/utils/cryptoHelper");
     #app
@@ -12,7 +15,8 @@ class storyRoutes {
         this.#app = app;
 
         //call method per route for the users entity
-        this.#addStory()
+        this.#addStory();
+        this.#getHighestRatedMessage();
     }
 
 
@@ -30,9 +34,27 @@ class storyRoutes {
 
                 //if we founnd one record we know the user exists in users table
 
-                    res.status(this.#errorCodes.HTTP_OK_CODE).json({message: "ok"});
+                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json({message: "ok"});
             } catch (e) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+                res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        });
+    }
+
+    /**
+     * This function returns the highest rated message of all time.
+     */
+    #getHighestRatedMessage(){
+        this.#app.get("/story/highestRated", async (req, res) => {
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
+                })
+                if (data){
+                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json({data})
+                }
+            } catch (e) {
+                res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e})
             }
         });
     }
