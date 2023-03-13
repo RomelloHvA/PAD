@@ -61,7 +61,7 @@ export class WelcomeController extends Controller{
         const data = await this.#storyRepository.getHighestRatedStory();
         console.log(data);
 
-        storyTitle.innerText = data.data.body;
-        storyText.innerText = data.data.body;
+        storyTitle.innerText = data.data[0].title;
+        storyText.innerText = data.data[0].body;
     }
 }
