@@ -51,7 +51,7 @@ class storyRoutes {
                     query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
                 })
                 if (data){
-                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json({data})
+                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json(data)
                 }
             } catch (e) {
                 res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e})
