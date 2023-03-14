@@ -43,6 +43,7 @@ class storyRoutes {
 
     /**
      * This function returns the highest rated message of all time.
+     * @author Romello ten Broeke
      */
     #getHighestRatedMessage(){
         this.#app.get("/story/highestRated", async (req, res) => {

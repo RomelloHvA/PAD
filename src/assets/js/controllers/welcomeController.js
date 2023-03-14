@@ -54,6 +54,14 @@ export class WelcomeController extends Controller{
         return false;
     }
 
+    /**
+     *
+     * @returns {Promise<void>}
+     * Returs the highest rated story from the repository.
+     * @author Romello ten Broeke
+     * private
+     */
+
     async #getHighestRatedStory() {
         const storyTitle = this.#welcomeView.querySelector("#storyTitle");
         const storyText = this.#welcomeView.querySelector("#storyText");
