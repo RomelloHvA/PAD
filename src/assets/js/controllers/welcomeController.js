@@ -64,7 +64,7 @@ export class WelcomeController extends Controller{
 
     async #getHighestRatedStory() {
         const storyTitle = this.#welcomeView.querySelector("#storyTitle");
-        const storyText = this.#welcomeView.querySelector("#storyText");
+        const storyText = this.#welcomeView.querySelector(".story-text")
 
         const data = await this.#storyRepository.getHighestRatedStory();
         console.log(data);
