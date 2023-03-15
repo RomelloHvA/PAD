@@ -36,23 +36,25 @@ export class addStoryController extends Controller {
     async addNewStory(event) {
 
         event.preventDefault();
-
         const subject = this.#addStoryView.querySelector("#subject").value;
         const year = this.#addStoryView.querySelector("#year").value;
         const story = this.#addStoryView.querySelector("#story").value;
+        const fileInput = this.#addStoryView.querySelector("#fileInput");
 
-        const requestBody = {
-            subject: subject,
-            year: year,
-            story: story
-        };
+        console.log(fileInput.files)
+        const formData = new FormData();
 
+        formData.append("subject", subject);
+        formData.append("year", year);
+        formData.append("story", story);
+        formData.append("file", fileInput.files[0]);
         try {
-            await this.#storyRepository.addNewStory(requestBody);
+            await this.#storyRepository.addNewStory(formData);
         }
         catch (error) {
             console.log(error);
         }
+
     }
 
 

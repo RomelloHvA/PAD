@@ -5,6 +5,8 @@
  * @author Pim Meijer
  */
 const fs = require("fs");
+const { v4: uuidv4 } = require('uuid');
+
 
 class UploadFileRoute {
     #errorCodes = require("../framework/utils/httpErrorCodes")
@@ -17,35 +19,51 @@ class UploadFileRoute {
      */
     constructor(app) {
         this.#app = app;
-        this.#uploadFile()
+        this.uploadFile()
     }
 
     /**
      * Example route for uploading files
      * @private
      */
-    #uploadFile() {
-        this.#app.post("/upload", this.#multer().single("sampleFile"), (req, res) => {
-
+    /**
+     * Uploads a file to the server.
+     *
+     * @function uploadFile
+     * @memberof storyRoutes
+     */
+    uploadFile() {
+        this.#app.post("/upload", this.#multer().single("file"), (req, res) => {
             if (!req.file) {
-                return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: "No file was uploaded."});
+                return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({ reason: "No file was uploaded." });
             }
 
-            //get the buffer of the file
+            // Get the buffer of the file
             const sampleFile = req.file.buffer;
 
-            //TODO: you should make file name dynamic otherwise it will overwrite each time :)
-            fs.writeFile(wwwrootPath + "/uploads/test.jpg", sampleFile, (err) => {
+            // Generate a unique file name to avoid overwriting existing files
+            const fileName = uuidv4() + ".jpg";
+
+            // Write the file to disk
+            fs.writeFile(`${wwwrootPath}/uploads/${fileName}`, sampleFile, (err) => {
                 if (err) {
-                    console.log(err)
-                    return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: err});
+                    console.log(err);
+                    return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({ reason: err });
                 }
 
-                return res.status(this.#errorCodes.HTTP_OK_CODE).json("File successfully uploaded!");
+                // Construct the URL of the uploaded file
+                const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${fileName}`;
 
+                // Return the URL of the uploaded file
+                return res.status(this.#errorCodes.HTTP_OK_CODE).json({ fileUrl });
             });
         });
     }
+
+
+
+
+
 }
 
 module.exports = UploadFileRoute
