@@ -20,6 +20,24 @@
     position: relative;
     background-color: inherit;
     width: 50%;
+    animation-duration: 3s;
+    animation-name: slidein;
+}
+.slide-animation{
+    animation-duration: 3s;
+    animation-name: slidein;
+    animation-iteration-count: infinite;
+}
+@keyframes slidein {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 50%;
+        height: fit-content;
+        position: inherit;
+    }
 }
 
 /* The circles on the timeline */
