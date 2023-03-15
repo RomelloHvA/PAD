@@ -17,6 +17,7 @@ class storyRoutes {
         //call method per route for the users entity
         this.#addStory();
         this.#getHighestRatedMessage();
+        this.#getHighestRatedMessageForYear();
     }
 
 
@@ -50,6 +51,29 @@ class storyRoutes {
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
+                })
+                if (data){
+                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        });
+    }
+
+    /**
+     * This function returns the highest rated story in a given year.
+     * @author Romello ten Broeke
+     */
+    #getHighestRatedMessageForYear(){
+
+            this.#app.get("/story/highestRatedPerYear", async (req, res) => {
+                const year = req.body.year;
+
+                try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE date = (?))",
+                    values: [year]
                 })
                 if (data){
                     res.status(this.#httpErrorCodes.HTTP_OK_CODE).json(data)

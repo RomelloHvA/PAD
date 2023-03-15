@@ -23,6 +23,9 @@ export class storyRepository {
     async getHighestRatedStory() {
         return await this.#networkManager.doRequest(`${this.#route}/highestRated`, "GET");
     }
+    async getHighestStoryPerYear(requestBody) {
+        return await this.#networkManager.doRequest(`${this.#route}/highestRatedPerYear`, "GET", requestBody);
+    }
 
     async delete() {
 
