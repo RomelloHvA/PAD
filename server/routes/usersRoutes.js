@@ -2,7 +2,7 @@
  * This class contains ExpressJS routes specific for the users entity
  * this file is automatically loaded in app.js
  *
- * @author Pim Meijer
+ * @author Othaim Iboualaisen
  */
 class UsersRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
@@ -39,10 +39,10 @@ class UsersRoutes {
                     values: [username, password]
                 });
 
-                //if we founnd one record we know the user exists in users table
+                //One record was found, we know the user exists in users table.
                 if (data.length === 1) {
                     //return just the username for now, never send password back!
-                    res.status(this.#errorCodes.HTTP_OK_CODE).json({"username": data[0].username});
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json({"userID": data[0].userID});
                 } else {
                     //wrong username
                     res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({reason: "Wrong username or password"});
@@ -62,11 +62,30 @@ class UsersRoutes {
         this.#app.post("/users/signup", async (req, res) => {
             const { firstname, lastname, phoneNr, email, password } = req.body;
 
-            // hash the password
+            // Hash the password
+            // const hashedPassword = await bcrypt.hash(password, 10);
 
-            // insert the new user into the database
+            // Check inputs and if they are valid execute the code below
+            const inputsValid = await this.#checkInputs(req.body);
+            if (!inputsValid) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
+                    reason: 'Invalid input fields.',
+                });
+                return;
+            }
+
+            // Check if email already exists
+            const emailAlreadyExists = await this.#emailExist(email);
+            if (emailAlreadyExists) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
+                    reason: 'Email already exists.',
+                });
+                return;
+            }
+
+            // Insert the new user into the database
             try {
-                await this.#databaseHelper.handleQuery({
+                const data = await this.#databaseHelper.handleQuery({
                     query:
                         "INSERT INTO user (firstname, lastname, phoneNr, email, password) VALUES (?, ?, ?, ?, ?)",
                     values: [firstname, lastname, phoneNr, email, password],
@@ -74,6 +93,7 @@ class UsersRoutes {
 
                 res.status(this.#errorCodes.HTTP_OK_CODE).json({
                     message: "User created successfully.",
+                    userID: data.insertId,
                 });
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
@@ -81,6 +101,46 @@ class UsersRoutes {
                 });
             }
         });
+    }
+
+    async #emailExist(email) {
+        const exists = await this.#databaseHelper.handleQuery({
+            query: "SELECT userID FROM user WHERE email = ?",
+            values: [email],
+        });
+
+        if (exists && exists.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    async #checkInputs(body) {
+        const { firstname, lastname, phoneNr, email, password, passwordRepeat } = body;
+
+        // Check if required fields are filled out
+        if (!firstname || !lastname || !email || !password || !passwordRepeat) {
+            return false;
+        }
+
+        // Check if email is a proper email
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+            return false;
+        }
+
+        // Check if password is at least 6 characters long
+        if (password.length < 6) {
+            return false;
+        }
+
+        // Check if password & passwordRepeat match
+        if (password !== passwordRepeat) {
+            return false;
+        }
+
+        return true;
     }
 }
 
