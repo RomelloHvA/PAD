@@ -1,19 +1,19 @@
 <head>
     <meta charset="UTF-8">
-    <title>add new Story</title>
+    <title>Voeg verhaal toe</title>
     <link rel="stylesheet" href="../assets/css/addStory.css">
 </head>
 <body>
 
-<h1>Add Story</h1>
+<h1>Verhaal toevoegen</h1>
 
 <form>
     <div class="mb-4">
-        <label class="form-label">Subject</label>
-        <input type="text" class="form-control" id = "subject" />
+        <label class="form-label">Onderwerp verhaal</label>
+        <input type="text" class="form-control" id = "subject" required />
     </div>
     <div class="mb-4">
-        <label class="form-label">Year</label>
+        <label class="form-label">Jaar</label>
         <select id="year">
             <option>2023</option>
             <option>2022</option>
@@ -22,11 +22,11 @@
         </select>
     </div>
     <div class="mb-4">
-        <label class="form-label">Story</label>
-        <textarea class="form-control" rows="10" id = "story"></textarea>
+        <label class="form-label">Verhaal</label>
+        <textarea class="form-control" rows="10" id = "story" placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
     </div>
 
-    <label class="form-label">Image</label>
+    <label class="form-label">Afbeelding</label>
     <input type="file" class="file-input" id="fileInput">
     <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Add story</button>
 </form>
