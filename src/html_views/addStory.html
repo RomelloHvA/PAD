@@ -10,7 +10,8 @@
 <form>
     <div class="mb-4">
         <label class="form-label">Onderwerp verhaal</label>
-        <input type="text" class="form-control" id = "subject" required />
+        <input type="text" class="form-control" id = "subject"/>
+        <p class="error" id="subject-error"></p>
     </div>
     <div class="mb-4">
         <label class="form-label">Jaar</label>
@@ -24,10 +25,12 @@
     <div class="mb-4">
         <label class="form-label">Verhaal</label>
         <textarea class="form-control" rows="10" id = "story" placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
+        <p class="error" id="story-error"></p>
     </div>
 
     <label class="form-label">Afbeelding</label>
     <input type="file" class="file-input" id="fileInput">
+    <img id="preview-image" src="">
     <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Add story</button>
 </form>
 </body>

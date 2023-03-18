@@ -8,13 +8,11 @@ export class addStoryController extends Controller {
 
     #storyRepository
 
-
     constructor() {
         super();
         this.#setupView();
         this.#storyRepository = new storyRepository();
         this.#route = "/story"
-
     }
 
     /**
@@ -30,16 +28,40 @@ export class addStoryController extends Controller {
         //from here we can safely get elements from the view via the right getter
         this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.addNewStory(event));
 
+        this.#addStoryView.querySelector("#fileInput").addEventListener("change", this.displayImagePreview.bind(this));
+
+
     }
 
 
     async addNewStory(event) {
-
         event.preventDefault();
         const subject = this.#addStoryView.querySelector("#subject").value;
         const year = this.#addStoryView.querySelector("#year").value;
         const story = this.#addStoryView.querySelector("#story").value;
         const fileInput = this.#addStoryView.querySelector("#fileInput");
+
+        // Validate the input fields
+        if (!subject || !story) {
+            const errorTextSubject = this.#addStoryView.querySelector("#subject-error");
+            const errorTextStory = this.#addStoryView.querySelector("#story-error");
+            if (!subject) {
+                errorTextSubject.innerHTML = "Please fill in subject field";
+            }
+            else {
+                errorTextSubject.innerHTML = "";
+            }
+            if (!story) {
+                errorTextStory.innerHTML = "Please fill in story field";
+            }
+            else {
+                errorTextStory.innerHTML = "";
+            }
+            return;
+        }
+
+
+
 
         console.log(fileInput.files)
         const formData = new FormData();
@@ -54,8 +76,20 @@ export class addStoryController extends Controller {
         catch (error) {
             console.log(error);
         }
-
     }
 
+    displayImagePreview(event) {
+        const fileInput = event.target;
+        const previewImage = this.#addStoryView.querySelector("#preview-image");
 
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                previewImage.src = event.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            previewImage.src = "";
+        }
+    }
 }
