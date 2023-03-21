@@ -27,49 +27,30 @@ export class addStoryController extends Controller {
 
         //from here we can safely get elements from the view via the right getter
         this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.addNewStory(event));
-
         this.#addStoryView.querySelector("#fileInput").addEventListener("change", this.displayImagePreview.bind(this));
-
-
     }
 
 
     async addNewStory(event) {
+
         event.preventDefault();
         const subject = this.#addStoryView.querySelector("#subject").value;
         const year = this.#addStoryView.querySelector("#year").value;
         const story = this.#addStoryView.querySelector("#story").value;
         const fileInput = this.#addStoryView.querySelector("#fileInput");
 
-        // Validate the input fields
-        if (!subject || !story) {
-            const errorTextSubject = this.#addStoryView.querySelector("#subject-error");
-            const errorTextStory = this.#addStoryView.querySelector("#story-error");
-            if (!subject) {
-                errorTextSubject.innerHTML = "Please fill in subject field";
-            }
-            else {
-                errorTextSubject.innerHTML = "";
-            }
-            if (!story) {
-                errorTextStory.innerHTML = "Please fill in story field";
-            }
-            else {
-                errorTextStory.innerHTML = "";
-            }
+
+        if(!this.#validateInputFields(subject, story)) {
             return;
         }
 
-
-
-
-        console.log(fileInput.files)
         const formData = new FormData();
 
         formData.append("subject", subject);
         formData.append("year", year);
         formData.append("story", story);
         formData.append("file", fileInput.files[0]);
+
         try {
             await this.#storyRepository.addNewStory(formData);
         }
@@ -79,6 +60,7 @@ export class addStoryController extends Controller {
     }
 
     displayImagePreview(event) {
+
         const fileInput = event.target;
         const previewImage = this.#addStoryView.querySelector("#preview-image");
 
@@ -92,4 +74,39 @@ export class addStoryController extends Controller {
             previewImage.src = "";
         }
     }
+
+
+
+    /**
+     * Validates the input fields for adding a new story.
+     * @param {string} subject - The subject of the story.
+     * @param {string} story - The body of the story.
+     * @returns {boolean} - True if the input fields are valid, false otherwise.
+     */
+    #validateInputFields(subject, story) {
+        const errorTextSubject = this.#addStoryView.querySelector("#subject-error");
+        const errorTextStory = this.#addStoryView.querySelector("#story-error");
+
+        // Validate the input fields
+        if (!subject) {
+            errorTextSubject.innerHTML = "Please fill in the subject field";
+            return false;
+        } else {
+            errorTextSubject.innerHTML = "";
+        }
+
+        if (!story) {
+            errorTextStory.innerHTML = "Please fill in the story field";
+            return false;
+        } else if (story.length > 2000) {
+            errorTextStory.innerHTML = "The story cannot be longer than 2000 characters";
+            return false;
+        } else {
+            errorTextStory.innerHTML = "";
+        }
+
+        return true;
+    }
+
+
 }
