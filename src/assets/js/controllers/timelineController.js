@@ -33,12 +33,9 @@ export class TimelineController extends Controller {
      */
 
     #LoadStory(){
+
         let nextStoryPosition = "left";
 
-        // returns a collection. To specify which one I need use the [0].
-        const storyTemplate = document.getElementsByTagName("template")[0];
-        let templateClone = storyTemplate.cloneNode(true);
-        storyTemplate.content.querySelector(".card-position");
         window.addEventListener("scroll", function () {
 
             console.log(document.body.scrollHeight + "scrollheight");
@@ -51,36 +48,45 @@ export class TimelineController extends Controller {
              */
             const scrollPosition = Math.ceil(window.scrollY + window.innerHeight);
             console.log(window.scrollY + window.innerHeight);
-            if ( scrollPosition >= document.body.scrollHeight){
 
-                nextStoryPosition = setStoryPosition(nextStoryPosition,storyTemplate);
-                document.querySelector(".main-timeline").appendChild(templateClone);
-                console.log("Einde bereikt");
+
+                if ( scrollPosition >= document.body.scrollHeight){
+
+                    const templateRight = document.querySelector("#template-right");
+                    const templateRightClone = templateRight.content.cloneNode(true);
+
+                    const templateLeft = document.querySelector("#template-left");
+                    const templateLeftClone = templateLeft.content.cloneNode(true);
+
+
+                    document.querySelector(".main-timeline").appendChild(setTemplate(nextStoryPosition,templateLeftClone,templateRightClone));
+                    nextStoryPosition = setStoryPosition(nextStoryPosition);
+                    console.log("Einde bereikt");
+                }
+
+
+
+            function setStoryPosition(nextStoryPosition){
+                if (nextStoryPosition === "left"){
+                    return "right";
+                } else {
+                    return "left";
+                }
             }
 
-
-            function setStoryPosition(nextStoryPosition, template) {
+            function setTemplate(nextStoryPosition,templateLeft, templateRight) {
 
                 if (nextStoryPosition === "left"){
-                    template.content.querySelector(".card-position").classList.add("timeline");
-                    template.content.querySelector(".card-position").classList.add(nextStoryPosition);
-
-                    nextStoryPosition = "right";
+                    return templateLeft;
                 } else {
-                    template.content.querySelector(".card-position").classList.add("timeline");
-                    template.content.querySelector(".card-position").classList.add(nextStoryPosition);
-
-                    nextStoryPosition = "left";
+                    return templateRight
                 }
-                return nextStoryPosition;
 
             }
 
         });
 
         }
-
-    
 
 
 }
