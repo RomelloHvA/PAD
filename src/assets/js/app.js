@@ -28,14 +28,14 @@ export class App {
     static CONTROLLER_LOGOUT = "logout";
     static CONTROLLER_WELCOME = "welcome";
     static CONTROLLER_UPLOAD = "upload";
-    static CONTROLLER_SIGNUP = "signup";
+    static CONTROLLER_SIGNUP = "register";
     static CONTROLLER_FOOTER = "footer";
     static CONTROLLER_TIMELINE = "timeline"
     static CONTROLLER_ADDSTORY = "addStory"
 
-    constructor() {
+    constructor(name, controllerData) {
         //Always load the navigation
-        App.loadController(App.CONTROLLER_NAVBAR);
+        App.loadController(App.CONTROLLER_NAVBAR, controllerData);
         App.CONTROLLER_FOOTER = new FooterController();
 
         //Attempt to load the controller from the URL, if it fails, fall back to the welcome controller.
@@ -73,11 +73,6 @@ export class App {
         switch (name) {
             case App.CONTROLLER_LOGIN:
                 App.isLoggedIn(() => new WelcomeController(), () => new LoginController());
-                break;
-
-            case App.CONTROLLER_WELCOME:
-                App.setCurrentController(name)
-                App.isLoggedIn(() => new WelcomeController(), () => new WelcomeController());
                 break;
 
             case App.CONTROLLER_UPLOAD:
