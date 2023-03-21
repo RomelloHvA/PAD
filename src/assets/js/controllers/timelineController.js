@@ -7,10 +7,12 @@ export class TimelineController extends Controller {
     #currentScrollYear;
     #MIN_SCROLL_YEAR = 1970;
     #MAX_SCROLL_YEAR = new Date().getFullYear();
-    #nextStoryPosition;
+    #DEFAULT_STORY_NUMBER_ON_PAGE = 2;
+    #scrollPosition;
 
     constructor() {
         super();
+        this.#currentScrollYear = this.#MAX_SCROLL_YEAR - this.#DEFAULT_STORY_NUMBER_ON_PAGE;
         this.#storyRepository = new storyRepository();
         this.#setupView();
     }
@@ -19,6 +21,19 @@ export class TimelineController extends Controller {
         this.#createTimelineView = await super.loadHtmlIntoContent(
             "html_views/timeline.html");
         // await this.#storyRepository.getHighestStoryPerYear(this.#currentScrollYear)
-        console.log();
+        this.#LoadStory()
+        this.#LoadStory();
+
     }
+
+    #LoadStory(){
+        window.addEventListener("scroll", function () {
+            console.log(window.scrollY);
+            if (window.scrollY >= window.innerHeight){
+                console.log("Einde bereikt");
+            }
+           return window.scrollY;
+        });
+    }
+
 }
