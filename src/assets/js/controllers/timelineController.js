@@ -39,73 +39,88 @@ export class TimelineController extends Controller {
         let storyPerYear = this.#storyRepository;
         let nextStoryPosition = "left";
 
-            window.addEventListener("scroll", function () {
-
-                console.log(document.body.scrollHeight + "scrollheight");
-
-                /**
-                 * Math.ceil is used because the scrollposition when adding more stories gets a decimal number.
-                 * Because of this the scroll position will never get higher than the scrollheight. So Math.ceil is used to
-                 * round up and reach the maximum height so new content can be loaded.
-                 * @type {number}
-                 */
-                const scrollPosition = Math.ceil(window.scrollY + window.innerHeight);
-                // console.log(window.scrollY + window.innerHeight);
-
-
-                if (scrollPosition >= document.body.scrollHeight && currentScrollYear >= minScrollYear) {
-
-                    addStory();
-                    currentScrollYear--;
-                    // console.log(currentScrollYear);
-                    // console.log(minScrollYear);
-                    console.log("Einde bereikt");
-                }
-
-                function addStory() {
-                    const templateRight = document.querySelector("#template-right");
-                    const templateRightClone = templateRight.content.cloneNode(true);
-
-                    const templateLeft = document.querySelector("#template-left");
-                    const templateLeftClone = templateLeft.content.cloneNode(true);
-
-                    let usedTemplate = setTemplate(nextStoryPosition, templateLeftClone, templateRightClone);
-                    setStoryContent(usedTemplate, currentScrollYear);
-
-
-                    document.querySelector(".main-timeline").appendChild(usedTemplate);
-                    nextStoryPosition = setStoryPosition(nextStoryPosition);
-                }
-
-                async function setStoryContent(usedTemplate, scrollYear) {
-                    //The data is always empty?
-                    console.log(scrollYear +"scrollyear");
-                   const data = await storyPerYear.getHighestStoryPerYear(scrollYear);
-                    console.log(data);
-
-                }
-
-                function setStoryPosition(nextStoryPosition) {
-                    if (nextStoryPosition === "left") {
-                        return "right";
-                    } else {
-                        return "left";
-                    }
-                }
-
-                function setTemplate(nextStoryPosition, templateLeft, templateRight) {
-
-                    if (nextStoryPosition === "left") {
-                        return templateLeft;
-                    } else {
-                        return templateRight
-                    }
-
-                }
-
-            });
+        //Checks if there is a scrollbar if not, adds stories until there is.
+        while (document.scrollingElement.scrollHeight < window.outerHeight){
+            addStory();
         }
 
+        window.addEventListener("scroll", function () {
+
+            console.log(document.body.scrollHeight + "scrollheight");
+
+            /**
+             * Math.ceil is used because the scrollposition when adding more stories gets a decimal number.
+             * Because of this the scroll position will never get higher than the scrollheight. So Math.ceil is used to
+             * round up and reach the maximum height so new content can be loaded.
+             * @type {number}
+             */
+            const scrollPosition = Math.ceil(window.scrollY + window.innerHeight);
+            // console.log(window.scrollY + window.innerHeight);
+
+
+            if (scrollPosition >= document.body.scrollHeight && currentScrollYear >= minScrollYear) {
+
+                addStory();
+                currentScrollYear--;
+                console.log("Einde bereikt");
+            }
+
+
+        })
+
+        /**
+         * This functions adds the story to the html and determines which position the next story needs to get.
+         * @author Romello ten Broeke
+         */
+
+        function addStory() {
+            const templateRight = document.querySelector("#template-right");
+            const templateRightClone = templateRight.content.cloneNode(true);
+
+            const templateLeft = document.querySelector("#template-left");
+            const templateLeftClone = templateLeft.content.cloneNode(true);
+
+            let usedTemplate = setTemplate(nextStoryPosition, templateLeftClone, templateRightClone);
+            console.log(setStoryContent(usedTemplate, currentScrollYear));
+
+
+            document.querySelector(".main-timeline").appendChild(usedTemplate);
+            nextStoryPosition = setStoryPosition(nextStoryPosition);
+        }
+
+        /**
+         *
+         * @param nextStoryPosition is the value of the where the story is supposed to be relative to the timeline.
+         * @param templateLeft is the left positioned  template. Stored in the header
+         * @param templateRight is the right positioned template. Stored in the header
+         * @returns a template in the correct position.
+         */
+
+        function setTemplate(nextStoryPosition, templateLeft, templateRight) {
+
+            if (nextStoryPosition === "left") {
+                return templateLeft;
+            } else {
+                return templateRight
+            }
+
+        }
+
+        async function setStoryContent(usedTemplate, scrollYear) {
+            //The data is always empty?
+            console.log(scrollYear + "scrollyear");
+            return await storyPerYear.getHighestStoryPerYear(scrollYear);
+
+        }
+
+        function setStoryPosition(nextStoryPosition) {
+            if (nextStoryPosition === "left") {
+                return "right";
+            } else {
+                return "left";
+            }
+        }
+    }
 
 
 }
