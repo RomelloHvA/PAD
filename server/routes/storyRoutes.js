@@ -67,7 +67,7 @@ class storyRoutes {
      */
     #getHighestRatedMessageForYear(){
 
-            this.#app.get("/story/highestRatedPerYear", async (req, res) => {
+            this.#app.post("/story/highestRatedPerYear", async (req, res) => {
                 const year = req.body.year;
 
                 try {
