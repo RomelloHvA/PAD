@@ -39,35 +39,63 @@ export class SignupController extends Controller {
         event.preventDefault();
 
         //get the input field elements from the view and retrieve the value
-        const firstname = this.#signupView.querySelector("#firstname").value;
-        const lastname  = this.#signupView.querySelector("#lastname").value;
-        const phoneNr   = this.#signupView.querySelector("#phoneNr").value;
-        const email     = this.#signupView.querySelector("#email").value;
-        const psw       = this.#signupView.querySelector("#psw").value;
-        const pswRepeat = this.#signupView.querySelector("#pswRepeat").value;
+        const firstname = this.#signupView.querySelector("#firstname");
+        const lastname  = this.#signupView.querySelector("#lastname");
+        const phoneNr   = this.#signupView.querySelector("#phoneNr");
+        const email     = this.#signupView.querySelector("#email");
+        const psw       = this.#signupView.querySelector("#psw");
+        const pswRepeat = this.#signupView.querySelector("#pswRepeat");
 
         let data = {
-            firstname,
-            lastname,
-            phoneNr,
-            email,
-            psw,
-            pswRepeat
+            firstname: firstname.value,
+            lastname: lastname.value,
+            phoneNr: phoneNr.value,
+            email: email.value,
+            psw: psw.value,
+            pswRepeat: pswRepeat.value
         }
 
+
         try{
-            const user = await this.#usersRepository.signup(data);
+            const signUp = await this.#usersRepository.signup(data);
+
+            console.log(signUp);
+
+            this.#signupView.querySelector('.message').innerText = signUp.message;
+
+            const form = this.#signupView.querySelector('form');
+            form.reset();
 
             //let the session manager know we are logged in by setting the username, never set the password in localstorage
-            App.sessionManager.set("username", user.username);
-            App.loadController(App.CONTROLLER_WELCOME);
+            App.sessionManager.set("userID", signUp.userID);
+            // App.loadController(App.CONTROLLER_LOGIN);
         } catch(error) {
             //if unauthorized error code, show error message to the user
             if(error.code === 401) {
-                this.#signupView.querySelector(".error").innerHTML = error.reason
+                let errorExists = false;
+
+                for (let i = 0; i < error.reason.length; i++) {
+                    console.log(error.reason[i]);
+                    const fieldId = error.reason[i].field;
+                    const inputField = this.#signupView.querySelector(`#${fieldId}`);
+                    inputField.classList.toggle("input-error", true);
+
+                    const inputContainer = inputField.parentElement;
+                    const small = inputContainer.querySelector('small');
+                    small.innerText = error.reason[i].message;
+
+                    errorExists = true;
+
+                    // Listen to input changes and remove input-error class when the input value changes
+                    inputField.addEventListener("input", () => {
+                        inputField.classList.remove("input-error");
+                        small.innerText = "";
+                    });
+                }
             } else {
                 console.error(error);
             }
         }
     }
 }
+

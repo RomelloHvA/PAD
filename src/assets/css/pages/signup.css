@@ -254,6 +254,22 @@ body {
     border-top-color: #3e3d3b;
 }
 
+.input_field small {
+    color: red;
+    font-weight: bold;
+}
+.message {
+    color: green;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-around;
+}
+
+.form_wrapper input.input-error {
+    border-color: red;
+}
+
+
 @-webkit-keyframes check {
     0% {
         height: 0;

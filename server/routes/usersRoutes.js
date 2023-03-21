@@ -19,7 +19,7 @@ class UsersRoutes {
 
         //call method per route for the users entity
         this.#login()
-        this.#signup()
+        this.#checkInputs()
     }
 
     /**
@@ -58,30 +58,12 @@ class UsersRoutes {
      *
      * @private
      */
-    #signup() {
-        this.#app.post("/users/signup", async (req, res) => {
+    async #signup(req, res) {
             const { firstname, lastname, phoneNr, email, password } = req.body;
 
             // Hash the password
             // const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Check inputs and if they are valid execute the code below
-            const inputsValid = await this.#checkInputs(req.body);
-            if (!inputsValid) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
-                    reason: 'Invalid input fields.',
-                });
-                return;
-            }
-
-            // Check if email already exists
-            const emailAlreadyExists = await this.#emailExist(email);
-            if (emailAlreadyExists) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
-                    reason: 'Email already exists.',
-                });
-                return;
-            }
 
             // Insert the new user into the database
             try {
@@ -92,7 +74,7 @@ class UsersRoutes {
                 });
 
                 res.status(this.#errorCodes.HTTP_OK_CODE).json({
-                    message: "User created successfully.",
+                    message: "Account succesvol aangemaakt",
                     userID: data.insertId,
                 });
             } catch (e) {
@@ -100,7 +82,6 @@ class UsersRoutes {
                     reason: e,
                 });
             }
-        });
     }
 
     async #emailExist(email) {
@@ -111,36 +92,87 @@ class UsersRoutes {
 
         if (exists && exists.length > 0) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    async #checkInputs(body) {
-        const { firstname, lastname, phoneNr, email, password, passwordRepeat } = body;
+    async #checkInputs() {
+        this.#app.post("/users/signup", async (req, res) => {
+            const body = req.body;
+            const {firstname, lastname, phoneNr, email, psw, pswRepeat} = body;
 
-        // Check if required fields are filled out
-        if (!firstname || !lastname || !email || !password || !passwordRepeat) {
-            return false;
-        }
+            let countError = true;
+            let messages = [];
 
-        // Check if email is a proper email
-        const emailRegex = /\S+@\S+\.\S+/;
-        if (!emailRegex.test(email)) {
-            return false;
-        }
 
-        // Check if password is at least 6 characters long
-        if (password.length < 6) {
-            return false;
-        }
+            // Check if required fields are filled out
+            if (!firstname || firstname === '') {
+                countError = false;
+                messages.push({field: 'firstname', message: "Dit veld mag niet leeg zijn"});
+            }
 
-        // Check if password & passwordRepeat match
-        if (password !== passwordRepeat) {
-            return false;
-        }
+            if (!lastname || lastname === '') {
+                countError = false;
+                messages.push({field: 'lastname', message: "Dit veld mag niet leeg zijn"});
+            }
 
-        return true;
+            if (!email || email === '') {
+                countError = false;
+                messages.push({field: 'email', message: "Dit veld mag niet leeg zijn"});
+            } else {
+                // Check if email is a proper email
+                const emailRegex = /\S+@\S+\.\S+/;
+                if (!emailRegex.test(email)) {
+                    countError = false;
+                    messages.push({field: 'email', message: "Voer een geldige email in"});
+                }
+            }
+
+            if (!psw || psw === '') {
+                countError = false;
+                messages.push({field: 'psw', message: "Dit veld mag niet leeg zijn"});
+
+            } else {
+                // Check if password is at least 6 characters long
+                if (psw.length < 6) {
+                    countError = false;
+                    messages.push({field: 'psw', message: "Wachtwoord moet bestaan uit minimaal 6 karakters"});
+                }
+            }
+
+            if (!pswRepeat || pswRepeat === '') {
+                countError = false;
+                messages.push({field: 'pswRepeat', message: "Dit veld mag niet leeg zijn"});
+            } else {
+                // Check if password & passwordRepeat match
+                if (psw !== pswRepeat) {
+                    countError = false;
+                    messages.push({field: 'pswRepeat', message: "Wachtwoord komt niet overeen"});
+                }
+            }
+
+            if (!countError) {
+                res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
+                    reason: messages
+                });
+                return;
+            }
+
+            // Check if email already exists
+            if (await this.#emailExist(email)) {
+                res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
+                    reason: [{
+                        field: 'email',
+                        message: "Dit email adres is al in gebruik, probeer in te loggen"
+                    }]
+                });
+                return;
+            }
+
+            await this.#signup(req, res);
+
+        });
     }
 }
 
