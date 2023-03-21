@@ -72,7 +72,7 @@ class storyRoutes {
 
                 try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE date = (?))",
+                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?))",
                     values: [year]
                 })
                 if (data){

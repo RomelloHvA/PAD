@@ -24,9 +24,9 @@
     animation-name: slidein;
 }
 .slide-animation{
-    animation-duration: 3s;
+    animation-duration: 4s;
     animation-name: fadein;
-    animation-iteration-count: infinite;
+    animation-iteration-count: 1;
 }
 @keyframes fadein {
     0% {
