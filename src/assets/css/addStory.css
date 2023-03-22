@@ -87,3 +87,21 @@ select {
     font-size: 16px;
     font-family: inherit;
 }
+
+.error {
+    color: red;
+}
+
+#inputfieldsrow {
+    display: flex;
+}
+
+.fields {
+    margin: 0px 5px;
+}
+
+
+#preview-image {
+
+    margin-bottom: 50px;
+}

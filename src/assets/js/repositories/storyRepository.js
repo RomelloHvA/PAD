@@ -15,8 +15,15 @@ export class storyRepository {
     }
 
     async addNewStory(requestBody) {
-        return await this.#networkManager.doRequest(`${this.#route}/add`, "POST", requestBody);
+
+
+        const response = await this.#networkManager.doFileRequest(`${this.#route}/add`, "POST", requestBody, {
+            'Content-Type': `multipart/form-data;`
+        });
+
+        return response;
     }
+
 
     async delete() {
 

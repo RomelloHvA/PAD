@@ -37,7 +37,7 @@ export class UploadController extends Controller {
             const formData = new FormData()
 
             //set "sampleFile" as key, we read this key in de back-end
-            formData.append("sampleFile", file)
+            formData.append("file", file)
 
             try {
                 const repsonse = await this.#networkManager.doFileRequest("/upload", "POST", formData);
