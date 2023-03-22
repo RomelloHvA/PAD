@@ -16,24 +16,26 @@
     <!-- Load bootstrap, UI framework -->
     <script src="assets/vendors/bootstrap/bootstrap.bundle.min.js"></script>
 
+
     <!-- Only load the config of the API and the entry point of the app via regular script tags -->
     <!-- Added .js files loaded via ES6 modules should not be added here but be referenced via ímport statement -->
     <script src="api/config.js"></script>
     <script src="assets/js/app.js" type="module"></script>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     <!-- Navigation -->
     <div class="navigation">
         <!-- Loads navigation via JS -->
     </div>
+
     <!-- Page Content -->
     <main class="content">
         <!-- Loads content via JS -->
     </main>
-    <footer id="sticky-footer" class="py-2 bg-light text-dark-50 border-top">
-        <div class="container text-center">
-            <small> &copy; HvA HBO-ICT 2021 | Ontwikkeld door Pim Meijer & Lennard Fonteijn</small>
-        </div>
+    <!-- Footer content  -->
+    <footer class="footer mt-auto py-3 bg-dark p-0">
+        <!-- Loads content into footer -->
     </footer>
+
 </body>
 </html>
