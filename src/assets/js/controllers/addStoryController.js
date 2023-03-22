@@ -35,13 +35,20 @@ export class addStoryController extends Controller {
         let monthfield = this.#addStoryView.querySelector("#month");
         let dayfield = this.#addStoryView.querySelector("#day");
 
+
+        const characterCount = document.getElementById("characterCount");
+        const story = this.#addStoryView.querySelector("#story");
+        story.addEventListener("input", function() {
+            characterCount.textContent = `${story.value.length}/2000 characters entered`;
+        });
+
+
         for (let i = 1980; i <= 2023; i++) {
             let option = document.createElement("option");
             option.value = i;
             option.text = i;
             yearfield.add(option);
         }
-
 
         let monthDays = {
             "Januari": 31,
