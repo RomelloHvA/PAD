@@ -37,29 +37,9 @@ export class SignupController extends Controller {
     async #handleLogin(event) {
         //prevent actual submit and page refresh
         event.preventDefault();
-
-        //get the input field elements from the view and retrieve the value
-        const firstname = this.#signupView.querySelector("#firstname");
-        const lastname  = this.#signupView.querySelector("#lastname");
-        const phoneNr   = this.#signupView.querySelector("#phoneNr");
-        const email     = this.#signupView.querySelector("#email");
-        const psw       = this.#signupView.querySelector("#psw");
-        const pswRepeat = this.#signupView.querySelector("#pswRepeat");
-
-        let data = {
-            firstname: firstname.value,
-            lastname: lastname.value,
-            phoneNr: phoneNr.value,
-            email: email.value,
-            psw: psw.value,
-            pswRepeat: pswRepeat.value
-        }
-
-
+        let data = this.getFormData();
         try{
             const signUp = await this.#usersRepository.signup(data);
-
-            console.log(signUp);
 
             this.#signupView.querySelector('.message').innerText = signUp.message;
 
@@ -72,30 +52,57 @@ export class SignupController extends Controller {
         } catch(error) {
             //if unauthorized error code, show error message to the user
             if(error.code === 401) {
-                let errorExists = false;
-
-                for (let i = 0; i < error.reason.length; i++) {
-                    console.log(error.reason[i]);
-                    const fieldId = error.reason[i].field;
-                    const inputField = this.#signupView.querySelector(`#${fieldId}`);
-                    inputField.classList.toggle("input-error", true);
-
-                    const inputContainer = inputField.parentElement;
-                    const small = inputContainer.querySelector('small');
-                    small.innerText = error.reason[i].message;
-
-                    errorExists = true;
-
-                    // Listen to input changes and remove input-error class when the input value changes
-                    inputField.addEventListener("input", () => {
-                        inputField.classList.remove("input-error");
-                        small.innerText = "";
-                    });
-                }
+                this.handleError(error);
             } else {
                 console.error(error);
             }
         }
+    }
+
+    handleError(error) {
+        let errorExists = false;
+
+        for (let i = 0; i < error.reason.length; i++) {
+            const fieldId = error.reason[i].field;
+            const inputField = this.#signupView.querySelector(`#${fieldId}`);
+            inputField.classList.toggle("input-error", true);
+            errorExists = true;
+
+            this.displayError(inputField, error.reason[i].message);
+        }
+    }
+
+    displayError(inputField, message) {
+        const inputContainer = inputField.parentElement;
+        const small = inputContainer.querySelector('small');
+        small.innerText = message;
+
+
+        // Listen to input changes and remove input-error class when the input value changes
+        inputField.addEventListener("input", () => {
+            inputField.classList.remove("input-error");
+            small.innerText = "";
+        });
+    }
+
+    getFormData() {
+        //get the input field elements from the view and retrieve the value
+        const firstname = this.#signupView.querySelector("#firstname");
+        const lastname = this.#signupView.querySelector("#lastname");
+        const phoneNr = this.#signupView.querySelector("#phoneNr");
+        const email = this.#signupView.querySelector("#email");
+        const psw = this.#signupView.querySelector("#psw");
+        const pswRepeat = this.#signupView.querySelector("#pswRepeat");
+
+        let data = {
+            firstname: firstname.value,
+            lastname: lastname.value,
+            phoneNr: phoneNr.value,
+            email: email.value,
+            psw: psw.value,
+            pswRepeat: pswRepeat.value
+        }
+        return data;
     }
 }
 
