@@ -143,6 +143,7 @@ export class addStoryController extends Controller {
         try {
             await this.#storyRepository.addNewStory(formData);
 
+
         }
         catch (error) {
             console.log(error);

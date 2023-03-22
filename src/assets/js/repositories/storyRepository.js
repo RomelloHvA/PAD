@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-=======
+
 /**
  * repository for interacting with stories. Also interacts with networkmanager
  */
->>>>>>> Romello
 import { NetworkManager } from "../framework/utils/networkManager.js";
 
 export class storyRepository {
@@ -21,17 +19,11 @@ export class storyRepository {
     }
 
     async addNewStory(requestBody) {
-
-
-        const response = await this.#networkManager.doFileRequest(`${this.#route}/add`, "POST", requestBody, {
+        return await this.#networkManager.doFileRequest(`${this.#route}/add`, "POST", requestBody, {
             'Content-Type': `multipart/form-data;`
         });
-
-        return response;
     }
 
-        return await this.#networkManager.doRequest(`${this.#route}/add`, "POST", requestBody);
-    }
     async getHighestRatedStory() {
         return await this.#networkManager.doRequest(`${this.#route}/highestRated`, "GET");
     }
@@ -43,12 +35,4 @@ export class storyRepository {
 
     }
 
-    //example endpoint would be: /users/register
-    async register(username, password) {
-
-    }
-
-    async update(id, values = {}) {
-
-    }
 }

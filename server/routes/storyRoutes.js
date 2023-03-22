@@ -1,10 +1,10 @@
 const fs = require("fs");
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 
 class storyRoutes {
-    #errorCodes = require("../framework/utils/httpErrorCodes")
-    #databaseHelper = require("../framework/utils/databaseHelper")
+    #errorCodes = require("../framework/utils/httpErrorCodes");
+    #databaseHelper = require("../framework/utils/databaseHelper");
     #cryptoHelper = require("../framework/utils/cryptoHelper");
     #app
     #multer = require("multer");
@@ -12,6 +12,8 @@ class storyRoutes {
     constructor(app) {
         this.#app = app;
         this.#addStory();
+        this.#getHighestRatedMessageForYear();
+        this.#getHighestRatedMessage();
     }
 
     /**
@@ -23,90 +25,28 @@ class storyRoutes {
         this.#app.post("/story/add", this.#multer().single("file"), async (req, res) => {
             try {
                 // Extract data from the request
-                const { body: { subject, story, year, month, day }, file } = req;
+                const {body: {subject, story, year, month, day}, file} = req;
 
                 let fileUrl = '';
 
                 // Check if a file was uploaded and write it to disk
-                if(file != null) {
+                if (file != null) {
                     fileUrl = await this.#writeUploadedFileToDisk(file);
                     if (!fileUrl) {
                         // If an error occurred while writing to disk, send a bad request response
                         return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
                     }
                 }
-                const newStory = { story, subject, year, month, day, fileUrl }
+                const newStory = {story, subject, year, month, day, fileUrl}
                 // Add the story to the database
                 await this.#addToDatabase(newStory);
 
             } catch (e) {
                 // If an error occurred while processing the request, send a bad request response
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({ reason: e });
-/**
- * Class for handling all the story routes
- */
-class storyRoutes {
-    #httpErrorCodes = require("../framework/utils/httpErrorCodes")
-    #databaseHelper = require("../framework/utils/databaseHelper")
-    #cryptoHelper = require("../framework/utils/cryptoHelper");
-    #app
-
-    /**
-     * @param app - ExpressJS instance(web application) we get passed automatically via app.js
-     * Important: always make sure there is an app parameter in your constructor!
-     */
-    constructor(app) {
-        this.#app = app;
-
-        //call method per route for the users entity
-        this.#addStory();
-        this.#getHighestRatedMessage();
-        this.#getHighestRatedMessageForYear();
-    }
-
-
-    #addStory() {
-        this.#app.post("/story/add", async (req, res) => {
-            const subject = req.body.subject;
-            const story = req.body.story;
-            const year = req.body.year;
-
-            try {
-                const data = await this.#databaseHelper.handleQuery({
-                    query: "INSERT INTO story (body, title, date) VALUES (?, ?, ?);",
-                    values: [story, subject, year]
-                });
-
-                //if we founnd one record we know the user exists in users table
-
-                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json({message: "ok"});
-            } catch (e) {
-                res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e});
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
-        });
+        })
     }
-
-    /**
-     Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
-     @async
-     @param {object} file - The uploaded file to write to disk.
-     @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
-
-     @author Tygo Geervliet
-     */
-    async #writeUploadedFileToDisk(file) {
-        const fileUrl = `uploads/${uuidv4()}.${this.#getFileExtension(file)}`;
-        try {
-            await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
-            return fileUrl;
-        } catch (err) {
-            console.log(err);
-            // If an error occurred while writing to disk, delete the file and return null
-            await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
-            return null;
-        }
-    }
-
 
     /**
 
@@ -136,7 +76,7 @@ class storyRoutes {
                 }
             });
         }
-}
+    }
 
     /**
      Extracts the file extension from the provided file object.
@@ -147,57 +87,66 @@ class storyRoutes {
      */
     #getFileExtension(file) {
 
-    let fileExtension = file.originalname;
-    const lastDotIndex = fileExtension.lastIndexOf(".");
-    if (lastDotIndex !== -1) {
-        return fileExtension.substring(lastDotIndex + 1);
+        let fileExtension = file.originalname;
+        const lastDotIndex = fileExtension.lastIndexOf(".");
+        if (lastDotIndex !== -1) {
+            return fileExtension.substring(lastDotIndex + 1);
+        }
     }
-   }
 
-}
-
-module.exports = storyRoutes;
-
-     * This function returns the highest rated message of all time.
-     * @author Romello ten Broeke
-     */
-    #getHighestRatedMessage(){
+    #getHighestRatedMessage() {
         this.#app.get("/story/highestRated", async (req, res) => {
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
                 })
-                if (data){
-                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json(data)
+                if (data) {
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
                 }
             } catch (e) {
-                res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e})
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        });
+    }
+
+    #getHighestRatedMessageForYear() {
+        this.#app.get("/story/highestRatedPerYear", async (req, res) => {
+            const year = req.query.year;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC",
+                    values: [year]
+                })
+                if (data) {
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
             }
         });
     }
 
     /**
-     * This function returns the highest rated story in a given year.
-     * @author Romello ten Broeke
+     Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
+     @async
+     @param {object} file - The uploaded file to write to disk.
+     @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
+
+     @author Tygo Geervliet
      */
-    #getHighestRatedMessageForYear(){
-
-            this.#app.get("/story/highestRatedPerYear", async (req, res) => {
-                const year = req.query.year;
-
-                try {
-                const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC",
-                    values: [year]
-                })
-                if (data){
-                    res.status(this.#httpErrorCodes.HTTP_OK_CODE).json(data)
-                }
-            } catch (e) {
-                res.status(this.#httpErrorCodes.BAD_REQUEST_CODE).json({reason: e})
-            }
-        });
+    async #writeUploadedFileToDisk(file) {
+        const fileUrl = `uploads/${uuidv4()}.${this.#getFileExtension(file)}`;
+        try {
+            await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
+            return fileUrl;
+        } catch (err) {
+            console.log(err);
+            // If an error occurred while writing to disk, delete the file and return null
+            await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
+            return null;
+        }
     }
 }
 
-module.exports = storyRoutes
+module.exports = storyRoutes;

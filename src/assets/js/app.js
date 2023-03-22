@@ -71,6 +71,9 @@ export class App {
         App.setCurrentController(name, controllerData);
         
         switch (name) {
+            case App.CONTROLLER_WELCOME:
+                App.isLoggedIn(() => new WelcomeController(), () => new WelcomeController());
+                break;
             case App.CONTROLLER_LOGIN:
                 App.isLoggedIn(() => new WelcomeController(), () => new LoginController());
                 break;
