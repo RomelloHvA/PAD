@@ -10,13 +10,9 @@ export class TimelineController extends Controller {
     #storyRepository;
     #currentScrollYear;
     #MIN_SCROLL_YEAR = 1970;
-    #MAX_SCROLL_YEAR = new Date().getFullYear();
-    #DEFAULT_STORY_NUMBER_ON_PAGE = 2;
-
     constructor() {
         super();
-        this.#currentScrollYear = 2023;
-        // this.#MAX_SCROLL_YEAR - this.#DEFAULT_STORY_NUMBER_ON_PAGE;
+        this.#currentScrollYear = new Date().getFullYear();
         this.#storyRepository = new storyRepository();
         this.#setupView();
     }
@@ -33,20 +29,27 @@ export class TimelineController extends Controller {
      * @author Romello ten Broeke
      */
 
-    #LoadStory() {
+    async #LoadStory() {
         let currentScrollYear = this.#currentScrollYear;
         const minScrollYear = this.#MIN_SCROLL_YEAR;
         let storyPerYear = this.#storyRepository;
         let nextStoryPosition = "left";
+        let view = this.#createTimelineView;
+        let dataIndex = 0;
 
         //Checks if there is a scrollbar if not, adds stories until there is.
-        while (document.scrollingElement.scrollHeight < window.outerHeight){
+        do {
+            await addAndSetStory();
+        } while (view.scrollHeight < window.outerHeight)
+
+        async function addAndSetStory() {
             addStory();
+            await setStoryContent();
+            currentScrollYear--;
         }
 
-        window.addEventListener("scroll", function () {
+        window.addEventListener("scroll", async function () {
 
-            console.log(document.body.scrollHeight + "scrollheight");
 
             /**
              * Math.ceil is used because the scrollposition when adding more stories gets a decimal number.
@@ -55,14 +58,10 @@ export class TimelineController extends Controller {
              * @type {number}
              */
             const scrollPosition = Math.ceil(window.scrollY + window.innerHeight);
-            // console.log(window.scrollY + window.innerHeight);
 
+            if (scrollPosition >= view.scrollHeight && currentScrollYear >= minScrollYear) {
 
-            if (scrollPosition >= document.body.scrollHeight && currentScrollYear >= minScrollYear) {
-
-                addStory();
-                currentScrollYear--;
-                console.log("Einde bereikt");
+                addAndSetStory();
             }
 
 
@@ -74,19 +73,18 @@ export class TimelineController extends Controller {
          */
 
         function addStory() {
-            const templateRight = document.querySelector("#template-right");
-            const templateRightClone = templateRight.content.cloneNode(true);
+            const templateRight = view.querySelector("#template-right").content.cloneNode(true);
 
-            const templateLeft = document.querySelector("#template-left");
-            const templateLeftClone = templateLeft.content.cloneNode(true);
+            const templateLeft = view.querySelector("#template-left").content.cloneNode(true);
 
-            let usedTemplate = setTemplate(nextStoryPosition, templateLeftClone, templateRightClone);
-            console.log(setStoryContent(usedTemplate, currentScrollYear));
+            let usedTemplate = setTemplatePosition(nextStoryPosition, templateLeft, templateRight);
 
+            usedTemplate.querySelector(".year").innerText = currentScrollYear;
 
-            document.querySelector(".main-timeline").appendChild(usedTemplate);
-            nextStoryPosition = setStoryPosition(nextStoryPosition);
+            view.querySelector(".main-timeline").appendChild(usedTemplate);
+            nextStoryPosition = setNextStoryPosition(nextStoryPosition);
         }
+
 
         /**
          *
@@ -96,7 +94,7 @@ export class TimelineController extends Controller {
          * @returns a template in the correct position.
          */
 
-        function setTemplate(nextStoryPosition, templateLeft, templateRight) {
+        function setTemplatePosition(nextStoryPosition, templateLeft, templateRight) {
 
             if (nextStoryPosition === "left") {
                 return templateLeft;
@@ -106,14 +104,36 @@ export class TimelineController extends Controller {
 
         }
 
-        async function setStoryContent(usedTemplate, scrollYear) {
-            //The data is always empty?
-            console.log(scrollYear + "scrollyear");
-            return await storyPerYear.getHighestStoryPerYear(scrollYear);
+        async function setStoryContent() {
+            const noStoryMessageBody = "Helaas is er over deze periode nog geen verhaal bekend " +
+                "of er zijn niet genoeg verhalen. Met uw hulp kunnen wij nog meer verhalen toevoegen.";
+            const noStoryTitle = "Helaas geen verhaal";
+
+            let data = await storyPerYear.getHighestStoryPerYear(currentScrollYear);
+            let storyBody = "";
+            let storyTitle = "";
+
+            if (data[dataIndex] === undefined) {
+                storyBody = noStoryMessageBody;
+                storyTitle =  noStoryTitle;
+            } else {
+                storyBody = data[dataIndex].body;
+                storyTitle = data[dataIndex].title;
+                dataIndex++;
+
+            }
+            const cardBodies = view.querySelectorAll(".card-body");
+            const lastCardBody = cardBodies[cardBodies.length - 1];
+            const cardTitles = view.querySelectorAll(".card-title")
+            const lastCardTitle = cardTitles[cardTitles.length - 1];
+
+            lastCardTitle.innerText = storyTitle;
+            lastCardBody.innerText = storyBody;
+
 
         }
 
-        function setStoryPosition(nextStoryPosition) {
+        function setNextStoryPosition(nextStoryPosition) {
             if (nextStoryPosition === "left") {
                 return "right";
             } else {

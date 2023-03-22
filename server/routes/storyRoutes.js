@@ -67,12 +67,12 @@ class storyRoutes {
      */
     #getHighestRatedMessageForYear(){
 
-            this.#app.post("/story/highestRatedPerYear", async (req, res) => {
-                const year = req.body.year;
+            this.#app.get("/story/highestRatedPerYear", async (req, res) => {
+                const year = req.query.year;
 
                 try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?))",
+                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC",
                     values: [year]
                 })
                 if (data){
