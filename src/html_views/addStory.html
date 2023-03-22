@@ -10,28 +10,35 @@
 <form>
     <div class="mb-4">
         <label class="form-label">Onderwerp verhaal</label>
-        <input type="text" class="form-control" id = "subject"/>
+        <input type="text" class="form-control" id = "subject" autocomplete="off"/>
         <p class="error" id="subject-error"></p>
     </div>
-    <div class="mb-4">
-        <label class="form-label">Jaar</label>
-        <select id="year" type="number">
-        </select>
-    </div>
-    <div class="mb-4">
-        <label class="form-label">Month</label>
+
+    <div class="mb-4" id="inputfieldsrow">
+        <div class="fields">
+        <label class="form-label">Maand</label>
         <select id="month" type="number">
+            <option disabled selected value="">Selecteer hier een maand</option>
         </select>
-    </div>
-    <div class="mb-4">
-        <label class="form-label">Day</label>
+        </div>
+
+        <div class="fields">
+        <label class="form-label">Dag</label>
         <select id="day" type="number">
+            <option disabled selected value="">Selecteer maand</option>
         </select>
-    </div>
+        </div>
+
+        <div class="fields">
+        <label class="form-label">Jaar</label>
+        <select id="year" type="number"></select>
+            </div>
+        </div>
+
 
     <div class="mb-4">
         <label class="form-label">Verhaal</label>
-        <textarea class="form-control" rows="10" id = "story" placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
+        <textarea maxlength="2000" class="form-control" rows="10" id = "story" placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
         <p class="error" id="story-error"></p>
         <p id="characterCount"></p>
     </div>
@@ -39,6 +46,6 @@
     <label class="form-label">Afbeelding</label>
     <input type="file" class="file-input" id="fileInput">
     <img id="preview-image" src="">
-    <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Add story</button>
+    <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Voeg verhaal toe</button>
 </form>
 </body>

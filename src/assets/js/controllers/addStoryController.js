@@ -29,27 +29,6 @@ export class addStoryController extends Controller {
         this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.addNewStory(event));
         this.#addStoryView.querySelector("#fileInput").addEventListener("change", this.displayImagePreview.bind(this));
 
-
-
-        let yearfield = this.#addStoryView.querySelector("#year");
-        let monthfield = this.#addStoryView.querySelector("#month");
-        let dayfield = this.#addStoryView.querySelector("#day");
-
-
-        const characterCount = document.getElementById("characterCount");
-        const story = this.#addStoryView.querySelector("#story");
-        story.addEventListener("input", function() {
-            characterCount.textContent = `${story.value.length}/2000 characters entered`;
-        });
-
-
-        for (let i = 1980; i <= 2023; i++) {
-            let option = document.createElement("option");
-            option.value = i;
-            option.text = i;
-            yearfield.add(option);
-        }
-
         let monthDays = {
             "Januari": 31,
             "Februari": 28, // or 29 in a leap year
@@ -65,18 +44,23 @@ export class addStoryController extends Controller {
             "December": 31
         };
 
-// Add options for months
-        for (let i = 1; i <= 12; i++) {
-            let option = document.createElement("option");
-            option.value = i;
-            option.textContent = Object.keys(monthDays)[i-1];
-            monthfield.appendChild(option);
-        }
+
+        let dayfield = this.#addStoryView.querySelector("#day");
+        dayfield.disabled = true;
+        dayfield.placeholder = "selecteer eerst een maand";
+        this.storyCharacterCount();
+        this.populateYearField();
+
+        let monthfield = this.#addStoryView.querySelector("#month");
+        this.PopulateMonthField(monthDays, monthfield);
+        this.populateDayField(monthfield, monthDays, dayfield);
+    }
 
 
-// Add event listener for month change
+    populateDayField(monthfield, monthDays, dayfield) {
         monthfield.addEventListener("change", (event) => {
-            let selectedMonth = Object.keys(monthDays)[event.target.value-1];
+            dayfield.disabled = false;
+            let selectedMonth = Object.keys(monthDays)[event.target.value - 1];
             let numDays = monthDays[selectedMonth];
             dayfield.innerHTML = "";
             for (let i = 1; i <= numDays; i++) {
@@ -88,14 +72,55 @@ export class addStoryController extends Controller {
         });
     }
 
+    PopulateMonthField(monthDays, monthfield) {
+
+        for (let i = 1; i <= 12; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.textContent = Object.keys(monthDays)[i - 1];
+            monthfield.appendChild(option);
+        }
+    }
+
+    populateYearField() {
+        let yearfield = this.#addStoryView.querySelector("#year");
+        const currentYear = new Date().getFullYear();
+        for (let i = 1980; i <= currentYear; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            yearfield.add(option);
+        }
+    }
+
+    /**
+     A function that tracks the number of characters entered into a story field
+     and updates the character count on the page.
+     @function storyCharacterCount
+     @returns {void}
+     */
+    storyCharacterCount() {
+        const characterCount = document.getElementById("characterCount");
+        const story = this.#addStoryView.querySelector("#story");
+        story.addEventListener("input", function () {
+            characterCount.textContent = `${story.value.length}/2000 characters entered`;
+
+            if (story.value.length > 1999) {
+                characterCount.style.color = 'red';
+            } else {
+                characterCount.style.color = 'black';
+            }
+
+        });
+    }
 
     async addNewStory(event) {
 
         event.preventDefault();
         const subject = this.#addStoryView.querySelector("#subject").value;
         const year = this.#addStoryView.querySelector("#year").value;
-        const month = this.#addStoryView.querySelector("#month").value;
-        const day = this.#addStoryView.querySelector("#day").value;
+        let month = this.#addStoryView.querySelector("#month").value;
+        let day = this.#addStoryView.querySelector("#day").value;
         const story = this.#addStoryView.querySelector("#story").value;
         const fileInput = this.#addStoryView.querySelector("#fileInput");
 
@@ -106,6 +131,8 @@ export class addStoryController extends Controller {
 
         const formData = new FormData();
 
+
+
         formData.append("subject", subject);
         formData.append("year", year);
         formData.append("story", story);
@@ -115,6 +142,7 @@ export class addStoryController extends Controller {
 
         try {
             await this.#storyRepository.addNewStory(formData);
+
         }
         catch (error) {
             console.log(error);
@@ -126,7 +154,12 @@ export class addStoryController extends Controller {
         const fileInput = event.target;
         const previewImage = this.#addStoryView.querySelector("#preview-image");
 
-        if (fileInput.files && fileInput.files[0]) {
+
+        previewImage.style.width = "300px";
+        previewImage.style.height = "200px";
+        previewImage.style.objectFit = "contain";
+
+        if (fileInput.files[0]) {
             const reader = new FileReader();
             reader.onload = function (event) {
                 previewImage.src = event.target.result;
@@ -151,24 +184,16 @@ export class addStoryController extends Controller {
 
         // Validate the input fields
         if (!subject) {
-            errorTextSubject.innerHTML = "Please fill in the subject field";
-            return false;
-        } else {
-            errorTextSubject.innerHTML = "";
+            return errorTextSubject.innerHTML = "Please fill in the subject field", false;
         }
+        errorTextSubject.innerHTML = "";
 
         if (!story) {
-            errorTextStory.innerHTML = "Please fill in the story field";
-            return false;
-        } else if (story.length > 2000) {
-            errorTextStory.innerHTML = "The story cannot be longer than 2000 characters";
-            return false;
-        } else {
-            errorTextStory.innerHTML = "";
+            return errorTextStory.innerHTML = "Please fill in the story field", false;
         }
+        errorTextStory.innerHTML = "";
 
         return true;
     }
-
 
 }
