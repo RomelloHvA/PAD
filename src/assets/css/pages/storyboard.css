@@ -1,9 +1,3 @@
-body {
-    background-color:  #dadada;
-    font-size: 50px;
-    letter-spacing: .04em;
-}
-
 /*Buttons*/
 .sortBar {
     display: flex;
@@ -46,7 +40,7 @@ a{
 }
 
 /*!*storytemplate*!*/
-.container{
+.storyContainer{
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -69,13 +63,13 @@ img{
     flex-direction: row;
     margin: 5px;
 }
-.tagList a{
+.tagList span{
     margin: 5px;
     background-color: #0a53be;
     border: 10px solid #0a58ca;
     border-radius: 10px;
 }
-.storyAndTags{
+.tagsStoryBox{
     display: flex;
     flex-direction: column;
 }
@@ -83,11 +77,11 @@ img{
     font-size: 35px;
     letter-spacing: 0;
 }
-.pictureAndrest{
+.lowerBox{
     display: flex;
     flex-direction: row;
 }
-.titleBar{
+.storyTitleSpan{
     background-color: #0a53be;
     color: black;
     margin-bottom: 1rem;

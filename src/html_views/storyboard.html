@@ -6,49 +6,57 @@
 
     <!--  css     -->
     <link rel="stylesheet" href="../assets/css/pages/storyboard.css">
+    <link rel="stylesheet" href="../assets/css/defaults.css">
+
+    <!--    javascript-->
+    <script src="../assets/js/controllers/storyboardController.js"></script>
+    <!--    templates   -->
+    <template>
+        <div class="storyContainer">
+            <!-- within this div box comes the title of the story -->
+            <div>
+                <span class="storyTitleSpan" id="storyTitleSpan"> </span>
+            </div>
+            <!-- within this div box comes everything under the title (picture, tags and the story) -->
+            <div class="lowerBox">
+                <!-- within this box comes the story picture-->
+                <div class="pictureBox">
+                    <img src="../uploads/pictures/florijn_01.jpeg" alt="foto enz">
+                </div>
+                <!-- this div box contains both the tags and the story-->
+                <div class="tagsStoryBox">
+                    <div class="tagList">
+                        <span href="#">inwoner</span>
+                        <span href="#">evenementen</span>
+                    </div>
+                    <!--this box contains the story itself -->
+                    <div class="storyBox">
+                    <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ex dui, cursus at erat rutrum,
+                        euismod gravida urna. Vestibulum in ligula non velit malesuada commodo. Praesent id eleifend
+                        urna. Proin porttitor, odio quis fringilla iaculis, tortor quam vehicula lectus, ac viverra nisl
+                        lectus at mauris. Morbi justo tellus, convallis vel tempus et, imperdiet vitae purus. Quisque
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 
 
 </head>
 <body>
-<div class="navbar">
-    hier komt de nav bar
-</div>
 <div class="sortBar">
     <button class="storyboardButton"><a href="#">Nieuwheid</a></button>
     <button class="storyboardButton"><a href="#">Likes</a></button>
     <button class="storyboardButton"><a href="#">Seizoen</a></button>
 </div>
-<div class="container">
-    <div class="storyPlate">
-        <div class="titleBar">
-            <span> De beste barbeque van de Florijn</span>
-        </div>
-        <div class="pictureAndrest">
-            <div class="picturediv">
-            <img src="../uploads/pictures/florijn_01.jpeg" alt="foto enz">
-            </div>
-            <div class="storyAndTags">
-                <div class="tagList">
-                    <a href="#">inwoner</a>
-                    <a href="#">evenementen</a>
-                    <!--           balk boven, naast foto met tags -->
-                </div>
-                <div class="story">
-                    <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ex dui, cursus at erat rutrum,
-                        euismod gravida urna. Vestibulum in ligula non velit malesuada commodo. Praesent id eleifend
-                        urna. Proin porttitor, odio quis fringilla iaculis, tortor quam vehicula lectus, ac viverra nisl
-                        lectus at mauris. Morbi justo tellus, convallis vel tempus et, imperdiet vitae purus. Quisque
 
-                    </span>
-                </div>
-            </div>
-        </div>
+<div class="templateBox">
+    <div class="templatePlacementBox">
+
     </div>
-</div>
-
-<div>
 
 </div>
-
+<script src="../assets/js/controllers/storyboardController.js"></script>
 </body>
 </html>
