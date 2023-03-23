@@ -1,3 +1,7 @@
+
+/**
+ * repository for interacting with stories. Also interacts with networkmanager
+ */
 import { NetworkManager } from "../framework/utils/networkManager.js";
 
 export class storyRepository {
@@ -15,26 +19,20 @@ export class storyRepository {
     }
 
     async addNewStory(requestBody) {
-
-
-        const response = await this.#networkManager.doFileRequest(`${this.#route}/add`, "POST", requestBody, {
+        return await this.#networkManager.doFileRequest(`${this.#route}/add`, "POST", requestBody, {
             'Content-Type': `multipart/form-data;`
         });
-
-        return response;
     }
 
+    async getHighestRatedStory() {
+        return await this.#networkManager.doRequest(`${this.#route}/highestRated`, "GET");
+    }
+    async getHighestStoryPerYear(query) {
+        return await this.#networkManager.doRequest(`${this.#route}/highestRatedPerYear?year=${query}`, "GET");
+    }
 
     async delete() {
 
     }
 
-    //example endpoint would be: /users/register
-    async register(username, password) {
-
-    }
-
-    async update(id, values = {}) {
-
-    }
 }
