@@ -1,62 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Storyboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--  css     -->
     <link rel="stylesheet" href="../assets/css/pages/storyboard.css">
-    <link rel="stylesheet" href="../assets/css/defaults.css">
+</head>
+<body>
+    <header class="header">
+        <!-- HTML template for a filter bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="popularity-filter">Popularity:</label>
+                <select id="popularity-filter">
+                    <option value="most-popular">Most popular</option>
+                    <option value="least-popular">Least popular</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="upload-date-filter">Date of upload:</label>
+                <select id="upload-date-filter">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="happening-date-filter">Date of happening:</label>
+                <select id="happening-date-filter">
+                    <option value="upcoming">Upcoming first</option>
+                    <option value="past">Past first</option>
+                </select>
+            </div>
+        </div>
+    </header>
 
-    <!--    javascript-->
-    <script src="../assets/js/controllers/storyboardController.js"></script>
-    <!--    templates   -->
-    <template>
-        <div class="storyContainer">
-            <!-- within this div box comes the title of the story -->
-            <div>
-                <span class="storyTitleSpan" id="storyTitleSpan"> </span>
+    <main class="main">
+        <card class="leftcolumn" style="overflow-x: auto">
+            <div id="profiles"></div>
+        </card>
+
+        <div class="rightcolumn">
+            <div class="story_right">
+                <h3>Popular Post</h3>
+                <div class="fakeimg">Image</div><br>
+                <div class="fakeimg">Image</div><br>
+                <div class="fakeimg">Image</div>
             </div>
-            <!-- within this div box comes everything under the title (picture, tags and the story) -->
-            <div class="lowerBox">
-                <!-- within this box comes the story picture-->
-                <div class="pictureBox">
-                    <img src="../uploads/pictures/florijn_01.jpeg" alt="foto enz">
-                </div>
-                <!-- this div box contains both the tags and the story-->
-                <div class="tagsStoryBox">
-                    <div class="tagList">
-                        <span href="#">inwoner</span>
-                        <span href="#">evenementen</span>
-                    </div>
-                    <!--this box contains the story itself -->
-                    <div class="storyBox">
-                    <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ex dui, cursus at erat rutrum,
-                        euismod gravida urna. Vestibulum in ligula non velit malesuada commodo. Praesent id eleifend
-                        urna. Proin porttitor, odio quis fringilla iaculis, tortor quam vehicula lectus, ac viverra nisl
-                        lectus at mauris. Morbi justo tellus, convallis vel tempus et, imperdiet vitae purus. Quisque
-                    </span>
-                    </div>
-                </div>
-            </div>
+        </div>
+    </main>
+
+    <template id="storyTemp">
+        <div class="story">
+            <a class="title_link" href="#">
+                <h2 id="title"></h2>
+            </a>
+            <h5>Title description, Dec 7, 2017</h5>
+            <div class="fakeimg" style="height:200px;">Image</div>
+            <p id="body"></p>
         </div>
     </template>
 
 
-</head>
-<body>
-<div class="sortBar">
-    <button class="storyboardButton"><a href="#">Nieuwheid</a></button>
-    <button class="storyboardButton"><a href="#">Likes</a></button>
-    <button class="storyboardButton"><a href="#">Seizoen</a></button>
-</div>
-
-<div class="templateBox">
-    <div class="templatePlacementBox">
-
-    </div>
-
-</div>
-<script src="../assets/js/controllers/storyboardController.js"></script>
 </body>
-</html>

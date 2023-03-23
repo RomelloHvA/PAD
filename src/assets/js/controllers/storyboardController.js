@@ -1,6 +1,6 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester
+ * @author  Rosalinde Vester & Othaim Iboualaisen
  */
 
 import {Controller} from "./controller.js";
@@ -27,40 +27,33 @@ export class StoryboardController extends Controller {
     }
 
     async loadStories() {
-        const response = await this.#storyboardRepository.getAll();
-        //haal div box op waar je verhalen moeten komen te staan
-        const placeStories = document.querySelector(".templatePlacementBox")
-        const storys = [
-            {
-                title: "soup",
-                // body: "soups",
+        try {
+            // get array of all stories
+            const data = await this.#storyboardRepository.getAll();
+
+            let template = this.#storyboardView.querySelector('#storyTemp').content;
+
+            console.log(data);
+
+            if (data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+
+                    let matchProfile = template.cloneNode(true);
+                    let title = data[i].title;
+                    let body = data[i].body;
+                    let id = data[i].storyID;
+
+                    matchProfile.querySelector(".story").id = id;
+                    matchProfile.querySelector("#title").innerHTML = title;
+                    matchProfile.querySelector("#body").innerHTML = body;
+
+                    this.#storyboardView.querySelector("#profiles").append(matchProfile);
+                }
+            } else {
+                this.#storyboardView.querySelector(".tableTxt").innerHTML = "Er zijn geen verhalen gevonden.";
             }
-        ];
-        for (const data of storys) {
-            this.displayStory(data, placeStories)
+        } catch (error) {
+            console.log(error);
         }
-    }
-
-    displayStory(data, targetElement) {
-
-        //clone template element
-        const storyElement = this.#storyboardView.querySelector("template").cloneNode(true);
-
-        console.log(data);
-        console.log(data.title);
-
-        //initialize classes with data from the database
-        let htmlTitle = document.querySelector("#storyTitleSpan")
-        htmlTitle.innerHTML = data.title;
-
-        const storyConst = document.querySelector(".storyBox")
-        // storyConst.innerHTML = data.body
-
-        const picture = document.querySelector(".pictureBox")
-        // picture.src = data.image;
-
-        targetElement.append(storyElement);
-
-
     }
 }

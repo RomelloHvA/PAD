@@ -1,6 +1,6 @@
 /**
  * this file contains ExpressJS stuff
- * @author Rosalinde
+ * @author Rosalinde & Othaim Iboualaisen
  */
 
 
@@ -31,14 +31,14 @@ class StoryboardRoutes {
             //get the title, body and image from the story table
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body, image FROM story",
+                    query: "SELECT * FROM story",
 
                 });
 
                 //give a response when an error occurs
-                res.send(data)
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
         })
     }
