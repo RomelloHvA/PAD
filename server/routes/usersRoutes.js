@@ -19,7 +19,7 @@ class UsersRoutes {
 
         //call method per route for the users entity
         this.#login()
-        this.#checkInputs()
+        this.#signUp()
     }
 
     /**
@@ -58,36 +58,33 @@ class UsersRoutes {
      *
      * @private
      */
-    async #signup(req, res) {
-            const { firstname, lastname, phoneNr, email, password } = req.body;
+    async #insertUser(req, res) {
+        const {firstname, lastname, phoneNr, email, password} = req.body;
 
-            // Hash the password
-            // const hashedPassword = await bcrypt.hash(password, 10);
+        // Hash the password
+        // const hashedPassword = await bcrypt.hash(password, 10);
 
 
-            // Insert the new user into the database
-            try {
-                const data = await this.#databaseHelper.handleQuery({
-                    query:
-                        "INSERT INTO user (firstname, lastname, phoneNr, email, password) VALUES (?, ?, ?, ?, ?)",
-                    values: [firstname, lastname, phoneNr, email, password],
-                });
+        // Insert the new user into the database
+        try {
+            const data = await this.#databaseHelper.handleQuery({
+                query: "INSERT INTO user (firstname, lastname, phoneNr, email, password) VALUES (?, ?, ?, ?, ?)",
+                values: [firstname, lastname, phoneNr, email, password],
+            });
 
-                res.status(this.#errorCodes.HTTP_OK_CODE).json({
-                    message: "Account succesvol aangemaakt",
-                    userID: data.insertId,
-                });
-            } catch (e) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
-                    reason: e,
-                });
-            }
+            res.status(this.#errorCodes.HTTP_OK_CODE).json({
+                message: "Account succesvol aangemaakt", userID: data.insertId,
+            });
+        } catch (e) {
+            res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
+                reason: e,
+            });
+        }
     }
 
     async #emailExist(email) {
         const exists = await this.#databaseHelper.handleQuery({
-            query: "SELECT userID FROM user WHERE email = ?",
-            values: [email],
+            query: "SELECT userID FROM user WHERE email = ?", values: [email],
         });
 
         if (exists && exists.length > 0) {
@@ -97,83 +94,62 @@ class UsersRoutes {
         return false;
     }
 
-    async #checkInputs() {
+    async #signUp() {
         this.#app.post("/users/signup", async (req, res) => {
             const body = req.body;
-            const {firstname, lastname, phoneNr, email, psw, pswRepeat} = body;
+            const requiredFields = ['firstname', 'lastname', 'phoneNr', 'email', 'psw', 'pswRepeat'];
 
-            let countError = true;
+            let countError = false;
             let messages = [];
 
-
             // Check if required fields are filled out
-            if (!firstname || firstname === '') {
-                countError = false;
-                messages.push({field: 'firstname', message: "Dit veld mag niet leeg zijn"});
-            }
+            requiredFields.forEach(field => {
+                if (!body[field] || body[field] === '') {
+                    countError = true;
+                    messages.push({field, message: "Dit veld mag niet leeg zijn"});
+                }
+            });
 
-            if (!lastname || lastname === '') {
-                countError = false;
-                messages.push({field: 'lastname', message: "Dit veld mag niet leeg zijn"});
-            }
+            if (!countError) {
+                const { email, psw, pswRepeat } = body;
 
-            if (!email || email === '') {
-                countError = false;
-                messages.push({field: 'email', message: "Dit veld mag niet leeg zijn"});
-            } else {
                 // Check if email is a proper email
                 const emailRegex = /\S+@\S+\.\S+/;
                 if (!emailRegex.test(email)) {
-                    countError = false;
-                    messages.push({field: 'email', message: "Voer een geldige email in"});
+                    countError = true;
+                    messages.push({ field: 'email', message: "Voer een geldige email in" });
                 }
-            }
 
-            if (!psw || psw === '') {
-                countError = false;
-                messages.push({field: 'psw', message: "Dit veld mag niet leeg zijn"});
-
-            } else {
                 // Check if password is at least 6 characters long
                 if (psw.length < 6) {
-                    countError = false;
-                    messages.push({field: 'psw', message: "Wachtwoord moet bestaan uit minimaal 6 karakters"});
+                    countError = true;
+                    messages.push({ field: 'psw', message: "Wachtwoord moet bestaan uit minimaal 6 karakters" });
                 }
-            }
 
-            if (!pswRepeat || pswRepeat === '') {
-                countError = false;
-                messages.push({field: 'pswRepeat', message: "Dit veld mag niet leeg zijn"});
-            } else {
                 // Check if password & passwordRepeat match
                 if (psw !== pswRepeat) {
-                    countError = false;
-                    messages.push({field: 'pswRepeat', message: "Wachtwoord komt niet overeen"});
+                    countError = true;
+                    messages.push({ field: 'pswRepeat', message: "Wachtwoord komt niet overeen" });
+                }
+
+                // Check if email already exists
+                if (await this.#emailExist(email)) {
+                    countError = true;
+                    messages.push({ field: 'email', message: "Dit email adres is al in gebruik, probeer in te loggen" });
                 }
             }
 
-            if (!countError) {
+            if (countError) {
                 res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
                     reason: messages
                 });
                 return;
             }
 
-            // Check if email already exists
-            if (await this.#emailExist(email)) {
-                res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
-                    reason: [{
-                        field: 'email',
-                        message: "Dit email adres is al in gebruik, probeer in te loggen"
-                    }]
-                });
-                return;
-            }
-
-            await this.#signup(req, res);
-
+            await this.#insertUser(req, res);
         });
     }
+
 }
 
 module.exports = UsersRoutes

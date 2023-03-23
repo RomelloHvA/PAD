@@ -3,9 +3,9 @@
  * @author Othaim Iboualaisen
  */
 
-import { UsersRepository } from "../repositories/usersRepository.js";
-import { App } from "../app.js";
-import { Controller } from "./controller.js";
+import {UsersRepository} from "../repositories/usersRepository.js";
+import {App} from "../app.js";
+import {Controller} from "./controller.js";
 
 export class SignupController extends Controller {
     //# is a private field in Javascript
@@ -27,9 +27,27 @@ export class SignupController extends Controller {
         //await for when HTML is loaded, never skip this method call in a controller
         this.#signupView = await super.loadHtmlIntoContent("html_views/signup.html")
 
-        //from here we can safely get elements from the view via the right getter
-        this.#signupView.querySelector("#btn").addEventListener("click", event => this.#handleLogin(event));
+        const checkbox = this.#signupView.querySelector("#cb1");
+        const button = this.#signupView.querySelector("#btn");
+
+        // Disable the button when the page first loads
+        button.disabled = true;
+
+        // Listen to changes on the checkbox
+        // Disable the button if the checkbox is unchecked
+        checkbox.addEventListener("change", function () {
+            button.disabled = !this.checked;
+        });
+
+        // Listen to clicks on the button
+        // Call the handleLogin method if the button is not disabled (i.e., the checkbox has been checked)
+        button.addEventListener("click", event => {
+            if (!button.disabled) {
+                this.#handleLogin(event);
+            }
+        });
     }
+
     /**
      * Async function that does a login request via repository
      * @param event
@@ -38,10 +56,10 @@ export class SignupController extends Controller {
         //prevent actual submit and page refresh
         event.preventDefault();
         let data = this.getFormData();
-        try{
+        try {
             const signUp = await this.#usersRepository.signup(data);
 
-            this.#signupView.querySelector('.message').innerText = signUp.message;
+            this.#signupView.querySelector('.message').style.display = "flex";
 
             const form = this.#signupView.querySelector('form');
             form.reset();
@@ -49,9 +67,9 @@ export class SignupController extends Controller {
             //let the session manager know we are logged in by setting the username, never set the password in localstorage
             App.sessionManager.set("userID", signUp.userID);
             // App.loadController(App.CONTROLLER_LOGIN);
-        } catch(error) {
+        } catch (error) {
             //if unauthorized error code, show error message to the user
-            if(error.code === 401) {
+            if (error.code === 401) {
                 this.handleError(error);
             } else {
                 console.error(error);

@@ -30,9 +30,9 @@ export class UsersRepository {
      * @param password
      * @returns {Promise<user>}
      */
-    async login(username, password) {
+    async login(data) {
         return await this.#networkManager
-            .doRequest(`${this.#route}/login`, "POST", {"username": username, "password": password});
+            .doRequest(`${this.#route}/login`, "POST", data);
     }
 
     //example endpoint would be: /users/signup
