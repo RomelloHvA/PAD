@@ -16,6 +16,7 @@ import { SignupController } from "./controllers/signupController.js";
 import { FooterController } from "./controllers/footerController.js";
 import {TimelineController} from "./controllers/timelineController.js";
 import {addStoryController} from "./controllers/addStoryController.js";
+import {StoryboardController} from "./controllers/storyboardController.js";
 
 export class App {
     //we only need one instance of the sessionManager, thus static use here
@@ -32,6 +33,7 @@ export class App {
     static CONTROLLER_FOOTER = "footer";
     static CONTROLLER_TIMELINE = "timeline"
     static CONTROLLER_ADDSTORY = "addStory"
+    static CONTROLLER_STORYBOARD = "storyboard";
 
     constructor(name, controllerData) {
         //Always load the navigation
@@ -95,6 +97,9 @@ export class App {
 
             case App.CONTROLLER_UPLOAD:
                 App.isLoggedIn(() => new UploadController(), () => new LoginController());
+                break;
+            case App.CONTROLLER_STORYBOARD:
+                App.isLoggedIn(() => new StoryboardController(), () => new StoryboardController());
                 break;
 
             default:

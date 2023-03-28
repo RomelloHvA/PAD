@@ -1,0 +1,61 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../assets/css/pages/storyboard.css">
+</head>
+<body>
+    <header class="header">
+        <!-- HTML template for a filter bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="popularity-filter">Popularity:</label>
+                <select id="popularity-filter">
+                    <option value="most-popular">Most popular</option>
+                    <option value="least-popular">Least popular</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="upload-date-filter">Date of upload:</label>
+                <select id="upload-date-filter">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="happening-date-filter">Date of happening:</label>
+                <select id="happening-date-filter">
+                    <option value="upcoming">Upcoming first</option>
+                    <option value="past">Past first</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <card class="leftcolumn" style="overflow-x: auto">
+            <div id="profiles"></div>
+        </card>
+
+        <div class="rightcolumn">
+            <div class="story_right">
+                <h3>Popular Post</h3>
+                <div class="fakeimg">Image</div><br>
+                <div class="fakeimg">Image</div><br>
+                <div class="fakeimg">Image</div>
+            </div>
+        </div>
+    </main>
+
+    <template id="storyTemp">
+        <div class="story">
+            <a class="title_link" href="#">
+                <h2 id="title"></h2>
+            </a>
+            <h5>Title description, Dec 7, 2017</h5>
+            <div class="fakeimg" style="height:200px;">Image</div>
+            <p id="body"></p>
+        </div>
+    </template>
+
+
+</body>

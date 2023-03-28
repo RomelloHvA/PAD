@@ -1,0 +1,107 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Add a gray background color with some padding */
+body {
+    font-family: Arial;
+    padding: 0;
+    margin: 0;
+    background: #f1f1f1;
+}
+
+/* Header/Blog Title */
+.header {
+    background: white;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {
+    float: left;
+    width: 75%;
+}
+
+/* Right column */
+.rightcolumn {
+    float: left;
+    width: 25%;
+    padding-left: 20px;
+}
+
+/* Fake image */
+.fakeimg {
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Add a card effect for articles */
+.story, .story_right {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.main {
+    padding: 10px;
+}
+
+.title_link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.title_link:hover {
+    color: inherit;
+}
+
+
+/* Clear floats after the columns */
+.main:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+    .leftcolumn, .rightcolumn {
+        width: 100%;
+        padding: 0;
+    }
+}
+
+/* CSS styling for the filter bar */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    justify-content: space-around;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-right: 20px;
+}
+
+label {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+select {
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}
+
+select option {
+    font-weight: normal;
+}
