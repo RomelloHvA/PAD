@@ -1,5 +1,7 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
+import {App} from "../app.js";
+import {TimelineController} from "./timelineController.js";
 
 export class addStoryController extends Controller {
 
@@ -28,6 +30,8 @@ export class addStoryController extends Controller {
         //from here we can safely get elements from the view via the right getter
         this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.addNewStory(event));
         this.#addStoryView.querySelector("#fileInput").addEventListener("change", this.displayImagePreview.bind(this));
+
+
 
         let monthDays = {
             "Januari": 31,
@@ -115,7 +119,6 @@ export class addStoryController extends Controller {
     }
 
     async addNewStory(event) {
-
         event.preventDefault();
         const subject = this.#addStoryView.querySelector("#subject").value;
         const year = this.#addStoryView.querySelector("#year").value;
@@ -124,14 +127,11 @@ export class addStoryController extends Controller {
         const story = this.#addStoryView.querySelector("#story").value;
         const fileInput = this.#addStoryView.querySelector("#fileInput");
 
-
-        if(!this.#validateInputFields(subject, story)) {
+        if (!this.#validateInputFields(subject, story)) {
             return;
         }
 
         const formData = new FormData();
-
-
 
         formData.append("subject", subject);
         formData.append("year", year);
@@ -141,14 +141,25 @@ export class addStoryController extends Controller {
         formData.append("day", day);
 
         try {
+            // Get the modal
+            const modal = this.#addStoryView.querySelector("#myModal");
+            modal.style.display = "block";
+
+            const confirm = this.#addStoryView.querySelector(".modal-buttons");
+
+
+            confirm.addEventListener("click", event => {
+                modal.style.display = "none";
+                App.setCurrentController(new TimelineController())
+            });
+
             await this.#storyRepository.addNewStory(formData);
 
-
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
         }
     }
+
 
     displayImagePreview(event) {
 
