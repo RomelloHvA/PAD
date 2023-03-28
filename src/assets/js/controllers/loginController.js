@@ -28,7 +28,8 @@ export class LoginController extends Controller{
         this.#loginView = await super.loadHtmlIntoContent("html_views/login.html")
 
         //from here we can safely get elements from the view via the right getter
-        this.#loginView.querySelector(".btn").addEventListener("click", event => this.#handleLogin(event));
+        const button = this.#loginView.querySelector("#btn");
+        button.addEventListener("click", event => this.#handleLogin(event));
     }
     /**
      * Async function that does a login request via repository
@@ -37,24 +38,68 @@ export class LoginController extends Controller{
     async #handleLogin(event) {
         //prevent actual submit and page refresh
         event.preventDefault();
-
-        //get the input field elements from the view and retrieve the value
-        const username = this.#loginView.querySelector("#exampleInputUsername").value;
-        const password = this.#loginView.querySelector("#exampleInputPassword").value;
+        let data = this.getFormData();
 
         try{
-            const user = await this.#usersRepository.login(username, password);
+            const user = await this.#usersRepository.login(data);
 
             //let the session manager know we are logged in by setting the username, never set the password in localstorage
-            App.sessionManager.set("username", user.username);
+            App.sessionManager.set("userID", user.id);
             App.loadController(App.CONTROLLER_WELCOME);
+
         } catch(error) {
-            //if unauthorized error code, show error message to the user
-            if(error.code === 401) {
-                this.#loginView.querySelector(".error").innerHTML = error.reason
+            // if unauthorized error code, show error message to the user
+            if (error.code === 401) {
+                this.handleError(error);
+            } else if (error.code === 429) {
+                this.setErrorMessage(error.reason);
             } else {
                 console.error(error);
             }
         }
+    }
+
+    setErrorMessage(message) {
+        this.#loginView.querySelector('.message').style.display = "flex";
+        this.#loginView.querySelector('.message').style.color = "red";
+        this.#loginView.querySelector('.message').innerHTML = message;
+    }
+
+    handleError(error) {
+        let errorExists = false;
+
+        for (let i = 0; i < error.reason.length; i++) {
+            const fieldId = error.reason[i].field;
+            const inputField = this.#loginView.querySelector(`#${fieldId}`);
+            inputField.classList.toggle("input-error", true);
+            errorExists = true;
+
+            this.displayError(inputField, error.reason[i].message);
+        }
+    }
+
+    displayError(inputField, message) {
+        const inputContainer = inputField.parentElement;
+        const small = inputContainer.querySelector('small');
+        small.innerText = message;
+
+
+        // Listen to input changes and remove input-error class when the input value changes
+        inputField.addEventListener("input", () => {
+            inputField.classList.remove("input-error");
+            small.innerText = "";
+        });
+    }
+
+    getFormData() {
+        //get the input field elements from the view and retrieve the value
+        const email = this.#loginView.querySelector("#email").value;
+        const psw = this.#loginView.querySelector("#psw").value;
+
+        let data = {
+            email: email.value,
+            psw: psw.value
+        }
+        return data;
     }
 }

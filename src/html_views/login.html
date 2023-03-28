@@ -1,23 +1,32 @@
-<div class="container">
-    <div class="row justify-content-md-center">
-        <div class="col-md-5">
-            <h2 class="mb-3 mt-4">Inloggen</h2>
+<head>
+    <link href="../assets/css/pages/signup.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<div class="form_wrapper">
+    <div class="form_container">
+        <div class="title_container">
+            <h2>Inloggen</h2>
+        </div>
+        <div class="row clearfix">
+            <div>
+                <form>
+                    <p>Log in om je eigen verhaal te delen.</p>
+                    <p class="message"></p>
 
-            <form class="login-form">
-                <div class="mb-3">
-                    <label for="exampleInputUsername">Gebruikersnaam</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputUsername" aria-describedby="usernameHelp" placeholder="Vul gebruikersnaam in">
-                    <div id="usernameHelp" class="form-text"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword" class="form-label">Wachtwoord</label>
-                    <input type="password" class="form-control" id="exampleInputPassword" placeholder="Vul wachtwoord in">
-                </div>
+                    <div class="input_field"> <label for="email"><i aria-hidden="true" class="fa fa-envelope"></i></label>
+                        <input type="email" id="email" placeholder="Email" />
+                        <small></small>
+                    </div>
+                    <div class="input_field"> <label for="psw"><i aria-hidden="true" class="fa fa-lock"></i></label>
+                        <input type="password" id="psw" placeholder="Wachtwoord" />
+                        <small></small>
+                    </div>
 
-                <div class="error mb-3 text-danger"></div>
+                    <input class="button" type="submit" value="Inloggen" id="btn"/>
 
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+                    <p>Nog geen account? Klik&nbsp<a href="login">hier</a>&nbspom er een aan te maken.</p>
+                </form>
+            </div>
         </div>
     </div>
 </div>

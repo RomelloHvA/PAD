@@ -71,7 +71,7 @@ body {
     -webkit-animation: bounce 0.6s ease-out;
     animation: bounce 0.6s ease-out;
 }
-.form_wrapper .input_field > span {
+.form_wrapper .input_field > label {
     position: absolute;
     left: 0;
     top: 0;
@@ -81,10 +81,10 @@ body {
     text-align: center;
     width: 30px;
 }
-.form_wrapper .input_field > span > i {
+.form_wrapper .input_field > label > i {
     padding-top: 10px;
 }
-.form_wrapper .textarea_field > span > i {
+.form_wrapper .textarea_field > label > i {
     padding-top: 10px;
 }
 .form_wrapper input[type="text"], .form_wrapper input[type="email"], .form_wrapper input[type="password"] {

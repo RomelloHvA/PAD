@@ -1,11 +1,13 @@
 /**
  * Responsible for handling the actions happening on the navigation
  *
- * @author Lennard Fonteijn & Pim Meijer
+ * @author Othaim Iboualaisen
  */
 
 import { App } from "../app.js";
 import {Controller} from "./controller.js";
+import {UploadController} from "./uploadController";
+import {LoginController} from "./loginController";
 
 export class NavbarController extends Controller{
     #navbarView
@@ -22,7 +24,10 @@ export class NavbarController extends Controller{
      */
     async #setupView() {
         //await for when HTML is
-        this.#navbarView = await super.loadHtmlIntoNavigation("html_views/navbar.html")
+
+        // await this.#isLoggedIn("html_views/navbar_loggedIn.html", "html_views/navbar.html");
+
+        this.#navbarView = await super.loadHtmlIntoNavigation("html_views/navbar.html");
 
         //from here we can safely get elements from the view via the right getter
         const anchors = this.#navbarView.querySelectorAll("a.nav-link");
@@ -30,6 +35,14 @@ export class NavbarController extends Controller{
         //set click listener on each anchor
         anchors.forEach(anchor => anchor.addEventListener("click", (event) => this.#handleClickNavigationItem(event)))
     }
+
+    // async #isLoggedIn(whenYes, whenNo) {
+    //     if (App.sessionManager.get("userID")) {
+    //         this.#navbarView = super.loadHtmlIntoNavigation(whenYes);
+    //     } else {
+    //         this.#navbarView = super.loadHtmlIntoNavigation(whenNo);
+    //     }
+    // }
 
     /**
      * Reads data attribute on each .nav-link and then when clicked navigates to specific controller
@@ -49,7 +62,12 @@ export class NavbarController extends Controller{
             return false;
         }
 
-        //TODO: You should add highlighting of correct anchor when page is active :)
+        // Add 'active' class to clicked anchor element
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+        clickedAnchor.classList.add('active');
 
         //Pass the action to a new function for further processing
         App.loadController(controller);

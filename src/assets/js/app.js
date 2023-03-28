@@ -74,16 +74,13 @@ export class App {
             case App.CONTROLLER_WELCOME:
                 App.isLoggedIn(() => new WelcomeController(), () => new WelcomeController());
                 break;
+
             case App.CONTROLLER_LOGIN:
                 App.isLoggedIn(() => new WelcomeController(), () => new LoginController());
                 break;
 
-            case App.CONTROLLER_UPLOAD:
-                App.isLoggedIn(() => new UploadController(), () => new LoginController());
-                break;
-
             case App.CONTROLLER_SIGNUP:
-                App.isLoggedIn(() => new SignupController(), () => new SignupController());
+                App.isLoggedIn(() => new WelcomeController(), () => new SignupController());
                 break;
 
             case App.CONTROLLER_TIMELINE:
@@ -93,7 +90,11 @@ export class App {
 
             case App.CONTROLLER_ADDSTORY:
                 App.setCurrentController(name);
-                App.isLoggedIn(() => new addStoryController(), () => new addStoryController());
+                App.isLoggedIn(() => new addStoryController(), () => new LoginController());
+                break;
+
+            case App.CONTROLLER_UPLOAD:
+                App.isLoggedIn(() => new UploadController(), () => new LoginController());
                 break;
 
             default:
@@ -174,7 +175,7 @@ export class App {
      * @param whenNo - function to execute when user is logged in
      */
     static isLoggedIn(whenYes, whenNo) {
-        if (App.sessionManager.get("username")) {
+        if (App.sessionManager.get("userID")) {
             whenYes();
         } else {
             whenNo();
@@ -185,7 +186,7 @@ export class App {
      * Removes username via sessionManager and loads the login screen
      */
     static handleLogout() {
-        App.sessionManager.remove("username");
+        App.sessionManager.remove("userID");
 
         //go to login screen
         App.loadController(App.CONTROLLER_LOGIN);
