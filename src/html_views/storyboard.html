@@ -1,59 +1,71 @@
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="../assets/css/pages/storyboard.css">
+    <link href="../assets/css/pages/storyboard.css" rel="stylesheet">
 </head>
 <body>
-    <header class="header">
-        <!-- HTML template for a filter bar -->
-        <div class="filter-bar">
-            <div class="filter-group">
-                <label for="popularity-filter">Popularity:</label>
-                <select id="popularity-filter">
-                    <option value="most-popular">Most popular</option>
-                    <option value="least-popular">Least popular</option>
-                </select>
+
+
+<div class="filter-bar">
+    <select>
+        <option value="">Filter 1</option>
+        <option value="">Filter 2</option>
+        <option value="">Filter 3</option>
+    </select>
+    <select>
+        <option value="">Filter 4</option>
+        <option value="">Filter 5</option>
+        <option value="">Filter 6</option>
+    </select>
+    <select>
+        <option value="">Filter 7</option>
+        <option value="">Filter 8</option>
+        <option value="">Filter 9</option>
+    </select>
+</div>
+<div class="board">
+
+    <div class="content" style="overflow-x: auto">
+
+        <div class="stories" id="stories">
+            <p class="message"></p>
+        </div>
+
+        <div class="small-stories">
+            <div class="small-story">
+                <h3>Title of small story 1</h3>
+                <p>Small story description</p>
             </div>
-            <div class="filter-group">
-                <label for="upload-date-filter">Date of upload:</label>
-                <select id="upload-date-filter">
-                    <option value="newest">Newest first</option>
-                    <option value="oldest">Oldest first</option>
-                </select>
+            <div class="small-story">
+                <h3>Title of small story 2</h3>
+                <p>Small story description</p>
             </div>
-            <div class="filter-group">
-                <label for="happening-date-filter">Date of happening:</label>
-                <select id="happening-date-filter">
-                    <option value="upcoming">Upcoming first</option>
-                    <option value="past">Past first</option>
-                </select>
+            <div class="small-story">
+                <h3>Title of small story 3</h3>
+                <p>Small story description</p>
             </div>
         </div>
-    </header>
-
-    <main class="main">
-        <card class="leftcolumn" style="overflow-x: auto">
-            <div id="profiles"></div>
-        </card>
-
-        <div class="rightcolumn">
-            <div class="story_right">
-                <h3>Popular Post</h3>
-                <div class="fakeimg">Image</div><br>
-                <div class="fakeimg">Image</div><br>
-                <div class="fakeimg">Image</div>
-            </div>
-        </div>
-    </main>
+    </div>
+</div>
 
     <template id="storyTemp">
         <div class="story">
-            <a class="title_link" href="#">
-                <h2 id="title"></h2>
-            </a>
-            <h5>Title description, Dec 7, 2017</h5>
-            <div class="fakeimg" style="height:200px;">Image</div>
-            <p id="body"></p>
+            <div class="story-info">
+                <h2 id="title">Title of this story</h2>
+                <p>Title description</p>
+                <p id="body">lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus justo at ultricies
+                    malesuada. Suspendisse potenti. Nullam malesuada pellentesque massa, eget faucibus mauris
+                    iaculis vel. Integer bibendum ipsum ac dolor aliquet euismod. Fusce vehicula felis quis velit
+                    facilisis eleifend. Aliquam aliquet elit elit, vel venenatis sem luctus quis. Fusce hendrerit
+                    commodo nunc, sit amet malesuada leo lobortis vitae. Maecenas commodo fermentum enim, a lacinia
+                    velit malesuada ut.</p>
+            </div>
+            <div class="story-image">
+                <img alt="Story Image" src="https://picsum.photos/300/200">
+            </div>
+            <div class="buttons">
+                <div class="upvote"></div>
+                <div id="counter">00</div>
+                <div class="downvote"></div>
+            </div>
         </div>
     </template>
 

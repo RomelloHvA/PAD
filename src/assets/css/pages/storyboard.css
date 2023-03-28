@@ -1,107 +1,147 @@
-* {
-    box-sizing: border-box;
-}
-
-/* Add a gray background color with some padding */
-body {
-    font-family: Arial;
-    padding: 0;
-    margin: 0;
-    background: #f1f1f1;
-}
-
-/* Header/Blog Title */
-.header {
-    background: white;
-}
-
-/* Create two unequal columns that floats next to each other */
-/* Left column */
-.leftcolumn {
-    float: left;
-    width: 75%;
-}
-
-/* Right column */
-.rightcolumn {
-    float: left;
-    width: 25%;
-    padding-left: 20px;
-}
-
-/* Fake image */
-.fakeimg {
-    background-color: #aaa;
-    width: 100%;
-    padding: 20px;
-}
-
-/* Add a card effect for articles */
-.story, .story_right {
-    background-color: white;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.main {
-    padding: 10px;
-}
-
-.title_link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.title_link:hover {
-    color: inherit;
-}
-
-
-/* Clear floats after the columns */
-.main:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 800px) {
-    .leftcolumn, .rightcolumn {
-        width: 100%;
-        padding: 0;
-    }
-}
-
-/* CSS styling for the filter bar */
-.filter-bar {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    justify-content: space-around;
-}
-
-.filter-group {
+/* Main styles */
+.board {
+    max-width: 1200px;
+    margin: 20px auto;
     display: flex;
     flex-wrap: wrap;
+}
+
+.filter-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-    margin-right: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: white;
 }
-
-label {
-    margin-right: 5px;
-    font-weight: bold;
-}
-
-select {
-    padding: 7px;
+.filter-bar select {
+    margin: 0 10px;
+    padding: 5px;
+    border-radius: 3px;
     border: 1px solid #ccc;
-    border-radius: 2px;
-    background-color: #fff;
-    font-size: 14px;
-    font-weight: normal;
-    color: #333;
+    font-size: 16px;
+    width: 30%;
 }
 
-select option {
-    font-weight: normal;
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.stories {
+    width: 70%;
+    flex: 0 0 65%;
+    margin-right: 1.5rem;
+}
+.story {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px #164fa2;
+    padding: 1rem;
+    border-radius: 3px;
+}
+
+.story-info {
+    width: 60%;
+    padding-right: 20px;
+    max-height: 200px;
+    overflow: hidden;
+}
+.story-info h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.story-info p {
+    margin: 0;
+    font-size: 1.2rem;
+}
+.story-info p:last-child {
+    margin-bottom: 0;
+}
+
+
+.story-image {
+    position: relative;
+    width: 40%;
+}
+.story-image img {
+    width: 100%;
+    height: auto;
+}
+
+
+
+.small-stories {
+    width: 30%;
+    flex: 0 0 30%;
+}
+
+.small-story {
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.small-story h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.small-story p {
+    margin: 0;
+}
+
+
+.buttons {
+    display: flex;
+    padding: 0.5rem;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+.upvote {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid #545454;
+    cursor: pointer;
+}
+
+.downvote {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #545454;
+    cursor: pointer;
+}
+
+#counter {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #545454;
+}
+
+
+.upvote:hover, .downvote:hover {
+    border-top-color: #164fa2;
+    border-bottom-color: #164fa2;
+}
+
+.upvote.active, .downvote.active {
+    border-top-color: #164fa2;
+    border-bottom-color: #164fa2;
+}
+
+.message {
+    display: none;
 }

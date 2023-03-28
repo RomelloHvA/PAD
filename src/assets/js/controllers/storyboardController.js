@@ -39,18 +39,23 @@ export class StoryboardController extends Controller {
                 for (let i = 0; i < data.length; i++) {
 
                     let matchProfile = template.cloneNode(true);
+                    let id = data[i].storyID;
                     let title = data[i].title;
                     let body = data[i].body;
-                    let id = data[i].storyID;
+                    let up = data[i].upvote;
+                    let down = data[i].downvote;
+                    let reputation = up - down;
 
                     matchProfile.querySelector(".story").id = id;
                     matchProfile.querySelector("#title").innerHTML = title;
                     matchProfile.querySelector("#body").innerHTML = body;
+                    matchProfile.querySelector("#counter").innerHTML = reputation;
 
-                    this.#storyboardView.querySelector("#profiles").append(matchProfile);
+                    this.#storyboardView.querySelector("#stories").append(matchProfile);
                 }
             } else {
-                this.#storyboardView.querySelector(".tableTxt").innerHTML = "Er zijn geen verhalen gevonden.";
+                this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";
+                this.#storyboardView.querySelector(".message").style.display = "block";
             }
         } catch (error) {
             console.log(error);
