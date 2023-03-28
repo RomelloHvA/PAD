@@ -34,13 +34,13 @@ export class NavbarController extends Controller{
         anchors.forEach(anchor => anchor.addEventListener("click", (event) => this.#handleClickNavigationItem(event)))
     }
 
-    // async #isLoggedIn(whenYes, whenNo) {
-    //     if (App.sessionManager.get("userID")) {
-    //         this.#navbarView = super.loadHtmlIntoNavigation(whenYes);
-    //     } else {
-    //         this.#navbarView = super.loadHtmlIntoNavigation(whenNo);
-    //     }
-    // }
+    async #isLoggedIn(whenYes, whenNo) {
+        if (App.sessionManager.get("userID")) {
+            this.#navbarView = super.loadHtmlIntoNavigation(whenYes);
+        } else {
+            this.#navbarView = super.loadHtmlIntoNavigation(whenNo);
+        }
+    }
 
     /**
      * Reads data attribute on each .nav-link and then when clicked navigates to specific controller

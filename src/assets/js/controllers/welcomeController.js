@@ -30,7 +30,6 @@ export class WelcomeController extends Controller{
 
         const anchors = this.#welcomeView.querySelectorAll("a");
         anchors.forEach(anchor => anchor.addEventListener("click", (event) => this.#handleClickTimelineButton(event)))
-        await this.#getHighestRatedStory()
     }
 
     #handleClickTimelineButton(event) {
@@ -52,24 +51,5 @@ export class WelcomeController extends Controller{
 
         //Return false to prevent reloading the page
         return false;
-    }
-
-    /**
-     *
-     * @returns {Promise<void>}
-     * Returs the highest rated story from the repository.
-     * @author Romello ten Broeke
-     * private
-     */
-
-    async #getHighestRatedStory() {
-        const storyTitle = this.#welcomeView.querySelector("#storyTitle");
-        const storyText = this.#welcomeView.querySelector(".story-text")
-
-        const data = await this.#storyRepository.getHighestRatedStory();
-        console.log(data);
-
-        storyTitle.innerText = data[0].title;
-        storyText.innerText = data[0].body;
     }
 }
