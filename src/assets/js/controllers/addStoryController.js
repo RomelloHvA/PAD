@@ -150,7 +150,7 @@ export class addStoryController extends Controller {
 
             confirm.addEventListener("click", event => {
                 modal.style.display = "none";
-                App.loadController(new TimelineController())
+                App.setCurrentController(new TimelineController())
             });
 
             await this.#storyRepository.addNewStory(formData);
