@@ -2,6 +2,7 @@ import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {App} from "../app.js";
 import {TimelineController} from "./timelineController.js";
+import {StoryboardController} from "./storyboardController.js";
 
 export class addStoryController extends Controller {
 
@@ -150,7 +151,7 @@ export class addStoryController extends Controller {
 
             confirm.addEventListener("click", event => {
                 modal.style.display = "none";
-                App.setCurrentController(new TimelineController())
+                App.setCurrentController(new StoryboardController())
             });
 
             await this.#storyRepository.addNewStory(formData);
