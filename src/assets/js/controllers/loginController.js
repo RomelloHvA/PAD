@@ -29,7 +29,6 @@ export class LoginController extends Controller{
 
         //from here we can safely get elements from the view via the right getter
         this.#loginView.querySelector(".btn").addEventListener("click", event => this.#handleLogin(event));
-
     }
     /**
      * Async function that does a login request via repository

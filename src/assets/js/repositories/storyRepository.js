@@ -1,0 +1,38 @@
+
+/**
+ * repository for interacting with stories. Also interacts with networkmanager
+ */
+import { NetworkManager } from "../framework/utils/networkManager.js";
+
+export class storyRepository {
+    //# is a private field in Javascript
+    #route
+    #networkManager
+
+    constructor() {
+        this.#route = "/story"
+        this.#networkManager = new NetworkManager();
+    }
+
+    async getAll() {
+
+    }
+
+    async addNewStory(requestBody) {
+        return await this.#networkManager.doFileRequest(`${this.#route}/add`, "POST", requestBody, {
+            'Content-Type': `multipart/form-data;`
+        });
+    }
+
+    async getHighestRatedStory() {
+        return await this.#networkManager.doRequest(`${this.#route}/highestRated`, "GET");
+    }
+    async getHighestStoryPerYear(query) {
+        return await this.#networkManager.doRequest(`${this.#route}/highestRatedPerYear?year=${query}`, "GET");
+    }
+
+    async delete() {
+
+    }
+
+}

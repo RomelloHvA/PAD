@@ -25,7 +25,7 @@ class UploadFileRoute {
      * @private
      */
     #uploadFile() {
-        this.#app.post("/upload", this.#multer().single("sampleFile"), (req, res) => {
+        this.#app.post("/upload", this.#multer().single("file"), (req, res) => {
 
             if (!req.file) {
                 return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: "No file was uploaded."});
