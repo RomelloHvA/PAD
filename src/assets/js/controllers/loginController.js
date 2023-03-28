@@ -28,7 +28,7 @@ export class LoginController extends Controller{
         this.#loginView = await super.loadHtmlIntoContent("html_views/login.html")
 
         //from here we can safely get elements from the view via the right getter
-        const button = this.#loginView.querySelector("#btn");
+        const button = this.#loginView.querySelector(".btn");
         button.addEventListener("click", event => this.#handleLogin(event));
     }
     /**

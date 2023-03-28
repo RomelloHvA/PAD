@@ -6,8 +6,6 @@
 
 import { App } from "../app.js";
 import {Controller} from "./controller.js";
-import {UploadController} from "./uploadController";
-import {LoginController} from "./loginController";
 
 export class NavbarController extends Controller{
     #navbarView
@@ -63,11 +61,11 @@ export class NavbarController extends Controller{
         }
 
         // Add 'active' class to clicked anchor element
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-        });
-        clickedAnchor.classList.add('active');
+        // const navLinks = document.querySelectorAll('.nav-link');
+        // navLinks.forEach(link => {
+        //     link.classList.remove('active');
+        // });
+        // clickedAnchor.classList.add('active');
 
         //Pass the action to a new function for further processing
         App.loadController(controller);
