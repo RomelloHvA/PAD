@@ -114,7 +114,7 @@ class storyRoutes {
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC",
+                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC LIMIT 1",
                     values: [year]
                 })
                 if (data) {
