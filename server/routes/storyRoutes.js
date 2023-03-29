@@ -1,5 +1,4 @@
 const fs = require("fs");
-const {v4: uuidv4} = require('uuid');
 
 
 class storyRoutes {
@@ -136,7 +135,10 @@ class storyRoutes {
      @author Tygo Geervliet
      */
     async #writeUploadedFileToDisk(file) {
-        const fileUrl = `uploads/${uuidv4()}.${this.#getFileExtension(file)}`;
+
+
+        const timestamp = new Date().getTime();
+        const fileUrl = `uploads/${timestamp}.${this.#getFileExtension(file)}`;
         try {
             await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
             return fileUrl;
