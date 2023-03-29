@@ -51,7 +51,7 @@ export class App {
      * @returns {boolean} - successful controller change
      */
     static loadController(name, controllerData) {
-        console.log("loadController: " + name);
+        // console.log("loadController: " + name);
 
         //log the data if data is being passed via controllers
         if (controllerData && Object.entries(controllerData).length !== 0) {
@@ -66,6 +66,7 @@ export class App {
 
             case App.CONTROLLER_LOGOUT:
                 App.handleLogout();
+                // new NavbarController();
                 return true;
         }
 
@@ -195,6 +196,15 @@ export class App {
 
         //go to login screen
         App.loadController(App.CONTROLLER_LOGIN);
+        new NavbarController();
+    }
+    /**
+     * Removes username via sessionManager and loads the login screen
+     */
+    static loginReload() {
+        //go to login screen
+        App.loadController(App.CONTROLLER_WELCOME);
+        new NavbarController();
     }
 }
 
