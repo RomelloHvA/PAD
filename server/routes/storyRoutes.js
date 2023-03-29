@@ -1,7 +1,3 @@
-const fs = require("fs");
-const {v4: uuidv4} = require('uuid');
-
-
 class storyRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes");
     #databaseHelper = require("../framework/utils/databaseHelper");
@@ -98,7 +94,7 @@ class storyRoutes {
         this.#app.get("/story/highestRated", async (req, res) => {
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
+                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story) LIMIT 1"
                 })
                 if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
@@ -127,26 +123,26 @@ class storyRoutes {
         });
     }
 
-    /**
-     Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
-     @async
-     @param {object} file - The uploaded file to write to disk.
-     @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
-
-     @author Tygo Geervliet
-     */
-    async #writeUploadedFileToDisk(file) {
-        const fileUrl = `uploads/${uuidv4()}.${this.#getFileExtension(file)}`;
-        try {
-            await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
-            return fileUrl;
-        } catch (err) {
-            console.log(err);
-            // If an error occurred while writing to disk, delete the file and return null
-            await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
-            return null;
-        }
-    }
+    // /**
+    //  Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
+    //  @async
+    //  @param {object} file - The uploaded file to write to disk.
+    //  @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
+    //
+    //  @author Tygo Geervliet
+    //  */
+    // async #writeUploadedFileToDisk(file) {
+    //     const fileUrl = `uploads/${uuidv4()}.${this.#getFileExtension(file)}`;
+    //     try {
+    //         await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
+    //         return fileUrl;
+    //     } catch (err) {
+    //         console.log(err);
+    //         // If an error occurred while writing to disk, delete the file and return null
+    //         await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
+    //         return null;
+    //     }
+    // }
 }
 
 module.exports = storyRoutes;
