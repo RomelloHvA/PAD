@@ -28,7 +28,7 @@ export class LoginController extends Controller{
         this.#loginView = await super.loadHtmlIntoContent("html_views/login.html")
 
         //from here we can safely get elements from the view via the right getter
-        const button = this.#loginView.querySelector(".btn");
+        const button = this.#loginView.querySelector("#btn");
         button.addEventListener("click", event => this.#handleLogin(event));
     }
     /**
@@ -50,7 +50,11 @@ export class LoginController extends Controller{
         } catch(error) {
             // if unauthorized error code, show error message to the user
             if (error.code === 401) {
-                this.handleError(error);
+                if (error.reason.length > 1) {
+                    this.handleError(error);
+                } else {
+                    this.setErrorMessage(error.reason[0].message);
+                }
             } else if (error.code === 429) {
                 this.setErrorMessage(error.reason);
             } else {
@@ -97,8 +101,8 @@ export class LoginController extends Controller{
         const psw = this.#loginView.querySelector("#psw").value;
 
         let data = {
-            email: email.value,
-            psw: psw.value
+            email,
+            psw
         }
         return data;
     }

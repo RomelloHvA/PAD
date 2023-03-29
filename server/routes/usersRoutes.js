@@ -56,8 +56,8 @@ class UsersRoutes {
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT email, password FROM users WHERE username = ? AND password = ?",
-                    values: [email, password]
+                    query: "SELECT email, password FROM user WHERE email = ? AND password = ?",
+                    values: [req.body.email, req.body.psw]
                 });
 
                 //One record was found, we know the user exists in users table.
@@ -66,7 +66,10 @@ class UsersRoutes {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json({"id": data[0].userID});
                 } else {
                     //wrong username
-                    res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({reason: "Incorrecte email/wachtwoord"});
+                    messages.push({field: "*", message: "Incorrecte email en/of wachtwoord"});
+                    res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
+                            reason: messages
+                    });
                 }
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
