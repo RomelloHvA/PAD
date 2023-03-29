@@ -1,3 +1,6 @@
+const fs = require("fs");
+
+
 class storyRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes");
     #databaseHelper = require("../framework/utils/databaseHelper");
@@ -27,11 +30,11 @@ class storyRoutes {
 
                 // Check if a file was uploaded and write it to disk
                 if (file != null) {
-                    //fileUrl = await this.#writeUploadedFileToDisk(file);
-                    // if (!fileUrl) {
-                    //     // If an error occurred while writing to disk, send a bad request response
-                    //     return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
-                    // }
+                    fileUrl = await this.#writeUploadedFileToDisk(file);
+                    if (!fileUrl) {
+                        // If an error occurred while writing to disk, send a bad request response
+                        return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
+                    }
                 }
                 const newStory = {story, subject, year, month, day, fileUrl}
                 // Add the story to the database
@@ -94,7 +97,7 @@ class storyRoutes {
         this.#app.get("/story/highestRated", async (req, res) => {
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story) LIMIT 1"
+                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
                 })
                 if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
@@ -123,26 +126,29 @@ class storyRoutes {
         });
     }
 
-    // /**
-    //  Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
-    //  @async
-    //  @param {object} file - The uploaded file to write to disk.
-    //  @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
-    //
-    //  @author Tygo Geervliet
-    //  */
-    // async #writeUploadedFileToDisk(file) {
-    //     const fileUrl = `uploads/${uuidv4()}.${this.#getFileExtension(file)}`;
-    //     try {
-    //         await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
-    //         return fileUrl;
-    //     } catch (err) {
-    //         console.log(err);
-    //         // If an error occurred while writing to disk, delete the file and return null
-    //         await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
-    //         return null;
-    //     }
-    // }
+    /**
+     Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
+     @async
+     @param {object} file - The uploaded file to write to disk.
+     @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
+
+     @author Tygo Geervliet
+     */
+    async #writeUploadedFileToDisk(file) {
+
+
+        const timestamp = new Date().getTime();
+        const fileUrl = `uploads/${timestamp}.${this.#getFileExtension(file)}`;
+        try {
+            await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
+            return fileUrl;
+        } catch (err) {
+            console.log(err);
+            // If an error occurred while writing to disk, delete the file and return null
+            await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
+            return null;
+        }
+    }
 }
 
 module.exports = storyRoutes;
