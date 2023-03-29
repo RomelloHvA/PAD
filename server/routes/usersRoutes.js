@@ -55,15 +55,26 @@ class UsersRoutes {
             //TODO: You shouldn't save a password unencrypted!! Improve this by using this.#cryptoHelper functions :)
 
             try {
+                if (!await this.#emailExist(req.body.email)) {
+                    messages.push({field: "*", message: "Incorrecte email en/of wachtwoord"});
+                    res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
+                        reason: messages
+                    });
+                    return;
+                }
+
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT email, password FROM user WHERE email = ? AND password = ?",
-                    values: [req.body.email, req.body.psw]
+                    query: "SELECT userID, password FROM user WHERE email = ?",
+                    values: [req.body.email]
                 });
 
+
                 //One record was found, we know the user exists in users table.
-                if (data.length === 1) {
+                if (data[0].password === req.body.psw) {
                     //return just the username for now, never send password back!
-                    res.status(this.#errorCodes.HTTP_OK_CODE).json({"id": data[0].userID});
+                    return res.status(this.#errorCodes.HTTP_OK_CODE).json({
+                        userID: data[0].userID,
+                    });
                 } else {
                     //wrong username
                     messages.push({field: "*", message: "Incorrecte email en/of wachtwoord"});

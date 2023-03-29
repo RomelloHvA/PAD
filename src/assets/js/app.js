@@ -51,7 +51,7 @@ export class App {
      * @returns {boolean} - successful controller change
      */
     static loadController(name, controllerData) {
-        console.log("loadController: " + name);
+        // console.log("loadController: " + name);
 
         //log the data if data is being passed via controllers
         if (controllerData && Object.entries(controllerData).length !== 0) {
