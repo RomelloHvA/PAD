@@ -23,9 +23,9 @@ export class NavbarController extends Controller{
     async #setupView() {
         //await for when HTML is
 
-        // await this.#isLoggedIn("html_views/navbar_loggedIn.html", "html_views/navbar.html");
+        await this.#isLoggedIn("html_views/navbar_loggedIn.html", "html_views/navbar.html");
 
-        this.#navbarView = await super.loadHtmlIntoNavigation("html_views/navbar.html");
+        // this.#navbarView = await super.loadHtmlIntoNavigation("html_views/navbar.html");
 
         //from here we can safely get elements from the view via the right getter
         const anchors = this.#navbarView.querySelectorAll("a.nav-link");
@@ -36,9 +36,9 @@ export class NavbarController extends Controller{
 
     async #isLoggedIn(whenYes, whenNo) {
         if (App.sessionManager.get("userID")) {
-            this.#navbarView = super.loadHtmlIntoNavigation(whenYes);
+            this.#navbarView = await super.loadHtmlIntoNavigation(whenYes);
         } else {
-            this.#navbarView = super.loadHtmlIntoNavigation(whenNo);
+            this.#navbarView = await super.loadHtmlIntoNavigation(whenNo);
         }
     }
 
