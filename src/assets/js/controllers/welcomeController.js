@@ -28,28 +28,48 @@ export class WelcomeController extends Controller{
         //await for when HTML is loaded
         this.#welcomeView = await super.loadHtmlIntoContent("html_views/welcome.html")
 
-        const anchors = this.#welcomeView.querySelectorAll("a");
-        anchors.forEach(anchor => anchor.addEventListener("click", (event) => this.#handleClickTimelineButton(event)))
+        this.#handleHighestStory();
+        this.#handleClickTimelineButton()
     }
 
-    #handleClickTimelineButton(event) {
-        event.preventDefault();
+    /**
+     * Handles the click event of the timeline button by loading the corresponding controller using the App.loadController() method.
+     * @function handleClickTimelineButton
+     * @author Romello ten Broeke
+     */
+    #handleClickTimelineButton() {
 
-        //Get the data-controller from the clicked element (this)
-        const clickedAnchor = event.target;
-        const controller = clickedAnchor.dataset.controller;
+        let timelineButton = this.#welcomeView.querySelector("#timeline-button");
+        let controller = timelineButton.dataset.controller;
 
-        if(typeof controller === "undefined") {
-            console.error("No data-controller attribute defined in anchor HTML tag, don't know which controller to load!")
-            return false;
+        timelineButton.onclick = function(){
+            App.loadController(controller);
         }
-
-        //TODO: You should add highlighting of correct anchor when page is active :)
-
-        //Pass the action to a new function for further processing
-        App.loadController(controller);
-
-        //Return false to prevent reloading the page
-        return false;
     }
+
+    /**
+     * Function for handling getting the highest story. Uses a helper function to set the story into the view.
+     * @returns {Promise<void>}
+     * @author Romello ten Broeke
+     */
+    async #handleHighestStory() {
+
+        let data = await this.#storyRepository.getHighestRatedStory();
+        this.#setStoryContentIntoView(data);
+
+    }
+
+    /**
+     * Function for setting the highest rated story into the welcome page.
+     * @param storyData should be the highest story obtained.
+     * @author Romello ten Broeke
+     */
+        #setStoryContentIntoView(storyData){
+
+        let storyTitle = this.#welcomeView.querySelector("#storyTitle");
+        let storyBody = this.#welcomeView.querySelector(".story-text");
+
+        storyTitle.innerText = storyData[0].title;
+        storyBody.innerText = storyData[0].body;
+        }
 }
