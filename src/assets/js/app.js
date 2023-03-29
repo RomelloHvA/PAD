@@ -88,7 +88,7 @@ export class App {
 
             case App.CONTROLLER_TIMELINE:
                 App.setCurrentController(name);
-                App.isLoggedIn(() => new TimelineController(), () => new TimelineController());
+                new TimelineController();
                 break;
 
             case App.CONTROLLER_ADDSTORY:
