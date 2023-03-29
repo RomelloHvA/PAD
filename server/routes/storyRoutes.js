@@ -27,11 +27,11 @@ class storyRoutes {
 
                 // Check if a file was uploaded and write it to disk
                 if (file != null) {
-                    fileUrl = await this.#writeUploadedFileToDisk(file);
-                    if (!fileUrl) {
-                        // If an error occurred while writing to disk, send a bad request response
-                        return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
-                    }
+                    //fileUrl = await this.#writeUploadedFileToDisk(file);
+                    // if (!fileUrl) {
+                    //     // If an error occurred while writing to disk, send a bad request response
+                    //     return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
+                    // }
                 }
                 const newStory = {story, subject, year, month, day, fileUrl}
                 // Add the story to the database
