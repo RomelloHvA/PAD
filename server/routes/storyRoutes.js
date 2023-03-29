@@ -93,6 +93,30 @@ class storyRoutes {
         }
     }
 
+    /**
+     Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
+     @async
+     @param {object} file - The uploaded file to write to disk.
+     @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
+
+     @author Tygo Geervliet
+     */
+    async #writeUploadedFileToDisk(file) {
+
+
+        const timestamp = new Date().getTime();
+        const fileUrl = `uploads/${timestamp}.${this.#getFileExtension(file)}`;
+        try {
+            await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
+            return fileUrl;
+        } catch (err) {
+            console.log(err);
+            // If an error occurred while writing to disk, delete the file and return null
+            await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
+            return null;
+        }
+    }
+
     #getHighestRatedMessage() {
         this.#app.get("/story/highestRated", async (req, res) => {
             try {
@@ -126,29 +150,7 @@ class storyRoutes {
         });
     }
 
-    /**
-     Writes an uploaded file to disk (uploads folder) and returns the URL of the saved file.
-     @async
-     @param {object} file - The uploaded file to write to disk.
-     @returns {Promise<string|null>} - The URL of the saved file, or null if an error occurred while writing to disk.
 
-     @author Tygo Geervliet
-     */
-    async #writeUploadedFileToDisk(file) {
-
-
-        const timestamp = new Date().getTime();
-        const fileUrl = `uploads/${timestamp}.${this.#getFileExtension(file)}`;
-        try {
-            await fs.promises.writeFile(`${wwwrootPath}/${fileUrl}`, file.buffer);
-            return fileUrl;
-        } catch (err) {
-            console.log(err);
-            // If an error occurred while writing to disk, delete the file and return null
-            await fs.promises.unlink(`${wwwrootPath}/${fileUrl}`);
-            return null;
-        }
-    }
 }
 
 module.exports = storyRoutes;
