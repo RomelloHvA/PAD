@@ -17,6 +17,7 @@ import { FooterController } from "./controllers/footerController.js";
 import {TimelineController} from "./controllers/timelineController.js";
 import {addStoryController} from "./controllers/addStoryController.js";
 import {StoryboardController} from "./controllers/storyboardController.js";
+import {singleStoryController} from "./controllers/singleStoryController.js";
 
 export class App {
     //we only need one instance of the sessionManager, thus static use here
@@ -102,6 +103,9 @@ export class App {
                 break;
             case App.CONTROLLER_STORYBOARD:
                 App.isLoggedIn(() => new StoryboardController(), () => new StoryboardController());
+                break;
+            case App.CONTROLLER_SINGLESTORY:
+                new singleStoryController();
                 break;
 
             default:
