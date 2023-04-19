@@ -150,6 +150,12 @@ class storyRoutes {
         });
     }
 
+    #getSingleStory(){
+        this.#app.get("/story/singleStory", async (req, res)=> {
+            let storyId;
+        })
+    }
+
 
 }
 

@@ -34,6 +34,7 @@ export class App {
     static CONTROLLER_TIMELINE = "timeline"
     static CONTROLLER_ADDSTORY = "addStory"
     static CONTROLLER_STORYBOARD = "storyboard";
+    static CONTROLLER_SINGLESTORY = "singleStory";
 
     constructor(name, controllerData) {
         //Always load the navigation
