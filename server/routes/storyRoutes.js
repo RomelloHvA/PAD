@@ -132,13 +132,18 @@ class storyRoutes {
         });
     }
 
+    /**
+     * Gets the highest rated story per year using the like table and counting the userID who liked a story and joining it on the story table.
+     * If there are no likes it will still return a story. If a story has the same amount of likes it will still return 1 story.
+     * @author Romello ten Broeke
+     */
     #getHighestRatedMessageForYear() {
         this.#app.get("/story/highestRatedPerYear", async (req, res) => {
             const year = req.query.year;
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC LIMIT 1",
+                    query: "SELECT s.* FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID WHERE s.year = ? GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC, s.storyID ASC LIMIT 1",
                     values: [year]
                 })
                 if (data) {
