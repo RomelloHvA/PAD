@@ -41,15 +41,11 @@ export class StoryboardController extends Controller {
                     let matchProfile = template.cloneNode(true);
                     let id = data[i].storyID;
                     let title = data[i].title;
-                    let body = data[i].body;
-                    let up = data[i].upvote;
-                    let down = data[i].downvote;
-                    let reputation = up - down;
+                    let body = data[i].body
 
                     matchProfile.querySelector(".story").id = id;
                     matchProfile.querySelector("#title").innerHTML = title;
                     matchProfile.querySelector("#body").innerHTML = body;
-                    matchProfile.querySelector("#counter").innerHTML = reputation;
 
                     this.#storyboardView.querySelector("#stories").append(matchProfile);
                 }

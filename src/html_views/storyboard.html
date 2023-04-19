@@ -1,28 +1,25 @@
 <head>
     <link href="../assets/css/pages/storyboard.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
 
 <div class="filter-bar">
     <select>
-        <option value="">Filter 1</option>
-        <option value="">Filter 2</option>
-        <option value="">Filter 3</option>
+        <option value="" selected>Meest recente</option>
+        <option value="">Oudste eerst</option>
     </select>
-    <select>
-        <option value="">Filter 4</option>
-        <option value="">Filter 5</option>
-        <option value="">Filter 6</option>
-    </select>
-    <select>
-        <option value="">Filter 7</option>
-        <option value="">Filter 8</option>
-        <option value="">Filter 9</option>
-    </select>
-</div>
-<div class="board">
 
+    <div class="slidecontainer">
+        <input type="range" min="1980" max="2023" value="2002" class="slider" id="myRange">
+        <p>Value: <span id="demo"></span></p>
+    </div>
+
+</div>
+
+<div class="board">
     <div class="content" style="overflow-x: auto">
 
         <div class="stories" id="stories">
@@ -43,28 +40,27 @@
                 <p>Small story description</p>
             </div>
         </div>
+
     </div>
 </div>
 
     <template id="storyTemp">
         <div class="story">
             <div class="story-info">
-                <h2 id="title">Title of this story</h2>
-                <p>Title description</p>
-                <p id="body">lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus justo at ultricies
-                    malesuada. Suspendisse potenti. Nullam malesuada pellentesque massa, eget faucibus mauris
-                    iaculis vel. Integer bibendum ipsum ac dolor aliquet euismod. Fusce vehicula felis quis velit
-                    facilisis eleifend. Aliquam aliquet elit elit, vel venenatis sem luctus quis. Fusce hendrerit
-                    commodo nunc, sit amet malesuada leo lobortis vitae. Maecenas commodo fermentum enim, a lacinia
-                    velit malesuada ut.</p>
+                <h2 id="title"></h2>
+                <p></p>
+                <p id="body"></p>
             </div>
             <div class="story-image">
                 <img alt="Story Image" src="https://picsum.photos/300/200">
             </div>
             <div class="buttons">
-                <div class="upvote"></div>
-                <div id="counter">00</div>
-                <div class="downvote"></div>
+                <div class="ui labeled button mt-5 ml-5" tabindex="0">
+                    <div class="ui blue button">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <span class="ui basic blue label">0</span>
+                </div>
             </div>
         </div>
     </template>
