@@ -117,11 +117,16 @@ class storyRoutes {
         }
     }
 
+    /**
+     * Gets the highest rated story of all time.
+     * @author Romello ten Broeke
+     */
+
     #getHighestRatedMessage() {
         this.#app.get("/story/highestRated", async (req, res) => {
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
+                    query: "SELECT s.* FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC, s.storyID ASC LIMIT 1"
                 })
                 if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
