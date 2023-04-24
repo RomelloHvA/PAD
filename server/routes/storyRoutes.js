@@ -13,6 +13,7 @@ class storyRoutes {
         this.#addStory();
         this.#getHighestRatedMessageForYear();
         this.#getHighestRatedMessage();
+        this.#getSingleStory();
     }
 
     /**
@@ -160,9 +161,26 @@ class storyRoutes {
         });
     }
 
+    /**
+     * API endpoint for getting a single story by its ID.
+     * @author Romello ten Broeke
+     */
+
     #getSingleStory(){
         this.#app.get("/story/singleStory", async (req, res)=> {
-            let storyId;
+            let storyId = req.query.storyId;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT * FROM story WHERE storyID = ?",
+                    values: [storyId]
+                })
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
         })
     }
 

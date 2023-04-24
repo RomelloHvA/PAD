@@ -31,6 +31,10 @@ export class storyRepository {
         return await this.#networkManager.doRequest(`${this.#route}/highestRatedPerYear?year=${query}`, "GET");
     }
 
+    async getSingleStory(query){
+        return await this.#networkManager.doRequest(`${this.#route}/singleStory?storyId=${query}`,"GET");
+    }
+
     async delete() {
 
     }
