@@ -13,8 +13,8 @@ export class singleStoryController extends Controller {
 
     constructor() {
         super();
-        this.#setupView().then();
         this.#storyRepository = new storyRepository();
+        this.#setupView().then();
     }
 
     async #setupView() {
