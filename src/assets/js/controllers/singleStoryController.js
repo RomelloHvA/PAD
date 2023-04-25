@@ -4,6 +4,7 @@
  */
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
+import {App} from "../app.js";
 
 export class singleStoryController extends Controller {
     #singleStoryView;
@@ -11,33 +12,28 @@ export class singleStoryController extends Controller {
     #storyID;
     #storyData;
 
-    constructor() {
+    /**
+     *
+     * @param storyId is the storyID that is stored in the URL through keypair. Keypair is after the "?" in the URL.
+     * Then an identifier and after the identifier comes an =. Which will be the value.
+     * @author Romello ten Broeke
+     */
+    constructor(storyId) {
         super();
         this.#storyRepository = new storyRepository();
+        this.#storyID = storyId;
         this.#setupView().then();
     }
 
     async #setupView() {
         this.#singleStoryView = await this.loadHtmlIntoContent("html_views/singleStory.html");
-        await this.#getClickedStoryID();
+        await this.#getStoryByID();
         await this.#setStoryYear();
         await this.#setStoryTitle();
         await this.#setStoryText();
 
     }
 
-    async #getClickedStoryID() {
-        if (sessionStorage.getItem("storyID") === null) {
-            // this.#storyID = sessionStorage.getItem("storyID");
-            this.#storyID = 1;
-            console.log(this.#storyID);
-            await this.#getStoryByID();
-        } else {
-            // this.#getStoryByID()
-            // this.#storyID = 1;
-            // console.log(this.#storyID);
-        }
-    }
 
     async #getStoryByID() {
         this.#storyData = await this.#storyRepository.getSingleStory(this.#storyID);

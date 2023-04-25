@@ -105,7 +105,10 @@ export class App {
                 App.isLoggedIn(() => new StoryboardController(), () => new StoryboardController());
                 break;
             case App.CONTROLLER_SINGLESTORY:
-                new singleStoryController();
+                /**
+                 * Loads new controller and takes the URL data after the "=". storyId is the
+                 */
+                new singleStoryController(controllerData.storyId);
                 break;
 
             default:
