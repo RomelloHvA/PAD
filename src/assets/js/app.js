@@ -93,7 +93,7 @@ export class App {
 
             case App.CONTROLLER_ADDSTORY:
                 App.setCurrentController(name);
-                App.isLoggedIn(() => new addStoryController(), () => new LoginController());
+                App.isLoggedIn(() => new addStoryController(), () => new addStoryController());
                 break;
 
             case App.CONTROLLER_UPLOAD:

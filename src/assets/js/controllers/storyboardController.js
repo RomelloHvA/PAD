@@ -60,5 +60,21 @@ export class StoryboardController extends Controller {
         } catch (error) {
             console.log(error);
         }
+
+        await this.likeStory();
     }
+
+    async likeStory() {
+
+        let likeBtn = this.#storyboardView.querySelectorAll("#like");
+        likeBtn.forEach(btn => {
+            btn.addEventListener("click", event => {
+                let likeCounter = btn.parentElement.querySelector("#counter");
+                likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
+            });
+        })
+    }
+
+
+
 }

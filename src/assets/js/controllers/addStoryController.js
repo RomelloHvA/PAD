@@ -15,7 +15,6 @@ export class addStoryController extends Controller {
         super();
         this.#setupView();
         this.#storyRepository = new storyRepository();
-        this.#route = "/story"
     }
 
     /**
@@ -115,7 +114,6 @@ export class addStoryController extends Controller {
             } else {
                 characterCount.style.color = 'black';
             }
-
         });
     }
 
@@ -140,6 +138,7 @@ export class addStoryController extends Controller {
         formData.append("file", fileInput.files[0]);
         formData.append("month", month);
         formData.append("day", day);
+        formData.append("userID", App.sessionManager.get("userID"));
 
         try {
             // Get the modal
@@ -147,7 +146,6 @@ export class addStoryController extends Controller {
             modal.style.display = "block";
 
             const confirm = this.#addStoryView.querySelector(".modal-buttons");
-
 
             confirm.addEventListener("click", event => {
                 modal.style.display = "none";
