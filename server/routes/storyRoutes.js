@@ -14,6 +14,7 @@ class storyRoutes {
         this.#getHighestRatedMessageForYear();
         this.#getHighestRatedMessage();
         this.#getSingleStory();
+        this.#getMaxUpvotesForStory();
     }
 
     /**
@@ -149,7 +150,7 @@ class storyRoutes {
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT s.* FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID WHERE s.year = ? GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC, s.storyID ASC LIMIT 1",
+                    query: "SELECT s.* FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID WHERE s.year = ? GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC LIMIT 1",
                     values: [year]
                 })
                 if (data) {
@@ -173,6 +174,29 @@ class storyRoutes {
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT * FROM story WHERE storyID = ?",
+                    values: [storyId]
+                })
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
+
+
+    /**
+     * API endpoint for getting all the likes for a given storyID.
+     * @author Romello ten Broeke
+     */
+    #getMaxUpvotesForStory(){
+        this.#app.get("/story/getUpvoteForStoryId", async (req, res)=> {
+            let storyId = req.query.storyId;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT COUNT(like.userID) AS total_likes FROM story RIGHT JOIN `like` ON story.storyID = like.storyID WHERE like.storyID = ?",
                     values: [storyId]
                 })
                 if (data){

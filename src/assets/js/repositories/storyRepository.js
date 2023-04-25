@@ -35,6 +35,10 @@ export class storyRepository {
         return await this.#networkManager.doRequest(`${this.#route}/singleStory?storyId=${query}`,"GET");
     }
 
+    async getUpvoteForStoryId(query){
+        return await this.#networkManager.doRequest(`${this.#route}/getUpvoteForStoryId?storyId=${query}`,"GET");
+    }
+
     async delete() {
 
     }

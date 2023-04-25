@@ -139,6 +139,7 @@
     display: flex;
     margin-bottom: 20px;
     background-color: #fff;
+    width: fit-content;
     box-shadow: 0px 2px 4px #164fa2;
     padding: 1rem;
     border-radius: 3px;
