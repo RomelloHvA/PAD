@@ -138,7 +138,7 @@ Front-end
     <id>UMLDeployment</id>
     <coordinates>
       <x>550</x>
-      <y>540</y>
+      <y>560</y>
       <w>160</w>
       <h>70</h>
     </coordinates>
@@ -185,5 +185,27 @@ jQuery</panel_attributes>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>190.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>590</x>
+      <y>480</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>650</x>
+      <y>530</y>
+      <w>90</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;30.0</additional_attributes>
   </element>
 </diagram>
