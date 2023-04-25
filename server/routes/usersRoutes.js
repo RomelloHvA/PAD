@@ -94,17 +94,16 @@ class UsersRoutes {
      * @private
      */
     async #insertUser(req, res) {
-        const {firstname, lastname, phoneNr, email, password} = req.body;
+        const {firstname, lastname, phoneNr, email, psw} = req.body;
 
         // Hash the password
         // const hashedPassword = await bcrypt.hash(password, 10);
-
 
         // Insert the new user into the database
         try {
             const data = await this.#databaseHelper.handleQuery({
                 query: "INSERT INTO user (firstname, lastname, phoneNr, email, password) VALUES (?, ?, ?, ?, ?)",
-                values: [firstname, lastname, phoneNr, email, password],
+                values: [firstname, lastname, phoneNr, email, psw],
             });
 
             return res.status(this.#errorCodes.HTTP_OK_CODE).json({

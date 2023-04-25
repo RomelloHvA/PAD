@@ -5,19 +5,19 @@ describe("Login",  () => {
     //Run before each test in this context
     beforeEach(() => {
         //Go to the specified URL
-        cy.visit("http://localhost:8080");
+        cy.visit("http://localhost:8080/#login");
     });
 
     //Test: Validate login form
     it("Valid login form", () => {
         //Find the field for the username, check if it exists.
-        cy.get("#exampleInputUsername").should("exist");
+        cy.get("#email").should("exist");
 
         //Find the field for the password, check if it exists.
-        cy.get("#exampleInputPassword").should("exist");
+        cy.get("#psw").should("exist");
 
         //Find the button to login, check if it exists.
-        cy.get(".login-form button").should("exist");
+        cy.get("#btn").should("exist");
     });
 
     //Test: Successful login
@@ -25,7 +25,7 @@ describe("Login",  () => {
         //Start a fake server
         cy.server();
 
-        const mockedResponse = {"username": "test"};
+        const mockedResponse = {"email": "test"};
 
         //Add a stub with the URL /users/login as a POST
         //Respond with a JSON-object when requested
@@ -36,14 +36,14 @@ describe("Login",  () => {
         }).as('login');
 
         //Find the field for the username and type the text "test".
-        cy.get("#exampleInputUsername").type("test");
+        cy.get("#email").type("test");
 
         //Find the field for the password and type the text "test".
-        cy.get("#exampleInputPassword").type("test");
+        cy.get("#psw").type("test");
 
         //Find the button to login and click it
-        console.log(cy.get(".login-form button"));
-        cy.get(".login-form button").click();
+        console.log(cy.get("#btn"));
+        cy.get("#btn").click();
 
         //Wait for the @login-stub to be called by the click-event.
         cy.wait("@login");
@@ -52,10 +52,10 @@ describe("Login",  () => {
         cy.get("@login").should((xhr) => {
             //The username should match what we typed earlier
             const body = xhr.request.body;
-            expect(body.username).equals("test");
+            expect(body.email).equals("test");
 
             //The password should match what we typed earlier
-            expect(body.password).equals("test");
+            expect(body.psw).equals("test");
         });
 
         //After a successful login, the URL should now contain #welcome.
@@ -82,18 +82,18 @@ describe("Login",  () => {
 
 
         //Find the field for the username and type the text "test".
-        cy.get("#exampleInputUsername").type("test");
+        cy.get("#email").type("test");
 
         //Find the field for the password and type the text "test".
-        cy.get("#exampleInputPassword").type("test");
+        cy.get("#psw").type("test");
 
         //Find the button to login and click it.
-        cy.get(".login-form button").click();
+        cy.get("#btn").click();
 
         //Wait for the @login-stub to be called by the click-event.
         cy.wait("@login");
 
         //After a failed login, an element containing our error-message should be shown.
-        cy.get(".error").should("exist").should("contain", "ERROR");
+        cy.get(".message").should("exist").should("contain", "ERROR");
     });
 });
