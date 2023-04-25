@@ -17,6 +17,7 @@ class StoryboardRoutes {
         this.#app = app;
 
         this.#getStory();
+        // this.#updateStory();
     }
 
 
@@ -42,6 +43,23 @@ class StoryboardRoutes {
             }
         })
     }
+
+    /**
+     * This method
+     * Roos
+     */
+    // #updateStory(){
+    //     this.#app.put("/storyboard/edit", async (req, res) => {
+    //
+    //         try {
+    //             const data = await this.#databaseHelper.handleQuery({
+    //                 query: `UPDATE (subject, story, year, month, day) SET ` ,
+    //                 values: []
+    //             })
+    //         }
+    //     })
+    //
+    // }
 }
 
 module.exports = StoryboardRoutes;
