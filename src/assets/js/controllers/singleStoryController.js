@@ -4,6 +4,7 @@
  */
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
+import {UsersRepository} from "../repositories/usersRepository.js";
 import {App} from "../app.js";
 
 export class singleStoryController extends Controller {
@@ -11,6 +12,8 @@ export class singleStoryController extends Controller {
     #storyRepository;
     #storyID;
     #storyData;
+    #userRepository;
+    #authorData;
 
     /**
      *
@@ -21,6 +24,7 @@ export class singleStoryController extends Controller {
     constructor(storyId) {
         super();
         this.#storyRepository = new storyRepository();
+        this.#userRepository = new UsersRepository();
         this.#storyID = storyId;
         this.#setupView().then();
     }
@@ -37,8 +41,11 @@ export class singleStoryController extends Controller {
         this.#singleStoryView = await this.loadHtmlIntoContent("html_views/singleStory.html");
         await this.#getStoryByID();
 
+
         try {
+            await this.#getUserData(this.#storyData[0].userID);
             this.#setStoryYear(this.#storyData[0].year);
+            this.#setStoryAuthor(this.#authorData[0].firstName + " " + this.#authorData[0].lastName);
             this.#setStoryTitle(this.#storyData[0].title);
             this.#setStoryText(this.#storyData[0].body);
             this.#setStoryPhoto(this.#storyData[0].image);
@@ -77,6 +84,15 @@ export class singleStoryController extends Controller {
     #setStoryTitle(storyTitleData){
         let storyTitle = this.#singleStoryView.querySelector(".card-title");
         storyTitle.innerText = storyTitleData;
+    }
+
+    async #getUserData(userId) {
+       this.#authorData = await this.#userRepository.getUserById(userId);
+    }
+
+    #setStoryAuthor(storyAuthorData){
+        let storyAuthor = this.#singleStoryView.querySelector(".username");
+        storyAuthor.innerText = storyAuthorData;
     }
 
     /**
