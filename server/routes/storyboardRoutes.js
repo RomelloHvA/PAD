@@ -17,6 +17,46 @@ class StoryboardRoutes {
         this.#app = app;
 
         this.#getStory();
+        this.addLike();
+        this.removeLike();
+    }
+
+    addLike() {
+        // Handle POST request to add a like
+        this.#app.post("/storyboard/addLike", async (req, res) => {
+            try {
+
+                console.log("test")
+                // Extract data from the request
+                const { userID, storyID } = req.body;
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "INSERT INTO `like` (userID, storyID) VALUES (?, ?)",
+                    values: [userID, storyID],
+                });
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (exc) {
+                // Handle errors
+                console.error(exc);
+            }
+        });
+    }
+
+    removeLike() {
+        // Handle POST request to remove a like
+        this.#app.post("/storyboard/removeLike", async (req, res) => {
+            try {
+                // Extract data from the request
+                const { userID, storyID } = req.body;
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "DELETE FROM `like` WHERE userID = ? AND storyID = ?",
+                    values: [userID, storyID],
+                });
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (exc) {
+                // Handle errors
+                console.error(exc);
+            }
+        });
     }
 
 

@@ -33,7 +33,7 @@ export class StoryboardController extends Controller {
 
             let template = this.#storyboardView.querySelector('#storyTemp').content;
 
-            console.log(data);
+
 
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
@@ -61,14 +61,71 @@ export class StoryboardController extends Controller {
     }
 
     async likeStory() {
-
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
+
+        // Check if the user has already liked each story
         likeBtn.forEach(btn => {
+            let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
+
+            let likedStories = JSON.parse(localStorage.getItem("likedStories")) || [];
+            let alreadyLiked = likedStories.includes(storyId);
+
+            let likeCounter = btn.parentElement.querySelector("#counter");
+
             btn.addEventListener("click", event => {
-                let likeCounter = btn.parentElement.querySelector("#counter");
-                likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
+                if (!alreadyLiked) {
+                    // User hasn't liked this story yet, so add the like
+                    likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
+
+                    // Store the ID of the liked story in local storage
+                    likedStories.push(storyId);
+                    localStorage.setItem("likedStories", JSON.stringify(likedStories));
+
+                    let userID = 1;
+                    this.addNewLike(userID, storyId);
+
+                    // Update the 'alreadyLiked' flag
+                    alreadyLiked = true;
+
+                    // Set the 'liked' class on the like button
+                    btn.classList.add("liked");
+                } else {
+                    // User has already liked this story, so remove the like
+                    if (parseInt(likeCounter.textContent) > 0) {
+                        likeCounter.textContent = parseInt(likeCounter.textContent) - 1;
+                    }
+
+                    let userID = 1;
+                    this.removeLike(userID, storyId);
+                    // Remove the ID of the unliked story from local storage
+                    likedStories = likedStories.filter(id => id !== storyId);
+                    localStorage.setItem("likedStories", JSON.stringify(likedStories));
+
+                    // Update the 'alreadyLiked' flag
+                    alreadyLiked = false;
+
+                    // Remove the 'liked' class from the like button
+                    btn.classList.remove("liked");
+                }
             });
-        })
+
+            // Set the initial state of the like button
+            if (alreadyLiked) {
+                btn.classList.add("liked");
+            }
+        });
+    }
+
+    async addNewLike(userID, storyID) {
+
+        await this.#storyboardRepository.addLike(userID, storyID);
+
+    }
+
+    async removeLike(userID, storyID) {
+
+        await this.#storyboardRepository.removeLike(userID, storyID);
+
     }
 
 

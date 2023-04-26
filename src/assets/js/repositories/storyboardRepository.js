@@ -19,6 +19,18 @@ export class storyboardRepository {
             .doRequest(`${this.#route}`, "GET");
     }
 
+    async addLike(userID, storyID) {
+        const body = { userID: userID, storyID: storyID };
+        return await this.#networkManager.doRequest(`${this.#route}/addLike`, "POST", body);
+    }
+
+    async removeLike(userID, storyID) {
+        const body = { userID: userID, storyID: storyID };
+        return await this.#networkManager.doRequest(`${this.#route}/removeLike`, "POST", body);
+    }
+
+
+
     async delete() {
 
     }
