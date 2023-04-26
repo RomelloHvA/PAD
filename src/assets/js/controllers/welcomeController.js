@@ -12,6 +12,7 @@ import {storyRepository} from "../repositories/storyRepository.js";
 export class WelcomeController extends Controller{
     #welcomeView
     #storyRepository;
+    #singleStoryURL = "#singleStory?storyId=";
 
     constructor() {
         super();
@@ -29,7 +30,7 @@ export class WelcomeController extends Controller{
         this.#welcomeView = await super.loadHtmlIntoContent("html_views/welcome.html")
 
         this.#handleHighestStory();
-        this.#handleClickTimelineButton()
+        this.#handleClickTimelineButton();
     }
 
     /**
@@ -68,8 +69,13 @@ export class WelcomeController extends Controller{
 
         let storyTitle = this.#welcomeView.querySelector("#storyTitle");
         let storyBody = this.#welcomeView.querySelector(".story-text");
+        let storyButton = this.#welcomeView.querySelector("#hottestStory");
 
         storyTitle.innerText = storyData[0].title;
         storyBody.innerText = storyData[0].body;
+        storyButton.href = this.#singleStoryURL + storyData[0].storyID;
         }
+
+
+
 }
