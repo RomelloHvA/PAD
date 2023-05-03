@@ -163,25 +163,38 @@ class storyRoutes {
     }
 
     /**
-     * API endpoint for getting a single story by its ID.
+     * API endpoint for getting a single story by its ID and the author first and last name. Checks is if there is a storyID
+     * If the storyID can't be found in the database responds with a 404 error-code And if the storyID is empty it wil give a bad request.
      * @author Romello ten Broeke
      */
 
-    #getSingleStory(){
-        this.#app.get("/story/singleStory", async (req, res)=> {
+    #getSingleStory() {
+        this.#app.get("/story/singleStory", async (req, res) => {
             let storyId = req.query.storyId;
 
-            try {
-                const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM story WHERE storyID = ?",
-                    values: [storyId]
-                })
-                if (data){
-                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+            if (storyId.length >= 1) {
+
+                try {
+                    const data = await this.#databaseHelper.handleQuery({
+                        query: "SELECT s.title, s.body, s.day, s.month, s.year, s.visible, s.image, u.firstName, u.lastName FROM story s LEFT JOIN user u ON s.userID = u.userID WHERE storyID = ?",
+                        values: [storyId]
+                    })
+
+                    if (Object.keys(data).length === 0) {
+                        res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({reason: this.#errorCodes.ROUTE_NOT_FOUND_CODE});
+                    } else {
+                        res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                    }
+                } catch (e) {
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
                 }
-            } catch (e) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            } else {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
+                    reason: "StoryID can't be empty."
+                })
             }
+
+
         })
     }
 
@@ -190,8 +203,8 @@ class storyRoutes {
      * API endpoint for getting all the likes for a given storyID.
      * @author Romello ten Broeke
      */
-    #getMaxUpvotesForStory(){
-        this.#app.get("/story/getUpvoteForStoryId", async (req, res)=> {
+    #getMaxUpvotesForStory() {
+        this.#app.get("/story/getUpvoteForStoryId", async (req, res) => {
             let storyId = req.query.storyId;
 
             try {
@@ -199,7 +212,7 @@ class storyRoutes {
                     query: "SELECT COUNT(like.userID) AS total_likes FROM story RIGHT JOIN `like` ON story.storyID = like.storyID WHERE like.storyID = ?",
                     values: [storyId]
                 })
-                if (data){
+                if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
                 }
             } catch (e) {

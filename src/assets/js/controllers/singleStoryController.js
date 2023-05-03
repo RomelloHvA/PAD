@@ -4,16 +4,12 @@
  */
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
-import {UsersRepository} from "../repositories/usersRepository.js";
-import {App} from "../app.js";
 
 export class singleStoryController extends Controller {
     #singleStoryView;
     #storyRepository;
     #storyID;
     #storyData;
-    #userRepository;
-    #authorData;
 
     /**
      *
@@ -24,7 +20,6 @@ export class singleStoryController extends Controller {
     constructor(storyId) {
         super();
         this.#storyRepository = new storyRepository();
-        this.#userRepository = new UsersRepository();
         this.#storyID = storyId;
         this.#setupView().then();
     }
@@ -39,22 +34,22 @@ export class singleStoryController extends Controller {
      */
     async #setupView() {
         this.#singleStoryView = await this.loadHtmlIntoContent("html_views/singleStory.html");
-        await this.#getStoryByID();
 
 
         try {
-            await this.#getUserData(this.#storyData[0].userID);
-            this.#setStoryYear(this.#storyData[0].year);
-            this.#setStoryAuthor(this.#authorData[0].firstName + " " + this.#authorData[0].lastName);
+            await this.#getStoryByID();
+            this.#setStoryDate(this.#storyData[0].year, this.#storyData[0].month, this.#storyData[0].day);
+            this.#setStoryAuthor(this.#storyData[0].firstName, this.#storyData[0].lastName);
             this.#setStoryTitle(this.#storyData[0].title);
             this.#setStoryText(this.#storyData[0].body);
             this.#setStoryPhoto(this.#storyData[0].image);
             await this.#setStoryLikes();
+
         } catch (e) {
             this.#setErrorStory();
         }
 
-        }
+    }
 
 
     /**
@@ -72,27 +67,34 @@ export class singleStoryController extends Controller {
      * @author Romello ten Broeke
      */
 
-    #setStoryYear(storyYearData){
-        let year = this.#singleStoryView.querySelector(".year");
-        year.innerText = storyYearData;
+    #setStoryDate(storyYearData, storyMonthData, storyDayData) {
+        let pageDate = this.#singleStoryView.querySelector(".year");
+
+        let storyFullDate = "Datum: " + storyDayData + "-" + storyMonthData + "-" + storyYearData;
+
+        pageDate.innerText = storyFullDate;
     }
 
     /**
      * Function for setting the Title in the view
      * @param storyTitleData this is the title data that will be displayed. Should be a year.
      */
-    #setStoryTitle(storyTitleData){
+    #setStoryTitle(storyTitleData) {
         let storyTitle = this.#singleStoryView.querySelector(".card-title");
         storyTitle.innerText = storyTitleData;
     }
 
-    async #getUserData(userId) {
-       this.#authorData = await this.#userRepository.getUserById(userId);
-    }
 
-    #setStoryAuthor(storyAuthorData){
+    #setStoryAuthor(firstName, lastName) {
+
+        let authorFullName;
+        if (firstName === null || lastName === null) {
+            authorFullName = "Onbekend";
+        } else {
+            authorFullName = firstName + " " + lastName;
+        }
         let storyAuthor = this.#singleStoryView.querySelector(".username");
-        storyAuthor.innerText = storyAuthorData;
+        storyAuthor.innerText = authorFullName;
     }
 
     /**
@@ -100,7 +102,7 @@ export class singleStoryController extends Controller {
      * @param storyTextData this is the text data for the story that will be displayed.
      * @author Romello ten Broeke
      */
-    #setStoryText(storyTextData){
+    #setStoryText(storyTextData) {
         let storyText = this.#singleStoryView.querySelector(".card-body");
         storyText.innerText = storyTextData;
     }
@@ -110,10 +112,10 @@ export class singleStoryController extends Controller {
      * @param photoLocationData this is the src path to the image.
      * @author Romello ten Broeke
      */
-    #setStoryPhoto(photoLocationData){
+    #setStoryPhoto(photoLocationData) {
         let storyPhoto = this.#singleStoryView.querySelector(".img-fluid");
 
-        if (this.#storyData[0].image != null){
+        if (this.#storyData[0].image != null) {
             storyPhoto.src = photoLocationData;
         } else {
             storyPhoto.src = "assets/img/demo-image-01.jpg";
@@ -134,22 +136,23 @@ export class singleStoryController extends Controller {
      * @returns {Promise<void>} resolves after the likes have been set.
      * @author Romello ten Broeke
      */
-    async #setStoryLikes(){
+    async #setStoryLikes() {
         let totalLikes = await this.#getStoryLikes();
-    let likeCounter = this.#singleStoryView.querySelector("#counter");
-    likeCounter.innerText = totalLikes[0].total_likes;
+        let likeCounter = this.#singleStoryView.querySelector("#counter");
+        likeCounter.innerText = totalLikes[0].total_likes;
     }
 
     /**
      * This is the method for liking a story. Will be implemented at a later time.
      */
-    #likeStory(){}
+    #likeStory() {
+    }
 
     /**
      * function for that should be called upon when there is an error. Sets an error message for the enduser.
      * @author Romello ten Broeke
      */
-    #setErrorStory(){
+    #setErrorStory() {
         let errorTitle = "Error";
         let errorText = "Er is iets misgegaan in het laden van het verhaal. Het verhaal wat u zoekt bestaat niet (meer). Navigeer terug naar de home pagina.";
         this.#setStoryTitle(errorTitle);
