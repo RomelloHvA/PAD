@@ -123,10 +123,8 @@ export class singleStoryController extends Controller {
     #setStoryPhoto(photoLocationData) {
         let storyPhoto = this.#singleStoryView.querySelector(".img-fluid");
 
-        if (this.#storyData[0].image != null) {
+        if (photoLocationData != null) {
             storyPhoto.src = photoLocationData;
-        } else {
-            storyPhoto.src = "assets/img/demo-image-01.jpg";
         }
     }
 
@@ -153,8 +151,8 @@ export class singleStoryController extends Controller {
     /**
      * This is the method for liking a story. Will be implemented at a later time.
      */
-    #likeStory() {
-    }
+    // #likeStory() {
+    // }
 
     /**
      * function for that should be called upon when there is an error. Sets an error message for the enduser.
