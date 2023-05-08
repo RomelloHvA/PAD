@@ -30,7 +30,7 @@ export class singleStoryController extends Controller {
      *  * sets the story year, title, text, and photo, and retrieves the story likes.
      *  * If any error occurs during this process, sets an error state for the story.
      * @returns {Promise<void>} A promise that resolves after the view setup is completed.
-     * @author Romello ten Broeke
+     * @author Romello ten Broeke.
      */
     async #setupView() {
         this.#singleStoryView = await this.loadHtmlIntoContent("html_views/singleStory.html");
