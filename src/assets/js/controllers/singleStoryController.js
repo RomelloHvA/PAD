@@ -78,12 +78,20 @@ export class singleStoryController extends Controller {
     /**
      * Function for setting the Title in the view
      * @param storyTitleData this is the title data that will be displayed. Should be a year.
+     * @author Romello ten Broeke
      */
     #setStoryTitle(storyTitleData) {
         let storyTitle = this.#singleStoryView.querySelector(".card-title");
         storyTitle.innerText = storyTitleData;
     }
 
+    /**
+     * Function for checking if the author is set in the recieved data. If the data in either params is empty sets the
+     * author to "onbekend".
+     * @param firstName of the author
+     * @param lastName of the author
+     * @author Romello ten Broeke
+     */
 
     #setStoryAuthor(firstName, lastName) {
 
