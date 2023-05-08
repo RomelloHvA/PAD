@@ -10,9 +10,6 @@ export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
 
-    // const user = (get user id)
-
-
     constructor() {
         super();
         this.#setupView();
@@ -33,25 +30,9 @@ export class StoryboardController extends Controller {
 
             let template = this.#storyboardView.querySelector('#storyTemp').content;
 
-            console.log(data);
-
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
-
-                    let matchProfile = template.cloneNode(true);
-                    let id = data[i].storyID;
-                    let title = data[i].title;
-                    let body = data[i].body;
-                    let up = data[i].upvote;
-                    let down = data[i].downvote;
-                    let reputation = up - down;
-
-                    matchProfile.querySelector(".story").id = id;
-                    matchProfile.querySelector("#title").innerHTML = title;
-                    matchProfile.querySelector("#body").innerHTML = body;
-                    matchProfile.querySelector("#counter").innerHTML = reputation;
-
-                    this.#storyboardView.querySelector("#stories").append(matchProfile);
+                    this.fillStoryData(template, data, i);
                 }
             } else {
                 this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";
@@ -60,5 +41,22 @@ export class StoryboardController extends Controller {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    fillStoryData(template, data, i) {
+        let matchProfile = template.cloneNode(true);
+        let id = data[i].storyID;
+        let title = data[i].title;
+        let body = data[i].body;
+        let up = data[i].upvote;
+        let down = data[i].downvote;
+        let reputation = up - down;
+
+        matchProfile.querySelector(".story").id = id;
+        matchProfile.querySelector("#title").innerHTML = title;
+        matchProfile.querySelector("#body").innerHTML = body;
+        matchProfile.querySelector("#counter").innerHTML = reputation;
+
+        this.#storyboardView.querySelector("#stories").append(matchProfile);
     }
 }
