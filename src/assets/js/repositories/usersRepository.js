@@ -46,6 +46,12 @@ export class UsersRepository {
 
     }
 
+    async getUserById(query){
+        return await this.#networkManager.doRequest(`${this.#route}/getSingleUser?userID=${query}`,"GET");
+    }
+
+
+
     async delete() {
 
     }

@@ -23,6 +23,7 @@ class UsersRoutes {
         //call method per route for the users entity
         this.#login()
         this.#signUp()
+        this.#getSingleUser();
     }
 
     /**
@@ -192,6 +193,24 @@ class UsersRoutes {
         max: 5,
         message: "Too many login attempts, please try again later."
     });
+
+    #getSingleUser(){
+        this.#app.get("/users/getSingleUser", async (req, res)=> {
+            let userId = req.query.userID;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT * FROM user WHERE userID = ?",
+                    values: [userId]
+                })
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
 
 
 }
