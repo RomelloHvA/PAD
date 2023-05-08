@@ -85,7 +85,10 @@ mysql</panel_attributes>
 &lt;&lt;api endpoints&gt;&gt;
 app.js
 -
-</panel_attributes>
+GET /story/highestRatedPerYear
+GET /story/highestRated
+GET /story/singleStory
+GET /story/getUpvoteForStoryId</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

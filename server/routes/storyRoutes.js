@@ -150,7 +150,7 @@ class storyRoutes {
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT s.* FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID WHERE s.year = ? GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC LIMIT 1",
+                    query: "SELECT s.title, s.body, s.year, s.image FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID WHERE s.year = ? GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC LIMIT 1",
                     values: [year]
                 })
                 if (data) {

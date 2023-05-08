@@ -39,7 +39,7 @@ export class TimelineController extends Controller {
      * @author Romello ten Broeke
      */
 
-    #reloadOnce(){
+    #reloadOnce() {
         if (sessionStorage.getItem("isReloaded") === null) {
             sessionStorage.setItem("isReloaded", "true");
             location.reload();
