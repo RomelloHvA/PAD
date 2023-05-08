@@ -64,15 +64,15 @@ export class singleStoryController extends Controller {
     /**
      * Function for setting the year in the view.
      * @param storyYearData this is the data that will be displayed.
+     * @param storyDayData is the day in numbers
+     * @param storyMonthData is the month in numbers
      * @author Romello ten Broeke
      */
 
     #setStoryDate(storyYearData, storyMonthData, storyDayData) {
         let pageDate = this.#singleStoryView.querySelector(".year");
 
-        let storyFullDate = "Datum: " + storyDayData + "-" + storyMonthData + "-" + storyYearData;
-
-        pageDate.innerText = storyFullDate;
+        pageDate.innerText = "Datum: " + storyDayData + "-" + storyMonthData + "-" + storyYearData;
     }
 
     /**
