@@ -12,6 +12,7 @@ export class TimelineController extends Controller {
     #nextStoryPosition;
     #MIN_SCROLL_YEAR = 1970;
     #singleStoryUrl = "#singleStory?storyId=";
+    #addStoryController = "#addStory";
 
 
     constructor() {
@@ -157,18 +158,8 @@ export class TimelineController extends Controller {
         let data = await this.#storyRepository.getHighestStoryPerYear(this.#currentScrollYear);
         let storyBody;
         let storyTitle;
-        let storyID;
+        let storyID = "";
 
-        if (data[dataIndex] === undefined) {
-            storyBody = noStoryMessageBody;
-            storyTitle = noStoryTitle;
-            storyID = "";
-        } else {
-            storyBody = data[dataIndex].body;
-            storyTitle = data[dataIndex].title;
-            storyID = data[dataIndex].storyID;
-
-        }
         const cardBodies = this.#timelineView.querySelectorAll(".card-body");
         const lastCardBody = cardBodies[cardBodies.length - 1];
 
@@ -181,12 +172,29 @@ export class TimelineController extends Controller {
         const leesVerhaalButtons = this.#timelineView.querySelectorAll(".storyID");
         const lastLeesVerhaalButton = leesVerhaalButtons[leesVerhaalButtons.length - 1];
 
+        if (data[dataIndex] === undefined) {
+            storyBody = noStoryMessageBody;
+            storyTitle = noStoryTitle;
+            this.#changeStoryButton(lastLeesVerhaalButton);
+        } else {
+            storyBody = data[dataIndex].body;
+            storyTitle = data[dataIndex].title;
+            storyID = data[dataIndex].storyID;
+            lastLeesVerhaalButton.href = this.#singleStoryUrl + storyID;
+
+
+        }
+
+
         lastCardTitle.innerText = storyTitle;
         lastCardBody.innerText = storyBody;
         lastStoryYear.innerText = this.#currentScrollYear;
-        lastLeesVerhaalButton.href = this.#singleStoryUrl + storyID;
 
+    }
 
+    #changeStoryButton(button){
+        button.href = "#addStory";
+        button.innerText = "Voeg verhaal toe!";
     }
 
 }
