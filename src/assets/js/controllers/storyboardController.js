@@ -66,22 +66,29 @@ export class StoryboardController extends Controller {
         // Check if the user has already liked each story
         likeBtn.forEach(btn => {
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
+            let userID = 1;
 
-            let likedStories = JSON.parse(localStorage.getItem("likedStories")) || [];
-            let alreadyLiked = likedStories.includes(storyId);
+            let alreadyLiked = this.#storyboardRepository.checkAlreadyLiked(userID, storyId);;
+            //set already liked 'true' or 'false'
+            if(alreadyLiked === 1) {
+                alreadyLiked = true;
+            }
+            else {
+                alreadyLiked = false;
+            }
 
+            //like counter
             let likeCounter = btn.parentElement.querySelector("#counter");
 
+
             btn.addEventListener("click", event => {
+                //if story is not already liked current user
                 if (!alreadyLiked) {
+
+
                     // User hasn't liked this story yet, so add the like
                     likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
 
-                    // Store the ID of the liked story in local storage
-                    likedStories.push(storyId);
-                    localStorage.setItem("likedStories", JSON.stringify(likedStories));
-
-                    let userID = 1;
                     this.addNewLike(userID, storyId);
 
                     // Update the 'alreadyLiked' flag
@@ -95,12 +102,7 @@ export class StoryboardController extends Controller {
                         likeCounter.textContent = parseInt(likeCounter.textContent) - 1;
                     }
 
-                    let userID = 1;
                     this.removeLike(userID, storyId);
-                    // Remove the ID of the unliked story from local storage
-                    likedStories = likedStories.filter(id => id !== storyId);
-                    localStorage.setItem("likedStories", JSON.stringify(likedStories));
-
                     // Update the 'alreadyLiked' flag
                     alreadyLiked = false;
 

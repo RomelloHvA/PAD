@@ -10,10 +10,7 @@ export class storyboardRepository {
         this.#networkManager = new NetworkManager();
     }
 
-    /**
-     * this function gets the information given from the endpoint from all story's
-     * @returns {Promise<*>}
-     */
+
     async getAll() {
         return await this.#networkManager
             .doRequest(`${this.#route}`, "GET");
@@ -29,6 +26,10 @@ export class storyboardRepository {
         return await this.#networkManager.doRequest(`${this.#route}/removeLike`, "POST", body);
     }
 
+    async checkAlreadyLiked(userID, storyID) {
+        const body = { userID: userID, storyID: storyID };
+        return await this.#networkManager.doRequest(`${this.#route}/getLike`, "GET", body);
+    }
 
 
     async delete() {

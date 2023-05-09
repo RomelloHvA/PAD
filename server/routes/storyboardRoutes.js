@@ -19,6 +19,7 @@ class StoryboardRoutes {
         this.#getStory();
         this.addLike();
         this.removeLike();
+        this.AlreadyLiked();
     }
 
     addLike() {
@@ -59,7 +60,21 @@ class StoryboardRoutes {
         });
     }
 
-
+    AlreadyLiked() {
+            this.#app.get("/storyboard/getLike", async (req, res) => {
+                const { userID, storyID } = req.body;
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT AlreadyLiked(?,?);",
+                    values: [userID, storyID]
+                });
+                //give a response when an error occurs
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
 
     /**
      * this method fetches the data from a story
