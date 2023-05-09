@@ -1,14 +1,13 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
-import {App} from "../app.js";
-import {TimelineController} from "./timelineController.js";
-import {StoryboardController} from "./storyboardController.js";
+import {storyboardRepository} from "../repositories/storyboardRepository.js";
 
 export class EditStoryController extends Controller {
     #addStoryView
     #route
     #storyRepository
     #selectedStory
+    #storyboardRepository
 
     constructor(selectedStory) {
         super();
@@ -16,6 +15,7 @@ export class EditStoryController extends Controller {
         this.#setupView();
         this.#storyRepository = new storyRepository();
         this.#route = "/story"
+        this.#storyboardRepository = new storyboardRepository();
     }
 
     /**
@@ -25,10 +25,11 @@ export class EditStoryController extends Controller {
      */
 
     async #setupView() {
-        //await for when HTML is
+
         this.#addStoryView = await super.loadHtmlIntoContent("html_views/editStory.html");
         console.log(this.#selectedStory);
 
+        //fill the fields with info from the original story
         const title = this.#selectedStory.title;
         const subjectField = this.#addStoryView.querySelector("#subject");
         subjectField.value = title;
@@ -46,17 +47,13 @@ export class EditStoryController extends Controller {
         // console.log(date);
         // const dateField = this.#addStoryView.querySelector("#date");
         // dateField.value = date;
+        await this.#updateStory();
 
 
         //click event voor updaten van verhaal in database
         // -> repo moet een update optie hebben
 
     }
-
-
-
-
-
 
 
     /**
@@ -80,10 +77,12 @@ export class EditStoryController extends Controller {
         });
     }
 
-    async updateStory(event) {
+    async #updateStory(event) {
         event.preventDefault();
+
+        //get button to save and call save method.
         const saveBtn = document.querySelector("#myButton");
-        saveBtn.addEventListener("click", );
+        saveBtn.addEventListener("click", await this.#storyboardRepository.updateStory());
 
         // try {
         //     // Get the modal
@@ -126,7 +125,6 @@ export class EditStoryController extends Controller {
             previewImage.src = "";
         }
     }
-
 
 
     /**

@@ -145,3 +145,17 @@
 .message {
     display: none;
 }
+
+.editButtons{
+    display: flex;
+    flex-direction: row;
+}
+.editButtons i{
+    margin: 5px;
+    font-size: 30px;
+}
+.editButtons .icon-pencil:hover{
+    background-color: green;
+    border-color: green;
+    color: white;
+}

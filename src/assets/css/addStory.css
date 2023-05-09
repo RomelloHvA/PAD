@@ -153,13 +153,12 @@ select {
     opacity: 0.8;
 }
 
+/*edit story only */
 .hidden{
     display: none;
 }
-.fa-solid {
-    font-family: unset;
-    font-style: unset;
-}
+
+
 
 
 

@@ -48,6 +48,7 @@ class StoryboardRoutes {
      * This method x
      * Roos
      */
+    //id say the method needs the new story data to be given along
     #updateStory(title, story, year, month, day){
         this.#app.put("/storyboard/edit", async (req, res) => {
 
