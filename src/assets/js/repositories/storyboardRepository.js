@@ -14,21 +14,8 @@ export class storyboardRepository {
      * this function gets the information given from the endpoint from all story's
      * @returns {Promise<*>}
      */
-    async getAll() {
+    async getAll(data) {
         return await this.#networkManager
-            .doRequest(`${this.#route}`, "GET");
-    }
-
-    async delete() {
-
-    }
-
-    //example endpoint would be: /users/register
-    async register(username, password) {
-
-    }
-
-    async update(id, values = {}) {
-
+            .doRequest(`${this.#route}`, "POST", data);
     }
 }

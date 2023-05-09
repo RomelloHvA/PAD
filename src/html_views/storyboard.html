@@ -7,15 +7,21 @@
 
 
 <div class="filter-bar">
-    <select>
-        <option value="" selected>Meest recente</option>
-        <option value="">Oudste eerst</option>
+    <select id="selectOrder">
+        <option value="newest" selected>Meest recente</option>
+        <option value="oldest">Oudste eerst</option>
+        <option value="most_likes">Meeste likes</option>
+        <option value="least_likes">Minste likes</option>
     </select>
 
-    <div class="slidecontainer">
-        <input type="range" min="1980" max="2023" value="2002" class="slider" id="myRange">
-        <p>Value: <span id="demo"></span></p>
-    </div>
+    <select id="selectYear">
+        <option value="*" selected>Alle jaren</option>
+    </select>
+
+<!--    <div class="slidecontainer">-->
+<!--        <input type="range" min="1870" max="2023" value="2002" class="slider" id="myRange">-->
+<!--        <div class="slider-value" id="valueLabel"></div> &lt;!&ndash; Add this for the value label &ndash;&gt;-->
+<!--    </div>-->
 
 </div>
 
@@ -26,40 +32,27 @@
             <p class="message"></p>
         </div>
 
-        <div class="small-stories">
-            <div class="small-story">
-                <h3>Title of small story 1</h3>
-                <p>Small story description</p>
-            </div>
-            <div class="small-story">
-                <h3>Title of small story 2</h3>
-                <p>Small story description</p>
-            </div>
-            <div class="small-story">
-                <h3>Title of small story 3</h3>
-                <p>Small story description</p>
-            </div>
-        </div>
-
     </div>
 </div>
 
     <template id="storyTemp">
         <div class="story">
             <div class="story-info">
-                <h2 id="title"></h2>
-                <p></p>
+                <a id="link">
+                    <h2 id="title"></h2>
+                </a>
+                <p id="author"></p>
                 <p id="body"></p>
             </div>
             <div class="story-image">
-                <img alt="Story Image" src="https://picsum.photos/300/200">
+                <img id="img" alt="Story Image">
             </div>
             <div class="buttons">
                 <div class="ui labeled button mt-5 ml-5" tabindex="0">
                     <div class="ui blue button">
                         <i class="fas fa-thumbs-up"></i>
                     </div>
-                    <span class="ui basic blue label">0</span>
+                    <span id="counter" class="ui basic blue label">0</span>
                 </div>
             </div>
         </div>
