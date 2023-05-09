@@ -12,7 +12,6 @@ export class TimelineController extends Controller {
     #nextStoryPosition;
     #MIN_SCROLL_YEAR = 1970;
     #singleStoryUrl = "#singleStory?storyId=";
-    #addStoryController = "#addStory";
 
 
     constructor() {
@@ -172,10 +171,11 @@ export class TimelineController extends Controller {
         const leesVerhaalButtons = this.#timelineView.querySelectorAll(".storyID");
         const lastLeesVerhaalButton = leesVerhaalButtons[leesVerhaalButtons.length - 1];
 
+
         if (data[dataIndex] === undefined) {
             storyBody = noStoryMessageBody;
             storyTitle = noStoryTitle;
-            this.#changeStoryButton(lastLeesVerhaalButton);
+            this.#changeStoryButton(lastLeesVerhaalButton, this.#currentScrollYear);
         } else {
             storyBody = data[dataIndex].body;
             storyTitle = data[dataIndex].title;
@@ -192,8 +192,8 @@ export class TimelineController extends Controller {
 
     }
 
-    #changeStoryButton(button){
-        button.href = "#addStory";
+    #changeStoryButton(button, year) {
+        button.href = "#addStory?year=" + year;
         button.innerText = "Voeg verhaal toe!";
     }
 
