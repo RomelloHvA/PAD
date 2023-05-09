@@ -90,6 +90,7 @@ export class StoryboardController extends Controller {
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
         let likeError = this.#storyboardView.querySelectorAll("#likeError");
 
+        //disables error text when not logged in
         likeError.forEach(message => {
             message.style.display = "none";
         })
