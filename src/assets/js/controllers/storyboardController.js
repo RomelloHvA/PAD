@@ -1,6 +1,6 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester & Othaim Iboualaisen
+ * @author  Rosalinde Vester & Othaim Iboualaisen & Tygo Geervliet
  */
 
 import {Controller} from "./controller.js";
@@ -11,7 +11,6 @@ export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
 
-    // const user = (get user id)
 
 
     constructor() {
@@ -31,10 +30,7 @@ export class StoryboardController extends Controller {
         try {
             // get array of all stories
             const data = await this.#storyboardRepository.getAll();
-
             let template = this.#storyboardView.querySelector('#storyTemp').content;
-
-
 
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
@@ -58,6 +54,8 @@ export class StoryboardController extends Controller {
             console.log(error);
         }
 
+
+        //checks if user is logged in
         if (App.sessionManager.get("userID")) {
             await this.likeStory()
         } else {
@@ -65,6 +63,12 @@ export class StoryboardController extends Controller {
         }
 
     }
+
+
+    /**
+     Disables all like buttons on the storyboard view and changes their style to grey.
+     @author Tygo Geervliet
+     */
     async disableLikes() {
         const likeBtns = this.#storyboardView.querySelectorAll("#like");
         likeBtns.forEach(btn => {
@@ -72,7 +76,13 @@ export class StoryboardController extends Controller {
         });
     }
 
-
+    /**
+     This function allows the user to like or unlike a story based on their current like status for that story.
+     If the story has already been liked by the user, the function unlikes it when the like button is clicked.
+     If the story has not been liked by the user, the function likes the story when the like button is clicked.
+     The function also updates the 'liked' status of the button and the like count accordingly.
+     @author Tygo Geervliet
+     */
     async likeStory() {
 
         let userID = App.sessionManager.get("userID");
@@ -133,9 +143,7 @@ export class StoryboardController extends Controller {
     }
 
     async addNewLike(userID, storyID) {
-
         await this.#storyboardRepository.addLike(userID, storyID);
-
     }
 
     async removeLike(userID, storyID) {
