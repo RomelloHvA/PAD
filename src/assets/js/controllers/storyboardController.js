@@ -88,8 +88,11 @@ export class StoryboardController extends Controller {
         let userID = App.sessionManager.get("userID");
 
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
-        let likeError = this.#storyboardView.querySelector("#likeError");
-        likeError.style.display = "none";
+        let likeError = this.#storyboardView.querySelectorAll("#likeError");
+
+        likeError.forEach(message => {
+            message.style.display = "none";
+        })
         // Check if the user has already liked each story
         likeBtn.forEach(btn => {
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
