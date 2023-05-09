@@ -26,51 +26,38 @@
 
     <div class="content" style="overflow-x: auto">
 
-<!--        <div class="stories" id="stories">-->
-<!--            <p class="message"></p>-->
-<!--        </div>-->
+        <div class="stories" id="stories">
+            <p class="message"></p>
+        </div>
 
 <!--        <div class="small-stories">-->
             <div class="small-story">
                 <h3>Title of small story 1</h3>
                 <p>Small story description</p>
-                <a id="exampleEditButton" onclick="location.href='editStory.html'">Hoi</a>
+                <a id="exampleEditButton">Hoi</a>
             </div>
-<!--            <div class="small-story">-->
-<!--                <h3>Title of small story 2</h3>-->
-<!--                <p>Small story description</p>-->
-<!--            </div>-->
-<!--            <div class="small-story">-->
-<!--                <h3>Title of small story 3</h3>-->
-<!--                <p>Small story description</p>-->
-<!--            </div>-->
-<!--        </div>-->
+
     </div>
 </div>
 
-    <template id="storyTemp">
-        <div class="story">
-            <div class="story-info">
-                <h2 id="title">Title of this story</h2>
-                <p>Title description</p>
-                <p id="body">lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus justo at ultricies
-                    malesuada. Suspendisse potenti. Nullam malesuada pellentesque massa, eget faucibus mauris
-                    iaculis vel. Integer bibendum ipsum ac dolor aliquet euismod. Fusce vehicula felis quis velit
-                    facilisis eleifend. Aliquam aliquet elit elit, vel venenatis sem luctus quis. Fusce hendrerit
-                    commodo nunc, sit amet malesuada leo lobortis vitae. Maecenas commodo fermentum enim, a lacinia
-                    velit malesuada ut.</p>
-            </div>
-            <div class="story-image">
-                <img alt="Story Image" src="https://picsum.photos/300/200">
-            </div>
-            <div class="buttons">
-                <div class="upvote"></div>
-                <div id="counter">00</div>
-                <div class="downvote"></div>
-            </div>
-<!--            <a href="editStory.html" id="exampleEditButton" >Hoi</a>-->
+<template id="storyTemp">
+    <div class="story">
+        <div class="story-info">
+            <h2 id="title"></h2>
+            <p> </p>
+            <p id="body"> No story found </p>
         </div>
-    </template>
+        <div class="story-image">
+            <img alt="Story Image" src="https://picsum.photos/300/200">
+        </div>
+        <i class="fa-solid fa-pencil" >A</i>
+        <div class="buttons">
+            <div class="upvote"></div>
+            <div id="counter">00</div>
+            <div class="downvote"></div>
+        </div>
+    </div>
+</template>
 
 <script src="https://kit.fontawesome.com/13b16c83c0.js" crossorigin="anonymous"></script>
 </body>

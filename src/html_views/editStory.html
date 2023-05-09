@@ -3,62 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>edit story</title>
-  <link rel="stylesheet" href="../assets/css/addStory.css">
+    <link rel="stylesheet" href="../assets/css/addStory.css">
 </head>
 <body>
 
 <h1>Verhaal editen</h1>
 
 <form>
-  <div class="mb-4">
-    <label class="form-label">Onderwerp verhaal</label>
-    <input type="text" class="form-control" id = "subject" autocomplete="off"/>
-    <p class="error" id="subject-error"></p>
-  </div>
-
-  <div class="mb-4" id="inputfieldsrow">
-    <div class="fields">
-      <label class="form-label">Maand</label>
-      <select id="month" type="number">
-        <option disabled selected value="">Selecteer hier een maand</option>
-      </select>
+    <div class="mb-4">
+        <label class="form-label">Onderwerp verhaal</label>
+        <input type="text" class="form-control" id="subject" autocomplete="off"/>
+        <p class="error" id="subject-error"></p>
     </div>
 
-    <div class="fields">
-      <label class="form-label">Dag</label>
-      <select id="day" type="number">
-        <option disabled selected value="">Selecteer dag</option>
-      </select>
+    <div class="mb-4" id="inputfieldsrow">
+        <div class="fields">
+            <label>
+                <p>voer hier de datum in</p>
+                <input type="date" id="date">
+            </label>
+            <option disabled selected value="">Selecteer hier een datum</option>
+            </select>
+        </div>
+
+        <!--    hidden fields-->
+        <div class="fields hidden">
+            <label class="form-label">Dag</label>
+            <select id="day" type="number">
+                <option disabled selected value="">Selecteer dag</option>
+            </select>
+        </div>
+
+        <div class="fields hidden">
+            <label class="form-label">Jaar</label>
+            <select id="year" type="number"></select>
+        </div>
+    </div>
+    <!--end hidden fields -->
+
+    <div class="mb-4">
+        <label class="form-label">Verhaal</label>
+        <textarea maxlength="2000" class="form-control" rows="10" id="story"
+                  placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
+        <p class="error" id="story-error"></p>
+        <p id="characterCount"></p>
     </div>
 
-    <div class="fields">
-      <label class="form-label">Jaar</label>
-      <select id="year" type="number"></select>
-    </div>
-  </div>
-
-
-  <div class="mb-4">
-    <label class="form-label">Verhaal</label>
-    <textarea maxlength="2000" class="form-control" rows="10" id = "story" placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
-    <p class="error" id="story-error"></p>
-    <p id="characterCount"></p>
-  </div>
-
-  <label class="form-label">Afbeelding</label>
-  <input type="file" class="file-input" id="fileInput">
-  <img id="preview-image" src="">
-  <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Voeg verhaal toe</button>
+    <label class="form-label">Afbeelding</label>
+    <input type="file" class="file-input" id="fileInput">
+    <img id="preview-image" src="">
+    <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Pas verhaal aan</button>
 </form>
 
 <!-- The modal -->
 <div id="myModal" class="modal">
-  <div class="modal-content">
+    <div class="modal-content">
 
-    <p>Verhaal is opgeslagen. je kan deze zien op de verhaal pagina</p>
-    <button class="modal-buttons">Confirm</button>
+        <p>Verhaal is opgeslagen. je kan deze zien op de verhaal pagina</p>
+        <button class="modal-buttons">Confirm</button>
 
-  </div>
+    </div>
 </div>
 
 </body>

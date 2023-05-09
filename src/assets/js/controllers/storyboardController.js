@@ -5,6 +5,7 @@
 
 import {Controller} from "./controller.js";
 import {storyboardRepository} from "../repositories/storyboardRepository.js";
+import {EditStoryController} from "./editStoryController.js";
 
 export class StoryboardController extends Controller {
     #storyboardView
@@ -37,8 +38,7 @@ export class StoryboardController extends Controller {
 
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
-
-                    let matchProfile = template.cloneNode(true);
+                    let HTMLTemplate = template.cloneNode(true);
                     let id = data[i].storyID;
                     let title = data[i].title;
                     let body = data[i].body;
@@ -46,12 +46,16 @@ export class StoryboardController extends Controller {
                     let down = data[i].downvote;
                     let reputation = up - down;
 
-                    matchProfile.querySelector(".story").id = id;
-                    matchProfile.querySelector("#title").innerHTML = title;
-                    matchProfile.querySelector("#body").innerHTML = body;
-                    matchProfile.querySelector("#counter").innerHTML = reputation;
+                    HTMLTemplate.querySelector(".story").id = id;
+                    HTMLTemplate.querySelector("#title").innerHTML = title;
+                    HTMLTemplate.querySelector("#body").innerHTML = body;
+                    HTMLTemplate.querySelector("#counter").innerHTML = reputation;
 
-                    this.#storyboardView.querySelector("#stories").append(matchProfile);
+                    this.#storyboardView.querySelector("#stories").append(HTMLTemplate);
+                    console.log(this.#storyboardView.querySelector("#stories").lastChild)
+                    this.#storyboardView.querySelector("#stories").lastChild.previousSibling.addEventListener(
+                        "click", ()=>{ new EditStoryController(data[i])
+                    })
                 }
             } else {
                 this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";

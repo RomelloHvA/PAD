@@ -4,9 +4,11 @@ export class storyboardRepository {
     //# is a private field in Javascript
     #route
     #networkManager
+    #editRoute
 
     constructor() {
         this.#route = "/storyboard"
+        this.#editRoute = "/storyboard/edit"
         this.#networkManager = new NetworkManager();
     }
 
@@ -15,8 +17,10 @@ export class storyboardRepository {
      * @returns {Promise<*>}
      */
     async getAll() {
-        return await this.#networkManager
-            .doRequest(`${this.#route}`, "GET");
+        return await this.#networkManager.doRequest(`${this.#route}`, "GET");
+    }
+    async updateStory(){
+        return await this.#networkManager.doRequest(`${this.#editRoute}`, "PUT");
     }
 
     async delete() {
