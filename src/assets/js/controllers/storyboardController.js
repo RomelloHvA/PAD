@@ -5,6 +5,7 @@
 
 import {Controller} from "./controller.js";
 import {storyboardRepository} from "../repositories/storyboardRepository.js";
+import {App} from "../app.js";
 
 export class StoryboardController extends Controller {
     #storyboardView
@@ -57,16 +58,30 @@ export class StoryboardController extends Controller {
             console.log(error);
         }
 
-        await this.likeStory();
+        if (App.sessionManager.get("userID")) {
+            await this.likeStory()
+        } else {
+            await this.disableLikes()
+        }
+
+    }
+    async disableLikes() {
+        const likeBtns = this.#storyboardView.querySelectorAll("#like");
+        likeBtns.forEach(btn => {
+            btn.className = "ui grey button";
+        });
     }
 
+
     async likeStory() {
+
+        let userID = App.sessionManager.get("userID");
+
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
 
         // Check if the user has already liked each story
         likeBtn.forEach(btn => {
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
-            let userID = 1;
 
             let alreadyLiked = this.#storyboardRepository.checkAlreadyLiked(userID, storyId);;
             //set already liked 'true' or 'false'
@@ -84,7 +99,6 @@ export class StoryboardController extends Controller {
             btn.addEventListener("click", event => {
                 //if story is not already liked current user
                 if (!alreadyLiked) {
-
 
                     // User hasn't liked this story yet, so add the like
                     likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
