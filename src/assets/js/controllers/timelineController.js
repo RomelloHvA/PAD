@@ -167,6 +167,8 @@ export class TimelineController extends Controller {
 
         const storyYears = this.#timelineView.querySelectorAll(".year");
         const lastStoryYear = storyYears[storyYears.length - 1];
+        const yearButtons = this.#timelineView.querySelectorAll(".year-button");
+        const lastYearButton = yearButtons[yearButtons.length - 1];
 
         const leesVerhaalButtons = this.#timelineView.querySelectorAll(".storyID");
         const lastLeesVerhaalButton = leesVerhaalButtons[leesVerhaalButtons.length - 1];
@@ -182,19 +184,23 @@ export class TimelineController extends Controller {
             storyID = data[dataIndex].storyID;
             lastLeesVerhaalButton.href = this.#singleStoryUrl + storyID;
 
-
         }
 
 
         lastCardTitle.innerText = storyTitle;
         lastCardBody.innerText = storyBody;
         lastStoryYear.innerText = this.#currentScrollYear;
+        this.#changeYearButton(lastYearButton, this.#currentScrollYear);
 
     }
 
     #changeStoryButton(button, year) {
         button.href = "#addStory?year=" + year;
         button.innerText = "Voeg verhaal toe!";
+    }
+
+    #changeYearButton(button, year){
+        button.href = "#storyboard?year=" + year;
     }
 
 }

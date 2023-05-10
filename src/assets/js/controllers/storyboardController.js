@@ -257,13 +257,13 @@ export class StoryboardController extends Controller {
         likeBtn.forEach(btn => {
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
 
-            let alreadyLiked = this.#storyboardRepository.checkAlreadyLiked(userID, storyId);;
+            let alreadyLiked = this.#storyboardRepository.checkAlreadyLiked(userID, storyId);
             //set already liked 'true' or 'false'
             if(alreadyLiked === 1) {
-                alreadyLiked = true;
+                alreadyLiked = false;
             }
             else {
-                alreadyLiked = false;
+                alreadyLiked = true;
             }
 
             //like counter
