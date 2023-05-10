@@ -21,7 +21,7 @@ export class StoryboardController extends Controller {
         this.#setupView();
 
         this.#storyboardRepository = new storyboardRepository();
-        this.#storyURL = "#singleStory?id=";
+        this.#storyURL = "#singleStory?storyId=";
 
         this.#MIN_YEAR = 1870;
         this.#MAX_YEAR = new Date().getFullYear();
