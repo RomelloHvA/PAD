@@ -31,6 +31,6 @@ export class storyboardRepository {
 
     async checkAlreadyLiked(userID, storyID) {
         const body = { userID: userID, storyID: storyID };
-        return await this.#networkManager.doRequest(`${this.#route}/getLike`, "GET", body);
+        return await this.#networkManager.doRequest(`${this.#route}/getLike`, "POST", body);
     }
 }

@@ -61,7 +61,7 @@ class StoryboardRoutes {
     }
 
     AlreadyLiked() {
-            this.#app.get("/storyboard/getLike", async (req, res) => {
+            this.#app.post("/storyboard/getLike", async (req, res) => {
                 const { userID, storyID } = req.body;
             try {
                 const data = await this.#databaseHelper.handleQuery({
