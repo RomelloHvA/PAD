@@ -246,70 +246,52 @@ export class StoryboardController extends Controller {
      @author Tygo Geervliet
      */
     async likeStory() {
-
         let userID = App.sessionManager.get("userID");
-
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
         let likeError = this.#storyboardView.querySelectorAll("#likeError");
 
-        //disables error text when not logged in
+        // Disables error text when not logged in
         likeError.forEach(message => {
             message.style.display = "none";
-        })
-        // Check if the user has already liked each story
-        for (let btn of likeBtn) {
+        });
 
+        for (let btn of likeBtn) {
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
-            //returns 1 or 0. 1 means story is already liked. 0 is not liked
             let alreadyLiked = await this.#storyboardRepository.checkAlreadyLiked(userID, storyId);
 
-            let alreadyLikedObject = alreadyLiked[0];
-            let key = 'AlreadyLiked(' + userID + ',' + storyId + ')';
-            let AlreadyLikedvalue = alreadyLikedObject[key];
+            //get return value from alreadyliked from promise
+            let alreadyLikedValue = this.retrieveAlreadyLikedValue(alreadyLiked, userID, storyId);
 
-
-
-
-            //like counter
             let likeCounter = btn.parentElement.querySelector("#counter");
 
-
             btn.addEventListener("click", async (event) => {
-                //if story is not already liked current user
-                console.log(alreadyLiked)
-                if (AlreadyLikedvalue === 0) {
-
-                    // User hasn't liked this story yet, so add the like
+                if (alreadyLikedValue === 0) {
                     likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
-
-                   await this.addNewLike(userID, storyId);
-
-                    // Update the 'alreadyLiked' flag
-                    AlreadyLikedvalue = 1;
-
-                    // Set the 'liked' class on the like button
+                    await this.addNewLike(userID, storyId);
+                    alreadyLikedValue = 1;
                     btn.classList.add("liked");
                 } else {
-                    // User has already liked this story, so remove the like
                     if (parseInt(likeCounter.textContent) > 0) {
                         likeCounter.textContent = parseInt(likeCounter.textContent) - 1;
                     }
-
                     this.removeLike(userID, storyId);
-                    // Update the 'alreadyLiked' flag
-                    AlreadyLikedvalue = 0;
-
-                    // Remove the 'liked' class from the like button
+                    alreadyLikedValue = 0;
                     btn.classList.remove("liked");
                 }
             });
 
-            // Set the initial state of the like button
-            if (alreadyLiked) {
+            if (alreadyLikedValue === 1) {
                 btn.classList.add("liked");
             }
-        };
+        }
     }
+
+    retrieveAlreadyLikedValue(alreadyLiked, userID, storyId) {
+        let alreadyLikedObject = alreadyLiked[0];
+        let key = 'AlreadyLiked(' + userID + ',' + storyId + ')';
+        return alreadyLikedObject[key];
+    }
+
 
     async addNewLike(userID, storyID) {
         await this.#storyboardRepository.addLike(userID, storyID);
