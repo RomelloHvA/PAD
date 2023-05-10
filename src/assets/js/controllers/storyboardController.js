@@ -32,7 +32,7 @@ export class StoryboardController extends Controller {
         const controller = App.getCurrentController();
         let year;
         if (controller.data) {
-            year = controller.data.year;
+            year = parseInt(controller.data.year);
         }
         this.#display_year = year ? year : "*";
     }
@@ -178,7 +178,13 @@ export class StoryboardController extends Controller {
         });
     }
 
-    selectYear(selectYear) {
+    async selectYear(selectYear) {
+        // if this.#display_year exists/is valid then select the option in the selectYear select element
+        if (this.#display_year) {
+            selectYear.value = this.#display_year;
+            await this.loadStories();
+        }
+
         // Add an event listener that listens to the change event of the select element
         selectYear.addEventListener("change", async (event) => {
             await this.loadStories();
@@ -205,21 +211,22 @@ export class StoryboardController extends Controller {
         }
 
         // Set the field and order properties of the sortData object based on the selected value
-        if (selectedOption === "newest") {
-            sortData.field = "created_at";
-            sortData.order = "DESC";
-        } else if (selectedOption === "oldest") {
-            sortData.field = "created_at";
-            sortData.order = "ASC";
-        } else if (selectedOption === "most_likes") {
-            sortData.field = "likes";
-            sortData.order = "DESC";
-        } else if (selectedOption === "least_likes") {
-            sortData.field = "likes";
-            sortData.order = "ASC";
-        }
         if (selectedYear !== "*") {
-            sortData.year = selectedYear
+            sortData.year = selectedYear;
+        } else {
+            if (selectedOption === "newest") {
+                sortData.field = "created_at";
+                sortData.order = "DESC";
+            } else if (selectedOption === "oldest") {
+                sortData.field = "created_at";
+                sortData.order = "ASC";
+            } else if (selectedOption === "most_likes") {
+                sortData.field = "likes";
+                sortData.order = "DESC";
+            } else if (selectedOption === "least_likes") {
+                sortData.field = "likes";
+                sortData.order = "ASC";
+            }
         }
         return sortData;
     }
