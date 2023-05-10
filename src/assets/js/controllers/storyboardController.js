@@ -199,6 +199,9 @@ export class StoryboardController extends Controller {
         const likeBtns = this.#storyboardView.querySelectorAll("#like");
         likeBtns.forEach(btn => {
             btn.className = "ui grey button";
+            btn.addEventListener('mouseover', () => {
+                btn.style.cursor = 'not-allowed';r
+            });
         });
     }
 
