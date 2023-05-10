@@ -43,8 +43,9 @@ export class EditStoryController extends Controller {
         const month = this.#selectedStory.month;
         const day = this.#selectedStory.day;
 
-        const date = new Date(year, month, day);
+        const date = new Date(year, month, day).toISOString().slice(0, 10);
         const dateField = this.#addStoryView.querySelector("#date");
+        dateField.value = date;
 
         console.log(date)
 
