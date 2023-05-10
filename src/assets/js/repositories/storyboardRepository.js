@@ -20,7 +20,9 @@ export class storyboardRepository {
         return await this.#networkManager.doRequest(`${this.#route}`, "GET");
     }
     async updateStory(data){
-        return await this.#networkManager.doRequest(`${this.#editRoute}`, "POST", data);
+        return await this.#networkManager.doFileRequest(`${this.#editRoute}`, "POST", data, {
+            'Content-Type': `multipart/form-data;`
+        });
     }
 
     async delete() {

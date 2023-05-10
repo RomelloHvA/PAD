@@ -58,7 +58,7 @@ export class EditStoryController extends Controller {
         const dateField = this.#addStoryView.querySelector("#date");
         dateField.value = date;
 
-        const image = this.#addStoryView.image;
+        const image = this.#selectedStory.image;
         const imageField = this.#addStoryView.querySelector("#preview-image");
         imageField.src = image;
     }
@@ -68,19 +68,29 @@ export class EditStoryController extends Controller {
         const newTitle = this.#addStoryView.querySelector("#subject");
         const newBody = this.#addStoryView.querySelector("#story");
         const baseId = this.#addStoryView.querySelector("#idInput");
-        const newImage = this.#addStoryView.querySelector("#preview-image");
-
         const newDate = this.#addStoryView.querySelector("#date");
         const [year, month, day] = newDate.value.split('-');
+        const newImage = this.#addStoryView.querySelector("#fileInput");
 
-        let data = {
-            title: newTitle.value,
-            body: newBody.value,
-            id: baseId.value,
-            year, month, day,
-            image: newImage
-        }
-        await this.#storyboardRepository.updateStory(data);
+        const formData = new FormData();
+
+        formData.append("title", newTitle.value);
+        formData.append("body", newBody.value);
+        formData.append("id", baseId.value);
+        formData.append("year", year);
+        formData.append("month", month);
+        formData.append("day", day);
+        formData.append("image", newImage.files[0]);
+
+        // let data = {
+        //     title: newTitle.value,
+        //     body: newBody.value,
+        //     id: baseId.value,
+        //     year, month, day,
+        //     image: newImage
+        // }
+        console.log(formData)
+        await this.#storyboardRepository.updateStory(formData);
     }
 
     /**

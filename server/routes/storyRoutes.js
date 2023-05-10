@@ -13,6 +13,7 @@ class storyRoutes {
         this.#addStory();
         this.#getHighestRatedMessageForYear();
         this.#getHighestRatedMessage();
+        this.#updateStory();
     }
 
     /**
@@ -103,7 +104,6 @@ class storyRoutes {
      */
     async #writeUploadedFileToDisk(file) {
 
-
         const timestamp = new Date().getTime();
         const fileUrl = `uploads/${timestamp}.${this.#getFileExtension(file)}`;
         try {
@@ -150,7 +150,33 @@ class storyRoutes {
         });
     }
 
+    #updateStory() {
+        this.#app.post("/storyboard/edit",this.#multer().single("image"), async (req, res) => {
+            const {body:{ title, body, year, month, day, id }, file} = req;
 
+            try {
+                let fileUrl = '';
+
+                // Check if a file was uploaded and write it to disk
+                if (file != null) {
+                    fileUrl = await this.#writeUploadedFileToDisk(file);
+                    if (!fileUrl) {
+                        // If an error occurred while writing to disk, send a bad request response
+                        return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
+                    }
+                }
+
+                const data = await this.#databaseHelper.handleQuery({
+                    query: `UPDATE story SET title = ?, body  = ?, year = ?, month = ?, day = ?, image = ? WHERE storyID = ?`,
+                    values: [title, body ,year, month, day, fileUrl, id]
+
+                });
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
 }
 
 module.exports = storyRoutes;

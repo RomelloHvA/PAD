@@ -1,13 +1,15 @@
+const fs = require("fs");
+
 /**
  * this file contains ExpressJS stuff
  * @author Rosalinde & Othaim Iboualaisen
  */
 
-
 class StoryboardRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
     #databaseHelper = require("../framework/utils/databaseHelper")
     #app
+    #multer = require("multer");
 
     /**
      * initialize
@@ -15,9 +17,8 @@ class StoryboardRoutes {
      */
     constructor(app) {
         this.#app = app;
-
         this.#getStory();
-        this.#updateStory();
+        // this.#updateStory();
     }
 
 
@@ -46,22 +47,6 @@ class StoryboardRoutes {
      * Roos
      */
 
-    #updateStory() {
-        this.#app.post("/storyboard/edit", async (req, res) => {
-            const { title, body, year, month, day, id } = req.body;
-
-            try {
-                const data = await this.#databaseHelper.handleQuery({
-                    query: `UPDATE story SET title = ?, body  = ?, year = ?, month = ?, day = ? WHERE storyID = ?`,
-                    values: [title, body ,year, month, day, id]
-
-                });
-                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
-            } catch (e) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
-            }
-        })
-    }
-}
+   }
 
 module.exports = StoryboardRoutes;
