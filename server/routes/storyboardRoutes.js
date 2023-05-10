@@ -21,7 +21,6 @@ class StoryboardRoutes {
     }
 
 
-
     /**
      * this method fetches the data from a story
      * Roos
@@ -49,16 +48,25 @@ class StoryboardRoutes {
      * Roos
      */
     //id say the method needs the new story data to be given along
-    #updateStory(title, story, year, month, day){
+    #updateStory() {
         this.#app.put("/storyboard/edit", async (req, res) => {
+
+            const title = req.query.title;
+            const story = req.query.story;
+            const year = req.query.year;
+            const month = req.query.month;
+            const day = req.query.day;
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: `UPDATE (subject, story, year, month, day) SET ` ,
+                    query: `UPDATE (subject, story, year, month, day)
+                            SET `,
                     values: [title, story, year, month, day]
-                })
+
+                });
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
-                
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
         })
 

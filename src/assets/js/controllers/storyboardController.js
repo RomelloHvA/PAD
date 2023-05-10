@@ -11,9 +11,6 @@ export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
 
-    // const user = (get user id)
-
-
     constructor() {
         super();
         this.#setupView();
@@ -56,6 +53,8 @@ export class StoryboardController extends Controller {
                     this.#storyboardView.querySelector("#stories").lastChild.previousSibling.addEventListener(
                         "click", ()=>{ new EditStoryController(data[i])
                     })
+                    const button = document.querySelector("#stories .icon-pencil");
+                    console.log(button + "button")
                 }
             } else {
                 this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";

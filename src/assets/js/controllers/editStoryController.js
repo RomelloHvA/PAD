@@ -13,6 +13,7 @@ export class EditStoryController extends Controller {
         super();
         this.#selectedStory = selectedStory;
         this.#setupView();
+        this.#updateStory(selectedStory)
         this.#storyRepository = new storyRepository();
         this.#route = "/story"
         this.#storyboardRepository = new storyboardRepository();
@@ -42,12 +43,18 @@ export class EditStoryController extends Controller {
         const month = this.#selectedStory.month;
         const day = this.#selectedStory.day;
 
+        const date = new Date(year, month, day);
+        const dateField = this.#addStoryView.querySelector("#date");
+
+        console.log(date)
+
+
+
         //???
         // const date = year + "-" + month + "-" + day;
         // console.log(date);
         // const dateField = this.#addStoryView.querySelector("#date");
         // dateField.value = date;
-        await this.#updateStory();
 
 
         //click event voor updaten van verhaal in database
@@ -78,7 +85,9 @@ export class EditStoryController extends Controller {
     }
 
     async #updateStory(event) {
-        event.preventDefault();
+        // event.preventDefault();
+
+
 
         //get button to save and call save method.
         const saveBtn = document.querySelector("#myButton");
