@@ -16,7 +16,7 @@ export class storyboardRepository {
      */
     async getAll(data) {
         return await this.#networkManager
-            .doRequest(`${this.#route}`, "GET");
+            .doRequest(`${this.#route}`, "POST", data);
     }
 
     async addLike(userID, storyID) {
@@ -32,19 +32,5 @@ export class storyboardRepository {
     async checkAlreadyLiked(userID, storyID) {
         const body = { userID: userID, storyID: storyID };
         return await this.#networkManager.doRequest(`${this.#route}/getLike`, "GET", body);
-    }
-
-
-    async delete() {
-
-    }
-
-    //example endpoint would be: /users/register
-    async register(username, password) {
-
-    }
-
-    async update(id, values = {}) {
-
     }
 }

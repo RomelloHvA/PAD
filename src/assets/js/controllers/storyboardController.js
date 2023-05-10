@@ -5,6 +5,7 @@
 
 import {Controller} from "./controller.js";
 import {storyboardRepository} from "../repositories/storyboardRepository.js";
+import {App} from "../app.js";
 
 export class StoryboardController extends Controller {
     #storyboardView
@@ -111,7 +112,6 @@ export class StoryboardController extends Controller {
         } catch (error) {
             console.log(error);
         }
-
 
         //checks if user is logged in
         if (App.sessionManager.get("userID")) {
