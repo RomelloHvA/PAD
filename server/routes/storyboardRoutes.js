@@ -82,8 +82,7 @@ class StoryboardRoutes {
      */
     #getStory() {
         this.#app.get("/storyboard", async (req, res) => {
-
-            //get the title, body and image from the story table
+            //todo: kijk naar andere errorcodes, het is niet altijd bad request
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT * FROM story",

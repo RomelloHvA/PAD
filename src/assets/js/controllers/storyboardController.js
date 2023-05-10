@@ -1,16 +1,16 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester & Othaim Iboualaisen & Tygo Geervliet
+ * @author  Rosalinde Vester & Othaim Iboualaisen
  */
 
 import {Controller} from "./controller.js";
 import {storyboardRepository} from "../repositories/storyboardRepository.js";
-import {App} from "../app.js";
 
 export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
 
+    // const user = (get user id)
 
 
     constructor() {
@@ -30,7 +30,10 @@ export class StoryboardController extends Controller {
         try {
             // get array of all stories
             const data = await this.#storyboardRepository.getAll();
+
             let template = this.#storyboardView.querySelector('#storyTemp').content;
+
+            console.log(data);
 
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
@@ -43,6 +46,7 @@ export class StoryboardController extends Controller {
                     matchProfile.querySelector(".story").id = id;
                     matchProfile.querySelector("#title").innerHTML = title;
                     matchProfile.querySelector("#body").innerHTML = body;
+                    matchProfile.querySelector("#counter").innerHTML = reputation;
 
                     this.#storyboardView.querySelector("#stories").append(matchProfile);
                 }
