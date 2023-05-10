@@ -11,6 +11,7 @@ export class TimelineController extends Controller {
     #currentScrollYear;
     #nextStoryPosition;
     #MIN_SCROLL_YEAR = 1970;
+    #singleStoryUrl = "#singleStory?storyId=";
 
 
     constructor() {
@@ -39,7 +40,7 @@ export class TimelineController extends Controller {
      * @author Romello ten Broeke
      */
 
-    #reloadOnce(){
+    #reloadOnce() {
         if (sessionStorage.getItem("isReloaded") === null) {
             sessionStorage.setItem("isReloaded", "true");
             location.reload();
@@ -156,15 +157,8 @@ export class TimelineController extends Controller {
         let data = await this.#storyRepository.getHighestStoryPerYear(this.#currentScrollYear);
         let storyBody;
         let storyTitle;
+        let storyID = "";
 
-        if (data[dataIndex] === undefined) {
-            storyBody = noStoryMessageBody;
-            storyTitle = noStoryTitle;
-        } else {
-            storyBody = data[dataIndex].body;
-            storyTitle = data[dataIndex].title;
-
-        }
         const cardBodies = this.#timelineView.querySelectorAll(".card-body");
         const lastCardBody = cardBodies[cardBodies.length - 1];
 
@@ -174,10 +168,33 @@ export class TimelineController extends Controller {
         const storyYears = this.#timelineView.querySelectorAll(".year");
         const lastStoryYear = storyYears[storyYears.length - 1];
 
+        const leesVerhaalButtons = this.#timelineView.querySelectorAll(".storyID");
+        const lastLeesVerhaalButton = leesVerhaalButtons[leesVerhaalButtons.length - 1];
+
+
+        if (data[dataIndex] === undefined) {
+            storyBody = noStoryMessageBody;
+            storyTitle = noStoryTitle;
+            this.#changeStoryButton(lastLeesVerhaalButton, this.#currentScrollYear);
+        } else {
+            storyBody = data[dataIndex].body;
+            storyTitle = data[dataIndex].title;
+            storyID = data[dataIndex].storyID;
+            lastLeesVerhaalButton.href = this.#singleStoryUrl + storyID;
+
+
+        }
+
+
         lastCardTitle.innerText = storyTitle;
         lastCardBody.innerText = storyBody;
         lastStoryYear.innerText = this.#currentScrollYear;
 
+    }
+
+    #changeStoryButton(button, year) {
+        button.href = "#addStory?year=" + year;
+        button.innerText = "Voeg verhaal toe!";
     }
 
 }
