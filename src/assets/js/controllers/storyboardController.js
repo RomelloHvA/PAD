@@ -91,7 +91,7 @@ export class StoryboardController extends Controller {
                     let reader = new FileReader();
 
                     // define a function to be called when the FileReader has finished reading the image file
-                    reader.onload = function() {
+                    reader.onload = function () {
                         // set the source of the 'img' element to the data URL obtained from reading the image file
                         storyTemp.querySelector("#img").src = reader.result;
                     }
@@ -119,6 +119,7 @@ export class StoryboardController extends Controller {
         } else {
             await this.disableLikes()
         }
+    }
 
     toggleMessage(toggle) {
         if (toggle) {
@@ -188,6 +189,8 @@ export class StoryboardController extends Controller {
         likeBtns.forEach(btn => {
             btn.className = "ui grey button";
         });
+    }
+
     getSortAndFilterData(selectedOption) {
         let sortData = {};
         let selectedYear = this.#storyboardView.querySelector("#selectYear").value;
