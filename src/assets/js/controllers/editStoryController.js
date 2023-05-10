@@ -53,7 +53,7 @@ export class EditStoryController extends Controller {
         const date = new Date(year, month, day).toISOString().slice(0, 10);
         const dateField = this.#addStoryView.querySelector("#date");
         dateField.value = date;
-        console.log(date + "date 1");
+        console.log(date + "oude date");
     }
 
     async #updateStory() {
@@ -72,6 +72,7 @@ export class EditStoryController extends Controller {
 
 
     }
+
     /**
      A function that tracks the number of characters entered into a story field
      and updates the character count on the page.

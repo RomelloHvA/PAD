@@ -47,7 +47,7 @@ class StoryboardRoutes {
      * This method x
      * Roos
      */
-    //id say the method needs the new story data to be given along
+
     #updateStory() {
         this.#app.put("/storyboard/edit", async (req, res) => {
 
@@ -61,9 +61,8 @@ class StoryboardRoutes {
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: `UPDATE (subject, story, year, month, day)
-                            SET `,
-                    values: [title, story, year, month, day]
+                    query: `UPDATE story s SET title = ?, body = ? WHERE storyID = 1`,
+                    values: [title, story]
 
                 });
                 res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
