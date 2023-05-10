@@ -13,6 +13,8 @@ class storyRoutes {
         this.#addStory();
         this.#getHighestRatedMessageForYear();
         this.#getHighestRatedMessage();
+        this.#getSingleStory();
+        this.#getMaxUpvotesForStory();
     }
 
     /**
@@ -117,11 +119,16 @@ class storyRoutes {
         }
     }
 
+    /**
+     * Gets the highest rated story of all time.
+     * @author Romello ten Broeke
+     */
+
     #getHighestRatedMessage() {
         this.#app.get("/story/highestRated", async (req, res) => {
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT title, body FROM story WHERE upvote = (SELECT MAX(upvote) FROM story)"
+                    query: "SELECT s.* FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC, s.storyID ASC LIMIT 1"
                 })
                 if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
@@ -132,13 +139,18 @@ class storyRoutes {
         });
     }
 
+    /**
+     * Gets the highest rated story per year using the like table and counting the userID who liked a story and joining it on the story table.
+     * If there are no likes it will still return a story. If a story has the same amount of likes it will still return 1 story.
+     * @author Romello ten Broeke
+     */
     #getHighestRatedMessageForYear() {
         this.#app.get("/story/highestRatedPerYear", async (req, res) => {
             const year = req.query.year;
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM story WHERE upvote = (SELECT MAX(upvote) FROM story WHERE year = (?)) GROUP BY year DESC LIMIT 1",
+                    query: "SELECT s.storyID, s.title, s.body, s.year, s.image FROM story s LEFT JOIN `like` l ON s.storyID = l.storyID WHERE s.year = ? GROUP BY s.storyID ORDER BY COUNT(l.userID) DESC LIMIT 1",
                     values: [year]
                 })
                 if (data) {
@@ -148,6 +160,65 @@ class storyRoutes {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
             }
         });
+    }
+
+    /**
+     * API endpoint for getting a single story by its ID and the author first and last name. Checks is if there is a storyID
+     * If the storyID can't be found in the database responds with a 404 error-code And if the storyID is empty it wil give a bad request.
+     * @author Romello ten Broeke
+     */
+
+    #getSingleStory() {
+        this.#app.get("/story/singleStory", async (req, res) => {
+            let storyId = req.query.storyId;
+
+            if (storyId.length >= 1) {
+
+                try {
+                    const data = await this.#databaseHelper.handleQuery({
+                        query: "SELECT s.title, s.body, s.day, s.month, s.year, s.visible, s.image, u.firstName, u.lastName FROM story s LEFT JOIN user u ON s.userID = u.userID WHERE storyID = ?",
+                        values: [storyId]
+                    })
+
+                    if (Object.keys(data).length === 0) {
+                        res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({reason: this.#errorCodes.ROUTE_NOT_FOUND_CODE});
+                    } else {
+                        res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                    }
+                } catch (e) {
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+                }
+            } else {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({
+                    reason: "StoryID can't be empty."
+                })
+            }
+
+
+        })
+    }
+
+
+    /**
+     * API endpoint for getting all the likes for a given storyID.
+     * @author Romello ten Broeke
+     */
+    #getMaxUpvotesForStory() {
+        this.#app.get("/story/getUpvoteForStoryId", async (req, res) => {
+            let storyId = req.query.storyId;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT COUNT(like.userID) AS total_likes FROM story RIGHT JOIN `like` ON story.storyID = like.storyID WHERE like.storyID = ?",
+                    values: [storyId]
+                })
+                if (data) {
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
     }
 
 
