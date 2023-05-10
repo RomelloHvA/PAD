@@ -69,11 +69,11 @@ describe("Login",  () => {
 
 
         const mockedResponse = {
-            reason: "ERROR"
+            reason: ["ERROR", "ERROR"]
         };
 
         //Add a stub with the URL /users/login as a POST
-        //Respond with a JSON-object when requested and set the status-code tot 401.
+        //Respond with a JSON-object when requested and set the status-code tot 429.
         //Give the stub the alias: @login
         cy.intercept('POST', '/users/login', {
             statusCode: 401,

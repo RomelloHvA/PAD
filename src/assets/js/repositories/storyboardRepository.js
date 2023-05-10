@@ -10,8 +10,11 @@ export class storyboardRepository {
         this.#networkManager = new NetworkManager();
     }
 
-
-    async getAll() {
+    /**
+     * this function gets the information given from the endpoint from all story's
+     * @returns {Promise<*>}
+     */
+    async getAll(data) {
         return await this.#networkManager
             .doRequest(`${this.#route}`, "GET");
     }

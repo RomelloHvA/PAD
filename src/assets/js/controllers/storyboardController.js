@@ -9,50 +9,104 @@ import {storyboardRepository} from "../repositories/storyboardRepository.js";
 export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
+    #storyURL
 
-    // const user = (get user id)
-
+    #MIN_YEAR
+    #MAX_YEAR
+    #display_year
 
     constructor() {
         super();
         this.#setupView();
 
         this.#storyboardRepository = new storyboardRepository();
+        this.#storyURL = "#singleStory?id=";
+
+        this.#MIN_YEAR = 1870;
+        this.#MAX_YEAR = new Date().getFullYear();
+
+        // Get the ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const year = urlParams.get("year");
+        this.#display_year = year ? year : "*";
     }
 
     async #setupView() {
         //wait for the html to load
         this.#storyboardView = await super.loadHtmlIntoContent("html_views/storyboard.html")
         await this.loadStories();
+
+        // Get a reference to the select element
+        const selectOrder = this.#storyboardView.querySelector("#selectOrder");
+        const selectYear = this.#storyboardView.querySelector("#selectYear");
+
+        // const slider = this.#storyboardView.querySelector("#myRange");
+        // const valueLabel = this.#storyboardView.querySelector("#valueLabel");
+        //
+        // this.setupSlider(slider);
+
+        // this.updateSliderValue(slider, valueLabel);
+
+        // Update the value label position and value on input change
+        // slider.addEventListener("input", () => this.updateSliderValue(slider, valueLabel));
+
+        this.populateSelect(selectYear);
+
+        this.selectSort(selectOrder);
+        this.selectYear(selectYear);
     }
 
-    async loadStories() {
+    async loadStories(selectedOption) {
         try {
+            let sortData = this.getSortAndFilterData(selectedOption);
+
             // get array of all stories
-            const data = await this.#storyboardRepository.getAll();
+            const data = await this.#storyboardRepository.getAll(sortData);
 
             let template = this.#storyboardView.querySelector('#storyTemp').content;
 
-            console.log(data);
+            this.removeNodes();
 
             if (data.length > 0) {
+                this.toggleMessage(false);
+
                 for (let i = 0; i < data.length; i++) {
 
-                    let matchProfile = template.cloneNode(true);
+                    let storyTemp = template.cloneNode(true);
                     let id = data[i].storyID;
+                    let author = data[i].author;
                     let title = data[i].title;
-                    let body = data[i].body
+                    let body = data[i].body;
+                    let likes = data[i].likes;
+                    let image = data[i].image;
 
-                    matchProfile.querySelector(".story").id = id;
-                    matchProfile.querySelector("#title").innerHTML = title;
-                    matchProfile.querySelector("#body").innerHTML = body;
-                    matchProfile.querySelector("#counter").innerHTML = reputation;
+                    storyTemp.querySelector(".story").id = id;
+                    storyTemp.querySelector("#title").innerHTML = title;
+                    storyTemp.querySelector("#author").innerHTML = author;
+                    storyTemp.querySelector("#body").innerHTML = body;
+                    storyTemp.querySelector("#link").href = this.#storyURL + id;
+                    storyTemp.querySelector("#counter").innerHTML = likes || 0;
 
-                    this.#storyboardView.querySelector("#stories").append(matchProfile);
+                    // create a new FileReader object
+                    let reader = new FileReader();
+
+                    // define a function to be called when the FileReader has finished reading the image file
+                    reader.onload = function() {
+                        // set the source of the 'img' element to the data URL obtained from reading the image file
+                        storyTemp.querySelector("#img").src = reader.result;
+                    }
+
+                    if (image && image.type) {
+                        reader.readAsDataURL(image);
+                    } else {
+                        storyTemp.querySelector("#img").src = "https://picsum.photos/300/200";
+                    }
+
+
+                    this.#storyboardView.querySelector("#stories").append(storyTemp);
                 }
             } else {
-                this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";
-                this.#storyboardView.querySelector(".message").style.display = "block";
+                this.toggleMessage(true);
             }
         } catch (error) {
             console.log(error);
@@ -66,8 +120,64 @@ export class StoryboardController extends Controller {
             await this.disableLikes()
         }
 
+    toggleMessage(toggle) {
+        if (toggle) {
+            this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";
+            this.#storyboardView.querySelector(".message").style.display = "block";
+        } else {
+            this.#storyboardView.querySelector(".message").innerHTML = "";
+            this.#storyboardView.querySelector(".message").style.display = "none";
+        }
+    }
+    setupSlider(slider) {
+        slider.min = this.#MIN_YEAR;
+        slider.max = this.#MAX_YEAR;
+        if (this.#display_year === "*") {
+            slider.disabled = true;
+
+        } else {
+            slider.value = this.#display_year;
+        }
     }
 
+    updateSliderValue(slider, valueLabel) {
+        const thumbPosition = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        valueLabel.style.left = thumbPosition + "%";
+        valueLabel.innerHTML = slider.value;
+    }
+
+    populateSelect(selectYear) {
+        const currentYear = new Date().getFullYear();
+        const startYear = 1980;
+
+        const yearArray = [];
+
+        for (let year = startYear; year <= currentYear; year++) {
+            yearArray.push(year);
+        }
+        // loop through the years array and create an option element for each year
+        yearArray.forEach(year => {
+            const option = document.createElement("option");
+            option.value = year;
+            option.text = year;
+            selectYear.appendChild(option);
+        });
+    }
+
+    selectSort(selectOrder) {
+        // Add an event listener that listens to the change event of the select element
+        selectOrder.addEventListener("change", async (event) => {
+            const selectedOption = event.target.value;
+            await this.loadStories(selectedOption);
+        });
+    }
+
+    selectYear(selectYear) {
+        // Add an event listener that listens to the change event of the select element
+        selectYear.addEventListener("change", async (event) => {
+            await this.loadStories();
+        });
+    }
 
     /**
      Disables all like buttons on the storyboard view and changes their style to grey.
@@ -78,6 +188,43 @@ export class StoryboardController extends Controller {
         likeBtns.forEach(btn => {
             btn.className = "ui grey button";
         });
+    getSortAndFilterData(selectedOption) {
+        let sortData = {};
+        let selectedYear = this.#storyboardView.querySelector("#selectYear").value;
+
+        if (!selectedOption) {
+            selectedOption = this.#storyboardView.querySelector("#selectOrder").value;
+        }
+
+        // Set the field and order properties of the sortData object based on the selected value
+        if (selectedOption === "newest") {
+            sortData.field = "created_at";
+            sortData.order = "DESC";
+        } else if (selectedOption === "oldest") {
+            sortData.field = "created_at";
+            sortData.order = "ASC";
+        } else if (selectedOption === "most_likes") {
+            sortData.field = "likes";
+            sortData.order = "DESC";
+        } else if (selectedOption === "least_likes") {
+            sortData.field = "likes";
+            sortData.order = "ASC";
+        }
+        if (selectedYear !== "*") {
+            sortData.year = selectedYear
+        }
+        return sortData;
+    }
+
+    removeNodes() {
+        // get all previously appended story elements
+        let storiesContainer = this.#storyboardView.querySelector("#stories");
+        let prevStories = storiesContainer.querySelectorAll(".story");
+
+        // remove previously appended story elements
+        for (let i = 0; i < prevStories.length; i++) {
+            prevStories[i].remove();
+        }
     }
 
     /**

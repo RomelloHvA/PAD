@@ -1,6 +1,6 @@
 /**
  * this file contains ExpressJS stuff
- * @author Rosalinde & Othaim Iboualaisen
+ * @author Othaim Iboualaisen
  */
 
 
@@ -78,18 +78,35 @@ class StoryboardRoutes {
 
     /**
      * this method fetches the data from a story
-     * Roos
+     * Othaim Iboualaisen
      */
     #getStory() {
-        this.#app.get("/storyboard", async (req, res) => {
-            //todo: kijk naar andere errorcodes, het is niet altijd bad request
+        this.#app.post("/storyboard", async (req, res) => {
             try {
-                const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM story",
+                let data;
+                let query;
 
-                });
+                let sortOrder = req.body.order;
+                let sortField = req.body.field;
+                let year = req.body.year;
 
-                //give a response when an error occurs
+                if (!sortOrder) sortOrder = "DESC";
+                if (!sortField || sortField === "") sortField = "s.created_at";
+                let whereClause = year ? `WHERE s.year = ${year}` : "";
+
+                query = `
+                    SELECT s.*, COUNT(l.storyID) AS likes, CONCAT(u.firstname, ' ', u.lastname) AS author
+                    FROM story AS s
+                        LEFT JOIN \`like\` AS l ON s.storyID = l.storyID
+                        LEFT JOIN user AS u ON s.userID = u.userID 
+                        ${whereClause}
+                    GROUP BY s.storyID
+                    ORDER BY ${sortField} ${sortOrder}`;
+
+
+                data = await this.#databaseHelper.handleQuery({query});
+
+
                 res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});

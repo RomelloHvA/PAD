@@ -1,21 +1,23 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {App} from "../app.js";
-import {TimelineController} from "./timelineController.js";
 import {StoryboardController} from "./storyboardController.js";
 
 export class addStoryController extends Controller {
 
     #addStoryView
     #route
-
-    #storyRepository
+    #storyRepository;
+    #controllerData;
+    #minimumDate;
 
     constructor() {
         super();
         this.#setupView();
         this.#storyRepository = new storyRepository();
         this.#route = "/story"
+        this.#controllerData = App.getCurrentController();
+        this.#minimumDate = 1980;
     }
 
     /**
@@ -31,7 +33,6 @@ export class addStoryController extends Controller {
         //from here we can safely get elements from the view via the right getter
         this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.addNewStory(event));
         this.#addStoryView.querySelector("#fileInput").addEventListener("change", this.displayImagePreview.bind(this));
-
 
 
         let monthDays = {
@@ -87,15 +88,27 @@ export class addStoryController extends Controller {
         }
     }
 
+    /**
+     * @author Tygo Geervliet & Romello ten Broeke
+     */
     populateYearField() {
-        let yearfield = this.#addStoryView.querySelector("#year");
+        let yearField = this.#addStoryView.querySelector("#year");
         const currentYear = new Date().getFullYear();
-        for (let i = 1980; i <= currentYear; i++) {
+        let year = "";
+
+        if (this.#controllerData.data) {
+            year = this.#controllerData.data.year;
+        }
+
+        for (let i = this.#minimumDate; i <= currentYear; i++) {
             let option = document.createElement("option");
             option.value = i;
             option.text = i;
-            yearfield.add(option);
+            yearField.add(option);
         }
+
+        this.#setYearField(year, yearField);
+
     }
 
     /**
@@ -184,7 +197,6 @@ export class addStoryController extends Controller {
     }
 
 
-
     /**
      * Validates the input fields for adding a new story.
      * @param {string} subject - The subject of the story.
@@ -207,6 +219,26 @@ export class addStoryController extends Controller {
         errorTextStory.innerHTML = "";
 
         return true;
+    }
+
+    /**
+     * This method checks if a given year value is valid and changes the yearElement value appropriately.
+     * @param year is the year that the user clicked on. At another page.
+     * @param yearElement is the element where year will be filled in.
+     * @author Romello ten Broeke
+     */
+
+    #setYearField(year, yearElement) {
+        let currentDate = new Date().getFullYear();
+
+        year = parseInt(year);
+
+        if (Number.isFinite(year) && year.toString().length === currentDate.toString().length && year <= currentDate
+            && year >= this.#minimumDate) {
+            yearElement.value = year;
+        } else {
+            yearElement.value = currentDate;
+        }
     }
 
 }
