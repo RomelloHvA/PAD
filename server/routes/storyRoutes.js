@@ -24,9 +24,11 @@ class storyRoutes {
     #addStory() {
         // Handle POST request to add a story
         this.#app.post("/story/add", this.#multer().single("file"), async (req, res) => {
+
+            console.log('req reached');
             try {
                 // Extract data from the request
-                const {body: {subject, story, year, month, day}, file} = req;
+                const {body: {subject, story, year, month, day, userID}, file} = req;
 
                 let fileUrl = '';
 
@@ -38,7 +40,7 @@ class storyRoutes {
                         return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
                     }
                 }
-                const newStory = {story, subject, year, month, day, fileUrl}
+                const newStory = {story, subject, year, month, day, fileUrl, userID}
                 // Add the story to the database
                 await this.#addToDatabase(newStory);
 
@@ -67,7 +69,7 @@ class storyRoutes {
             // Add the story to the database
             await this.#databaseHelper.handleQuery({
                 query: "CALL UpdateStory(?, ?, ?, ?, ?, ?)",
-                values: [newStory.story, newStory.subject, newStory.year, newStory.fileUrl, newStory.month, newStory.day],
+                values: [newStory.story, newStory.subject, newStory.year, newStory.fileUrl, newStory.month, newStory.day, newStory.userID],
             });
         } catch (e) {
             // If an error occurred while adding the story to the database, delete the uploaded image and send a bad request response

@@ -28,7 +28,12 @@ export class StoryboardController extends Controller {
 
         // Get the ID from the URL
         const urlParams = new URLSearchParams(window.location.search);
-        const year = urlParams.get("year");
+
+        const controller = App.getCurrentController();
+        let year;
+        if (controller.data) {
+            year = controller.data.year;
+        }
         this.#display_year = year ? year : "*";
     }
 

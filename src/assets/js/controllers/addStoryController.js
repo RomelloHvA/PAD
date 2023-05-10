@@ -145,6 +145,8 @@ export class addStoryController extends Controller {
             return;
         }
 
+
+
         const formData = new FormData();
 
         formData.append("subject", subject);
@@ -153,6 +155,7 @@ export class addStoryController extends Controller {
         formData.append("file", fileInput.files[0]);
         formData.append("month", month);
         formData.append("day", day);
+        formData.append("userID", App.sessionManager.get("userID"));
 
         try {
             // Get the modal
