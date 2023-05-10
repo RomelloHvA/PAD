@@ -31,8 +31,6 @@ export class StoryboardController extends Controller {
 
             let template = this.#storyboardView.querySelector('#storyTemp').content;
 
-            console.log(data);
-
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
                     let HTMLTemplate = template.cloneNode(true);
@@ -49,12 +47,9 @@ export class StoryboardController extends Controller {
                     HTMLTemplate.querySelector("#counter").innerHTML = reputation;
 
                     this.#storyboardView.querySelector("#stories").append(HTMLTemplate);
-                    // console.log(this.#storyboardView.querySelector("#stories").lastChild)
                     this.#storyboardView.querySelector("#stories").lastChild.previousSibling.addEventListener(
                         "click", ()=>{ new EditStoryController(data[i])
                     })
-                    const button = document.querySelector("#stories .icon-pencil");
-                    console.log(button + "button")
                 }
             } else {
                 this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";

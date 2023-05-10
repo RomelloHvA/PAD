@@ -19,8 +19,8 @@ export class storyboardRepository {
     async getAll() {
         return await this.#networkManager.doRequest(`${this.#route}`, "GET");
     }
-    async updateStory(){
-        return await this.#networkManager.doRequest(`${this.#editRoute}`, "PUT");
+    async updateStory(data){
+        return await this.#networkManager.doRequest(`${this.#editRoute}`, "POST", data);
     }
 
     async delete() {

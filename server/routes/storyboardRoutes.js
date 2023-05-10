@@ -32,9 +32,7 @@ class StoryboardRoutes {
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT * FROM story",
-
                 });
-
                 //give a response when an error occurs
                 res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
@@ -49,20 +47,13 @@ class StoryboardRoutes {
      */
 
     #updateStory() {
-        this.#app.put("/storyboard/edit", async (req, res) => {
-
-            const title = req.query.title;
-            const story = req.query.story;
-            const year = req.query.year;
-            const month = req.query.month;
-            const day = req.query.day;
-
-            console.log("update story wordt aangeroepen")
+        this.#app.post("/storyboard/edit", async (req, res) => {
+            const { title, body, year, month, day, id } = req.body;
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: `UPDATE story s SET title = ?, body = ? WHERE storyID = 1`,
-                    values: [title, story]
+                    query: `UPDATE story SET title = ?, body  = ?, year = ?, month = ?, day = ? WHERE storyID = ?`,
+                    values: [title, body ,year, month, day, id]
 
                 });
                 res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
@@ -70,7 +61,6 @@ class StoryboardRoutes {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
         })
-
     }
 }
 

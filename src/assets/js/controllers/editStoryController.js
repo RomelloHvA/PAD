@@ -38,6 +38,10 @@ export class EditStoryController extends Controller {
 
 
     #setFields() {
+        const id = this.#selectedStory.storyID;
+        const idField = this.#addStoryView.querySelector("#idInput");
+        idField.value = id;
+
         const title = this.#selectedStory.title;
         const subjectField = this.#addStoryView.querySelector("#subject");
         subjectField.value = title;
@@ -53,24 +57,24 @@ export class EditStoryController extends Controller {
         const date = new Date(year, month, day).toISOString().slice(0, 10);
         const dateField = this.#addStoryView.querySelector("#date");
         dateField.value = date;
-        console.log(date + "oude date");
     }
 
     async #updateStory() {
         // event.preventDefault();
         const newTitle = this.#addStoryView.querySelector("#subject");
         const newBody = this.#addStoryView.querySelector("#story");
+        const baseId = this.#addStoryView.querySelector("#idInput");
+
         const newDate = this.#addStoryView.querySelector("#date");
+        const [year, month, day] = newDate.value.split('-');
 
         let data = {
             title: newTitle.value,
             body: newBody.value,
-            date: newDate.value
+            id: baseId.value,
+            year, month, day
         }
-        console.log(data.date + "nieuwe date");
         await this.#storyboardRepository.updateStory(data);
-
-
     }
 
     /**
