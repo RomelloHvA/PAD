@@ -49,7 +49,7 @@ export class StoryboardController extends Controller {
                     HTMLTemplate.querySelector("#counter").innerHTML = reputation;
 
                     this.#storyboardView.querySelector("#stories").append(HTMLTemplate);
-                    console.log(this.#storyboardView.querySelector("#stories").lastChild)
+                    // console.log(this.#storyboardView.querySelector("#stories").lastChild)
                     this.#storyboardView.querySelector("#stories").lastChild.previousSibling.addEventListener(
                         "click", ()=>{ new EditStoryController(data[i])
                     })

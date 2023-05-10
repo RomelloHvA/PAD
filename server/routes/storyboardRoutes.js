@@ -57,6 +57,8 @@ class StoryboardRoutes {
             const month = req.query.month;
             const day = req.query.day;
 
+            console.log("update story wordt aangeroepen")
+
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: `UPDATE (subject, story, year, month, day)

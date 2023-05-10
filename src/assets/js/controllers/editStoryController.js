@@ -28,9 +28,16 @@ export class EditStoryController extends Controller {
     async #setupView() {
 
         this.#addStoryView = await super.loadHtmlIntoContent("html_views/editStory.html");
-        console.log(this.#selectedStory);
 
         //fill the fields with info from the original story
+        this.#setFields();
+
+        const saveBtn = document.querySelector("#myButton");
+        saveBtn.addEventListener("click", () => {this.#updateStory()});
+    }
+
+
+    #setFields() {
         const title = this.#selectedStory.title;
         const subjectField = this.#addStoryView.querySelector("#subject");
         subjectField.value = title;
@@ -46,24 +53,25 @@ export class EditStoryController extends Controller {
         const date = new Date(year, month, day).toISOString().slice(0, 10);
         const dateField = this.#addStoryView.querySelector("#date");
         dateField.value = date;
-
-        console.log(date)
-
-
-
-        //???
-        // const date = year + "-" + month + "-" + day;
-        // console.log(date);
-        // const dateField = this.#addStoryView.querySelector("#date");
-        // dateField.value = date;
-
-
-        //click event voor updaten van verhaal in database
-        // -> repo moet een update optie hebben
-
+        console.log(date + "date 1");
     }
 
+    async #updateStory() {
+        // event.preventDefault();
+        const newTitle = this.#addStoryView.querySelector("#subject");
+        const newBody = this.#addStoryView.querySelector("#story");
+        const newDate = this.#addStoryView.querySelector("#date");
 
+        let data = {
+            title: newTitle.value,
+            body: newBody.value,
+            date: newDate.value
+        }
+        console.log(data.date + "nieuwe date");
+        await this.#storyboardRepository.updateStory(data);
+
+
+    }
     /**
      A function that tracks the number of characters entered into a story field
      and updates the character count on the page.
@@ -84,36 +92,6 @@ export class EditStoryController extends Controller {
 
         });
     }
-
-    async #updateStory(event) {
-        // event.preventDefault();
-
-
-
-        //get button to save and call save method.
-        const saveBtn = document.querySelector("#myButton");
-        saveBtn.addEventListener("click", await this.#storyboardRepository.updateStory());
-
-        // try {
-        //     // Get the modal
-        //     const modal = this.#addStoryView.querySelector("#myModal");
-        //     modal.style.display = "block";
-        //
-        //     const confirm = this.#addStoryView.querySelector(".modal-buttons");
-        //
-        //
-        //     confirm.addEventListener("click", event => {
-        //         modal.style.display = "none";
-        //         App.setCurrentController(new StoryboardController())
-        //     });
-        //
-        //     await this.#storyRepository.addNewStory(formData);
-        //
-        // } catch (error) {
-        //     console.log(error);
-        // }
-    }
-
 
     displayImagePreview(event) {
 
