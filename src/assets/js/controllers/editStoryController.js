@@ -57,6 +57,10 @@ export class EditStoryController extends Controller {
         const date = new Date(year, month, day).toISOString().slice(0, 10);
         const dateField = this.#addStoryView.querySelector("#date");
         dateField.value = date;
+
+        const image = this.#addStoryView.image;
+        const imageField = this.#addStoryView.querySelector("#preview-image");
+        imageField.src = image;
     }
 
     async #updateStory() {
@@ -64,6 +68,7 @@ export class EditStoryController extends Controller {
         const newTitle = this.#addStoryView.querySelector("#subject");
         const newBody = this.#addStoryView.querySelector("#story");
         const baseId = this.#addStoryView.querySelector("#idInput");
+        const newImage = this.#addStoryView.querySelector("#preview-image");
 
         const newDate = this.#addStoryView.querySelector("#date");
         const [year, month, day] = newDate.value.split('-');
@@ -72,7 +77,8 @@ export class EditStoryController extends Controller {
             title: newTitle.value,
             body: newBody.value,
             id: baseId.value,
-            year, month, day
+            year, month, day,
+            image: newImage
         }
         await this.#storyboardRepository.updateStory(data);
     }
