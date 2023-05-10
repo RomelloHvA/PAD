@@ -1,6 +1,5 @@
 const fs = require("fs");
 
-
 class storyRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes");
     #databaseHelper = require("../framework/utils/databaseHelper");
@@ -150,6 +149,10 @@ class storyRoutes {
         });
     }
 
+    /**
+     * This method updates stories
+     * Roos
+     */
     #updateStory() {
         this.#app.post("/storyboard/edit",this.#multer().single("image"), async (req, res) => {
             const {body:{ title, body, year, month, day, id }, file} = req;

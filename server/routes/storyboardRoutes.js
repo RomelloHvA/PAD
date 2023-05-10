@@ -41,12 +41,6 @@ class StoryboardRoutes {
             }
         })
     }
-
-    /**
-     * This method x
-     * Roos
-     */
-
    }
 
 module.exports = StoryboardRoutes;

@@ -82,13 +82,6 @@ export class EditStoryController extends Controller {
         formData.append("day", day);
         formData.append("image", newImage.files[0]);
 
-        // let data = {
-        //     title: newTitle.value,
-        //     body: newBody.value,
-        //     id: baseId.value,
-        //     year, month, day,
-        //     image: newImage
-        // }
         console.log(formData)
         await this.#storyboardRepository.updateStory(formData);
     }
