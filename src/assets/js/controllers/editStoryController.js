@@ -1,6 +1,8 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {storyboardRepository} from "../repositories/storyboardRepository.js";
+import {App} from "../app.js";
+import {StoryboardController} from "./storyboardController.js";
 
 export class EditStoryController extends Controller {
     #addStoryView
@@ -28,6 +30,7 @@ export class EditStoryController extends Controller {
     async #setupView() {
 
         this.#addStoryView = await super.loadHtmlIntoContent("html_views/editStory.html");
+        this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.#updateStory(event));
 
         //fill the fields with info from the original story
         this.#setFields();
@@ -63,7 +66,7 @@ export class EditStoryController extends Controller {
         imageField.src = image;
     }
 
-    async #updateStory() {
+    async #updateStory(event) {
         // event.preventDefault();
         const newTitle = this.#addStoryView.querySelector("#subject");
         const newBody = this.#addStoryView.querySelector("#story");
@@ -71,6 +74,10 @@ export class EditStoryController extends Controller {
         const newDate = this.#addStoryView.querySelector("#date");
         const [year, month, day] = newDate.value.split('-');
         const newImage = this.#addStoryView.querySelector("#fileInput");
+
+        // if (!this.#validateInputFields(newTitle, newBody)) {
+        //     return;
+        // }
 
         const formData = new FormData();
 
@@ -82,8 +89,21 @@ export class EditStoryController extends Controller {
         formData.append("day", day);
         formData.append("image", newImage.files[0]);
 
-        console.log(formData)
-        await this.#storyboardRepository.updateStory(formData);
+        try {
+            // Get the modal
+            const modal = this.#addStoryView.querySelector("#myModal");
+            modal.style.display = "block";
+
+            const confirm = this.#addStoryView.querySelector(".modal-buttons");
+
+            confirm.addEventListener("click", event => {
+                modal.style.display = "none";
+                App.setCurrentController(new StoryboardController())
+            });
+            await this.#storyboardRepository.updateStory(formData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**
