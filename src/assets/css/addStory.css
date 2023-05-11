@@ -157,6 +157,9 @@ select {
 .hidden{
     display: none;
 }
+.edit_fields{
+    margin: 0;
+}
 
 
 
