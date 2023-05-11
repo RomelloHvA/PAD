@@ -67,23 +67,22 @@ export class EditStoryController extends Controller {
     }
 
     async #updateStory(event) {
-        // event.preventDefault();
-        const newTitle = this.#addStoryView.querySelector("#subject");
-        const newBody = this.#addStoryView.querySelector("#story");
-        const baseId = this.#addStoryView.querySelector("#idInput");
+        const newTitle = this.#addStoryView.querySelector("#subject").value;
+        const newBody = this.#addStoryView.querySelector("#story").value;
+        const baseId = this.#addStoryView.querySelector("#idInput").value;
         const newDate = this.#addStoryView.querySelector("#date");
         const [year, month, day] = newDate.value.split('-');
         const newImage = this.#addStoryView.querySelector("#fileInput");
 
-        // if (!this.#validateInputFields(newTitle, newBody)) {
-        //     return;
-        // }
+        if (!this.#validateInputFields(newTitle, newBody)) {
+            return;
+        }
 
         const formData = new FormData();
 
-        formData.append("title", newTitle.value);
-        formData.append("body", newBody.value);
-        formData.append("id", baseId.value);
+        formData.append("title", newTitle);
+        formData.append("body", newBody);
+        formData.append("id", baseId);
         formData.append("year", year);
         formData.append("month", month);
         formData.append("day", day);
@@ -151,21 +150,21 @@ export class EditStoryController extends Controller {
 
     /**
      * Validates the input fields for adding a new story.
-     * @param {string} subject - The subject of the story.
-     * @param {string} story - The body of the story.
+     // * @param {string} subject - The subject of the story.
+     // * @param {string} story - The body of the story.
      * @returns {boolean} - True if the input fields are valid, false otherwise.
      */
-    #validateInputFields(subject, story) {
+    #validateInputFields(newTitle, newBody) {
         const errorTextSubject = this.#addStoryView.querySelector("#subject-error");
         const errorTextStory = this.#addStoryView.querySelector("#story-error");
 
         // Validate the input fields
-        if (!subject) {
+        if (!newTitle) {
             return errorTextSubject.innerHTML = "Please fill in the subject field", false;
         }
         errorTextSubject.innerHTML = "";
 
-        if (!story) {
+        if (!newBody) {
             return errorTextStory.innerHTML = "Please fill in the story field", false;
         }
         errorTextStory.innerHTML = "";
