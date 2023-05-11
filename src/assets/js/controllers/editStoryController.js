@@ -75,6 +75,7 @@ export class EditStoryController extends Controller {
         const newDate = this.#addStoryView.querySelector("#date");
         const [year, month, day] = newDate.value.split('-');
         const newImage = this.#addStoryView.querySelector("#fileInput");
+        const oldImage = this.#selectedStory.image;
 
         if (!this.#validateInputFields(newTitle, newBody)) {
             return;
@@ -88,7 +89,9 @@ export class EditStoryController extends Controller {
         formData.append("year", year);
         formData.append("month", month);
         formData.append("day", day);
+        formData.append("otherImage", oldImage);
         formData.append("image", newImage.files[0]);
+
 
         try {
             // Get the modal

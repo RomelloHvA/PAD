@@ -103,7 +103,7 @@ select {
 
 
 #preview-image {
-
+    max-width: 100%;
     margin-bottom: 50px;
 }
 
@@ -157,6 +157,7 @@ select {
 .hidden{
     display: none;
 }
+
 
 
 

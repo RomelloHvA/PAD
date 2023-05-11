@@ -155,7 +155,7 @@ class storyRoutes {
      */
     #updateStory() {
         this.#app.post("/storyboard/edit",this.#multer().single("image"), async (req, res) => {
-            const {body:{ title, body, year, month, day, id }, file} = req;
+            const {body:{ title, body, year, month, day, id, otherImage }, file} = req;
 
             try {
                 let fileUrl = '';
@@ -167,6 +167,8 @@ class storyRoutes {
                         // If an error occurred while writing to disk, send a bad request response
                         return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
                     }
+                } else {
+                    fileUrl = otherImage;
                 }
 
                 const data = await this.#databaseHelper.handleQuery({
