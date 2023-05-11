@@ -30,7 +30,9 @@ export class EditStoryController extends Controller {
     async #setupView() {
 
         this.#addStoryView = await super.loadHtmlIntoContent("html_views/editStory.html");
+
         this.#addStoryView.querySelector("#myButton").addEventListener("click", event => this.#updateStory(event));
+        this.#addStoryView.querySelector("#fileInput").addEventListener("change", this.displayImagePreview.bind(this));
 
         //fill the fields with info from the original story
         this.#setFields();
