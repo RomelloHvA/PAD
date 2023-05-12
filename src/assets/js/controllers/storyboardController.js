@@ -411,13 +411,13 @@ export class StoryboardController extends Controller {
 
                 const deleteStory = async () => {
                     await this.#storyboardRepository.removeStory(storyId);
-                    modal.remove();
+                    modal.style.display = "none";
                     App.setCurrentController(new StoryboardController())
                 };
 
                 yesBtn.addEventListener("click", deleteStory);
                 noBtn.addEventListener("click", () => {
-                    modal.remove();
+                    modal.style.display = "none";
                 });
             });
         }
