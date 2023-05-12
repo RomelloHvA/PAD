@@ -1,6 +1,6 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester & Othaim Iboualaisen & Tygo Geervliet
+ * @author  Othaim Iboualaisen & Tygo Geervliet
  */
 
 import {Controller} from "./controller.js";
@@ -11,10 +11,10 @@ export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
     #storyURL
+
     #MIN_YEAR
     #MAX_YEAR
     #display_year
-    userID;
 
     constructor() {
         super();
@@ -64,6 +64,14 @@ export class StoryboardController extends Controller {
         this.selectYear(selectYear);
     }
 
+    /**
+     * Loads the stories with optional sorting and filtering.
+     * @memberof StoryboardController
+     * @async
+     * @param {string} [selectedOption] - The selected sorting option.
+     * @returns {Promise<void>}
+     * @author Othaim Iboualaisen
+     */
     async loadStories(selectedOption) {
         try {
             let sortData = this.getSortAndFilterData(selectedOption);
@@ -140,6 +148,13 @@ export class StoryboardController extends Controller {
     }
 
 
+    /**
+     * Toggles the message display.
+     * @memberof StoryboardController
+     * @param {boolean} toggle - Whether to show or hide the message.
+     * @returns {void}
+     * @author Othaim Iboualaisen
+     */
     toggleMessage(toggle) {
         if (toggle) {
             this.#storyboardView.querySelector(".message").innerHTML = "Er zijn geen verhalen gevonden.";
@@ -160,12 +175,13 @@ export class StoryboardController extends Controller {
         }
     }
 
-    updateSliderValue(slider, valueLabel) {
-        const thumbPosition = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-        valueLabel.style.left = thumbPosition + "%";
-        valueLabel.innerHTML = slider.value;
-    }
-
+    /**
+     * Populates the year filter select element with options.
+     * @memberof StoryboardController
+     * @param {HTMLSelectElement} selectYear - The year filter select element.
+     * @returns {void}
+     * @author Othaim Iboualaisen
+     */
     populateSelect(selectYear) {
         const currentYear = new Date().getFullYear();
         const startYear = 1980;
@@ -192,7 +208,21 @@ export class StoryboardController extends Controller {
         });
     }
 
-    selectYear(selectYear) {
+    /**
+     * Sets up the year filter select element with optional filtering.
+     * @memberof StoryboardController
+     * @async
+     * @param {HTMLSelectElement} selectYear - The year filter select element.
+     * @returns {Promise<void>}
+     * @author Othaim Iboualaisen
+     */
+    async selectYear(selectYear) {
+        // if this.#display_year exists/is valid then select the option in the selectYear select element
+        if (this.#display_year) {
+            selectYear.value = this.#display_year;
+            await this.loadStories();
+        }
+
         // Add an event listener that listens to the change event of the select element
         selectYear.addEventListener("change", async (event) => {
             await this.loadStories();
@@ -200,8 +230,11 @@ export class StoryboardController extends Controller {
     }
 
     /**
-     Disables all like buttons on the storyboard view and changes their style to grey.
-     @author Tygo Geervliet
+     * Returns an object containing the sort field and order properties based on the selected option and year.
+     *
+     * @param {string} [selectedOption] - The selected sorting option. If not provided, the default value from the "selectOrder" element will be used.
+     * @returns {Object} - An object with the "year", "field", and "order" properties based on the selected option and year.
+     * @author Othaim Iboualaisen
      */
     async disableLikes() {
         const likeBtns = this.#storyboardView.querySelectorAll("#like");
@@ -222,25 +255,30 @@ export class StoryboardController extends Controller {
         }
 
         // Set the field and order properties of the sortData object based on the selected value
-        if (selectedOption === "newest") {
-            sortData.field = "created_at";
-            sortData.order = "DESC";
-        } else if (selectedOption === "oldest") {
-            sortData.field = "created_at";
-            sortData.order = "ASC";
-        } else if (selectedOption === "most_likes") {
-            sortData.field = "likes";
-            sortData.order = "DESC";
-        } else if (selectedOption === "least_likes") {
-            sortData.field = "likes";
-            sortData.order = "ASC";
-        }
         if (selectedYear !== "*") {
-            sortData.year = selectedYear
+            sortData.year = selectedYear;
+        } else {
+            if (selectedOption === "newest") {
+                sortData.field = "created_at";
+                sortData.order = "DESC";
+            } else if (selectedOption === "oldest") {
+                sortData.field = "created_at";
+                sortData.order = "ASC";
+            } else if (selectedOption === "most_likes") {
+                sortData.field = "likes";
+                sortData.order = "DESC";
+            } else if (selectedOption === "least_likes") {
+                sortData.field = "likes";
+                sortData.order = "ASC";
+            }
         }
         return sortData;
     }
 
+    /**
+     * Removes all previously appended story elements from the storyboard view.
+     * @author Othaim Iboualaisen
+     */
     removeNodes() {
         // get all previously appended story elements
         let storiesContainer = this.#storyboardView.querySelector("#stories");
@@ -250,6 +288,20 @@ export class StoryboardController extends Controller {
         for (let i = 0; i < prevStories.length; i++) {
             prevStories[i].remove();
         }
+    }
+
+    /**
+     Disables all like buttons on the storyboard view and changes their style to grey.
+     @author Tygo Geervliet
+     */
+    async disableLikes() {
+        const likeBtns = this.#storyboardView.querySelectorAll("#like");
+        likeBtns.forEach(btn => {
+            btn.className = "ui grey button";
+            btn.addEventListener('mouseover', () => {
+                btn.style.cursor = 'not-allowed';
+            });
+        });
     }
 
     /**
@@ -305,6 +357,7 @@ export class StoryboardController extends Controller {
         let key = 'AlreadyLiked(' + userID + ',' + storyId + ')';
         return alreadyLikedObject[key];
     }
+
 
     async addNewLike(userID, storyID) {
         await this.#storyboardRepository.addLike(userID, storyID);
