@@ -33,4 +33,15 @@ export class storyboardRepository {
         const body = { userID: userID, storyID: storyID };
         return await this.#networkManager.doRequest(`${this.#route}/getLike`, "POST", body);
     }
+
+    async getStoryByUserID(userID) {
+        const body = { userID: userID};
+        return await this.#networkManager.doRequest(`${this.#route}/getStoryByUserID`, "POST", body);
+    }
+
+    async removeStory(storyID) {
+        const body = { storyID: storyID};
+        return await this.#networkManager.doRequest(`${this.#route}/removeStory`, "POST", body);
+
+    }
 }

@@ -1,6 +1,5 @@
 /**
- * this file contains ExpressJS stuff
- * @author Othaim Iboualaisen
+ * @author Othaim Iboualaisen & Tygo Geervliet
  */
 
 
@@ -17,12 +16,14 @@ class StoryboardRoutes {
         this.#app = app;
 
         this.#getStory();
-        this.addLike();
-        this.removeLike();
-        this.AlreadyLiked();
+        this.#addLike();
+        this.#removeLike();
+        this.#AlreadyLiked();
+        this.#getStoryByUserID();
+        this.#deleteStory();
     }
 
-    addLike() {
+    #addLike() {
         // Handle POST request to add a like
         this.#app.post("/storyboard/addLike", async (req, res) => {
             try {
@@ -42,7 +43,7 @@ class StoryboardRoutes {
         });
     }
 
-    removeLike() {
+    #removeLike() {
         // Handle POST request to remove a like
         this.#app.post("/storyboard/removeLike", async (req, res) => {
             try {
@@ -60,7 +61,7 @@ class StoryboardRoutes {
         });
     }
 
-    AlreadyLiked() {
+    #AlreadyLiked() {
             this.#app.post("/storyboard/getLike", async (req, res) => {
                 const { userID, storyID } = req.body;
             try {
@@ -75,6 +76,40 @@ class StoryboardRoutes {
             }
         })
     }
+
+    #getStoryByUserID() {
+        this.#app.post("/storyboard/getStoryByUserID", async (req, res) => {
+            const { userID } = req.body;
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT getStorysByUser(?);",
+                    values: [userID]
+                });
+                //give a response when an error occurs
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
+    #deleteStory() {
+        this.#app.post("/storyboard/removeStory", async (req, res) => {
+            const { storyID } = req.body;
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "DELETE FROM story WHERE storyID = ?;",
+                    values: [storyID]
+                });
+                //give a response when an error occurs
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
+
 
     /**
      * this method fetches the data from a story

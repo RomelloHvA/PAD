@@ -1,6 +1,6 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester & Othaim Iboualaisen
+ * @author  Rosalinde Vester & Othaim Iboualaisen & Tygo Geervliet
  */
 
 import {Controller} from "./controller.js";
@@ -11,14 +11,16 @@ export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
     #storyURL
-
     #MIN_YEAR
     #MAX_YEAR
     #display_year
+    userID;
 
     constructor() {
         super();
         this.#setupView();
+
+        this.userID = App.sessionManager.get("userID");
 
         this.#storyboardRepository = new storyboardRepository();
         this.#storyURL = "#singleStory?storyId=";
@@ -121,10 +123,22 @@ export class StoryboardController extends Controller {
         //checks if user is logged in
         if (App.sessionManager.get("userID")) {
             await this.likeStory()
+            await this.removeStory();
         } else {
             await this.disableLikes()
+            await this.disableRemoveBtn();
         }
     }
+
+    disableRemoveBtn() {
+        let removeBtns = this.#storyboardView.querySelectorAll("#deleteBtn");
+
+        for (let btn of removeBtns) {
+            btn.disabled = true;
+            btn.style.display = "none";
+        }
+    }
+
 
     toggleMessage(toggle) {
         if (toggle) {
@@ -246,7 +260,7 @@ export class StoryboardController extends Controller {
      @author Tygo Geervliet
      */
     async likeStory() {
-        let userID = App.sessionManager.get("userID");
+
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
         let likeError = this.#storyboardView.querySelectorAll("#likeError");
 
@@ -257,24 +271,24 @@ export class StoryboardController extends Controller {
 
         for (let btn of likeBtn) {
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
-            let alreadyLiked = await this.#storyboardRepository.checkAlreadyLiked(userID, storyId);
+            let alreadyLiked = await this.#storyboardRepository.checkAlreadyLiked(this.userID, storyId);
 
             //get return value from alreadyliked from promise
-            let alreadyLikedValue = this.retrieveAlreadyLikedValue(alreadyLiked, userID, storyId);
+            let alreadyLikedValue = this.retrieveAlreadyLikedValue(alreadyLiked, this.userID, storyId);
 
             let likeCounter = btn.parentElement.querySelector("#counter");
 
             btn.addEventListener("click", async (event) => {
                 if (alreadyLikedValue === 0) {
                     likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
-                    await this.addNewLike(userID, storyId);
+                    await this.addNewLike(this.userID, storyId);
                     alreadyLikedValue = 1;
                     btn.classList.add("liked");
                 } else {
                     if (parseInt(likeCounter.textContent) > 0) {
                         likeCounter.textContent = parseInt(likeCounter.textContent) - 1;
                     }
-                    this.removeLike(userID, storyId);
+                    this.removeLike(this.userID, storyId);
                     alreadyLikedValue = 0;
                     btn.classList.remove("liked");
                 }
@@ -292,7 +306,6 @@ export class StoryboardController extends Controller {
         return alreadyLikedObject[key];
     }
 
-
     async addNewLike(userID, storyID) {
         await this.#storyboardRepository.addLike(userID, storyID);
     }
@@ -301,6 +314,74 @@ export class StoryboardController extends Controller {
 
         await this.#storyboardRepository.removeLike(userID, storyID);
 
+    }
+
+    /**
+     Updates the visibility of the remove buttons based on the stories associated with the current user.
+     @param {NodeList} removeBtns - The collection of remove buttons to update.
+     @param {Array} storiesFromThisUser - The stories associated with the current user.
+     @returns {void}
+     @author Tygo Geervliet
+     */
+    #updateRemoveButtonsVisibility(removeBtns, storiesFromThisUser) {
+        // value from storiesFromThisUserValue is for example "1,2,14,15,16,17,19,20" (string) outputs
+        // all storyID that is associated  with the current user
+        let storiesFromThisUserValue = this.retrieveStoryIDsValue(storiesFromThisUser, this.userID);
+
+        //split the string and make array
+        let storyIdsArray = storiesFromThisUserValue.split(',');
+
+        for (let btn of removeBtns) {
+            btn.style.display = "none";
+            let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
+            if (storyIdsArray.includes(storyId.toString())) {
+                // The storyId matches one of the numbers in storiesFromThisUserValue
+                btn.style.display = "block"
+            }
+        }
+    }
+
+    async removeStory() {
+        const removeBtns = this.#storyboardView.querySelectorAll("#deleteBtn");
+        const storiesFromThisUser = await this.#storyboardRepository.getStoryByUserID(this.userID);
+        this.#updateRemoveButtonsVisibility(removeBtns, storiesFromThisUser);
+
+        const modal = this.#storyboardView.querySelector("#myModal");
+
+        for (let btn of removeBtns) {
+            const storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
+
+            btn.addEventListener("click", async (event) => {
+                modal.style.display = "block";
+
+                const yesBtn = modal.querySelector("#modal-yes");
+                const noBtn = modal.querySelector("#modal-no");
+
+                const deleteStory = async () => {
+                    await this.#storyboardRepository.removeStory(storyId);
+                    modal.remove();
+                    App.setCurrentController(new StoryboardController())
+                };
+
+                yesBtn.addEventListener("click", deleteStory);
+                noBtn.addEventListener("click", () => {
+                    modal.remove();
+                });
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+    retrieveStoryIDsValue(getStoryByUserID, userID) {
+        let StoryByUserIDObject = getStoryByUserID[0];
+        let key = 'getStorysByUser(' + userID + ')';
+        return StoryByUserIDObject[key];
     }
 
 
