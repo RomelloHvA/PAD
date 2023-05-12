@@ -48,3 +48,7 @@
 .modal-buttons:hover {
     opacity: 0.8;
 }
+
+#deleteBtn {
+    display: none;
+}

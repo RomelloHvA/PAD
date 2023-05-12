@@ -385,7 +385,6 @@ export class StoryboardController extends Controller {
         let storyIdsArray = storiesFromThisUserValue.split(',');
 
         for (let btn of removeBtns) {
-            btn.style.display = "none";
             let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
             if (storyIdsArray.includes(storyId.toString())) {
                 // The storyId matches one of the numbers in storiesFromThisUserValue
