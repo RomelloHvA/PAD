@@ -1,4 +1,7 @@
 <link rel="stylesheet" href="/assets/css/pages/timeline.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
+
 <div class="story m-4">
     <div class="slide-animation">
         <!--                    float end makes the text wrap around it-->
@@ -19,8 +22,11 @@
 
     </div>
     <div class="buttons">
-        <div class="upvote"></div>
-        <div id="counter">NaN</div>
-        <div class="downvote"></div>
+        <div class="ui labeled button mt-5 ml-5" tabindex="0">
+            <div class="ui blue button" id="like">
+                <i class="fas fa-thumbs-up"></i>
+            </div>
+            <span id="counter" class="ui basic blue label">0</span>
+        </div>
     </div>
 </div>

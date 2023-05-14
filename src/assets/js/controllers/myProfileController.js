@@ -14,6 +14,8 @@ export class myProfileController extends Controller {
     #userData;
     #storyRepository;
     #usersRepository;
+    #editStoryUrl;
+
 
     constructor(userId) {
         super();
