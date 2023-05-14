@@ -41,7 +41,10 @@ export class EditStoryController extends Controller {
         saveBtn.addEventListener("click", () => {this.#updateStory()});
     }
 
-
+    /**
+     * this method fills all the editable fields with the original data
+     * @author Roos
+     */
     #setFields() {
         const id = this.#selectedStory.storyID;
         const idField = this.#addStoryView.querySelector("#idInput");
@@ -68,6 +71,12 @@ export class EditStoryController extends Controller {
         imageField.src = image;
     }
 
+    /**
+     * this method updates an old story
+     * @param event
+     * @returns {Promise<void>}
+     * @author Roos
+     */
     async #updateStory(event) {
         const newTitle = this.#addStoryView.querySelector("#subject").value;
         const newBody = this.#addStoryView.querySelector("#story").value;
@@ -80,7 +89,24 @@ export class EditStoryController extends Controller {
         if (!this.#validateInputFields(newTitle, newBody)) {
             return;
         }
+        const formData = this.prepareFormData(newTitle, newBody, baseId, year, month, day, oldImage, newImage);
 
+        await this.getModal(formData);
+    }
+
+    /**
+     * this method puts all the new data in the formdata
+     * @param newTitle
+     * @param newBody
+     * @param baseId
+     * @param year
+     * @param month
+     * @param day
+     * @param oldImage
+     * @param newImage
+     * @returns {FormData}
+     */
+    prepareFormData(newTitle, newBody, baseId, year, month, day, oldImage, newImage) {
         const formData = new FormData();
 
         formData.append("title", newTitle);
@@ -91,8 +117,15 @@ export class EditStoryController extends Controller {
         formData.append("day", day);
         formData.append("otherImage", oldImage);
         formData.append("image", newImage.files[0]);
+        return formData;
+    }
 
-
+    /**
+     * this method gets and shows the modal
+     * @param formData with new data of story
+     * @returns {Promise<void>}
+     */
+    async getModal(formData) {
         try {
             // Get the modal
             const modal = this.#addStoryView.querySelector("#myModal");
@@ -108,27 +141,6 @@ export class EditStoryController extends Controller {
         } catch (error) {
             console.log(error);
         }
-    }
-
-    /**
-     A function that tracks the number of characters entered into a story field
-     and updates the character count on the page.
-     @function storyCharacterCount
-     @returns {void}
-     */
-    storyCharacterCount() {
-        const characterCount = document.getElementById("characterCount");
-        const story = this.#addStoryView.querySelector("#story");
-        story.addEventListener("input", function () {
-            characterCount.textContent = `${story.value.length}/2000 characters entered`;
-
-            if (story.value.length > 1999) {
-                characterCount.style.color = 'red';
-            } else {
-                characterCount.style.color = 'black';
-            }
-
-        });
     }
 
     displayImagePreview(event) {

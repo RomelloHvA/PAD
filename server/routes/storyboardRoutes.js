@@ -41,6 +41,6 @@ class StoryboardRoutes {
             }
         })
     }
-   }
+}
 
 module.exports = StoryboardRoutes;

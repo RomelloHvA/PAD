@@ -150,8 +150,8 @@ class storyRoutes {
     }
 
     /**
-     * This method updates stories
-     * Roos
+     * This method puts the new data in the database
+     * @author Roos
      */
     #updateStory() {
         this.#app.post("/storyboard/edit",this.#multer().single("image"), async (req, res) => {
