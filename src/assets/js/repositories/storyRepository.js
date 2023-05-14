@@ -43,4 +43,8 @@ export class storyRepository {
 
     }
 
+    async getTotalUpvotesForUser(query){
+        return await this.#networkManager.doRequest(`${this.#route}/getUpvoteForUserId?userId=${query}`, "GET")
+    }
+
 }

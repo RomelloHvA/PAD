@@ -15,6 +15,7 @@ class storyRoutes {
         this.#getHighestRatedMessage();
         this.#getSingleStory();
         this.#getMaxUpvotesForStory();
+        this.#getTotalUpvotesForUser();
     }
 
     /**
@@ -213,6 +214,24 @@ class storyRoutes {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT COUNT(like.userID) AS total_likes FROM story RIGHT JOIN `like` ON story.storyID = like.storyID WHERE like.storyID = ?",
                     values: [storyId]
+                })
+                if (data) {
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
+
+    #getTotalUpvotesForUser() {
+        this.#app.get("/story/getUpvoteForUserId", async (req, res) => {
+            let userID = req.query.userId;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT COUNT(*) AS total_likes FROM `like` WHERE storyID IN (SELECT storyID FROM `story` WHERE userID = ?)",
+                    values: [userID]
                 })
                 if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)

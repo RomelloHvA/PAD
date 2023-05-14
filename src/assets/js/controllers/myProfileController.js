@@ -15,6 +15,7 @@ export class myProfileController extends Controller {
     #storyRepository;
     #usersRepository;
     #editStoryUrl;
+    #storyTemplate;
 
 
     constructor(userId) {
@@ -27,10 +28,43 @@ export class myProfileController extends Controller {
 
     async #setupView() {
         this.#myProfileView = await this.loadHtmlIntoContent("html_views/myProfile.html");
+        this.#storyTemplate = this.#myProfileView.querySelector("#story-template");
+        await this.#setUserFields();
+
+
     }
 
-    #getUserData(userId){
-
+    async #getUserData() {
+        this.#userData = await this.#usersRepository.getUserById(this.#userId);
     }
+
+    async #setUserFields() {
+
+        await this.#getUserData();
+        let maxLikes = await this.#getTotalLikesForUser();
+
+        this.#setTotalLikesInView(maxLikes[0].total_likes);
+
+        let emailField = this.#myProfileView.querySelector("#user-email");
+        let firstNameField = this.#myProfileView.querySelector("#first-name");
+        let lastNameField = this.#myProfileView.querySelector("#last-name");
+        let phoneNumberField = this.#myProfileView.querySelector("#phone-number");
+
+        emailField.value = this.#userData[0].email;
+        firstNameField.value = this.#userData[0].firstName;
+        lastNameField.value = this.#userData[0].lastName;
+        phoneNumberField.value = this.#userData[0].phoneNr;
+    }
+
+    async #getTotalLikesForUser(){
+        return await this.#storyRepository.getTotalUpvotesForUser(this.#userId);
+    }
+
+    #setTotalLikesInView(totalLikes){
+        this.#myProfileView.querySelector("#total-likes").innerText = totalLikes;
+    }
+
+
+
 
 }
