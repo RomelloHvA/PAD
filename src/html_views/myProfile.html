@@ -64,7 +64,7 @@
 
 <!--    Stories should go in this div -->
 
-<div class="story m-4 w-50 h-25 bg-dark shadow-none row overflow-auto container-fluid" id="stories-holder">
+<div class="story m-4 w-75 h-50 bg-dark shadow-none row overflow-auto" id="stories-holder">
 
     <!--        Actual story is going to be a template.-->
     <div class="story w-auto justify-content-center row visually-hidden" id="no-stories">
@@ -75,46 +75,44 @@
         </a>
     </div>
 
-    <div class="story w-auto justify-content-center row visually-hidden" id="stories-header">
-        <h2 class="justify-content-center"> Uw Stories</h2>
+    <div class="story w-auto row visually-hidden" id="stories-header">
+        <h2 class=""> Uw Stories</h2>
 
         <a href="#addStory">
             <div class="btn btn-primary h-auto w-auto"><h1>Nog meer verhalen toevoegen!</h1></div>
         </a>
+        <div class=" w-25 m-4 visually-hidden" id="sorting-menu">
+            <div class="form-group">
+                <label for="post-select" class="h-25 text-primary"></label>
+                <select class="form-select" id="post-select">
+                    <option>Meest recente post</option>
+                    <option>Oudste post</option>
+                </select>
+            </div>
+        </div>
     </div>
 
 </div>
 
-<div class="card w-25 m-4 visually-hidden" id="sorting-menu">
-    <div class="form-group">
-        <label for="post-select" class="h-25 text-primary">Sorteer</label>
-        <select class="form-select" id="post-select">
-            <option>Meest recente post</option>
-            <option>Oudste post</option>
-        </select>
-    </div>
-</div>
+
 
 
 <template id="story-template">
-        <div class="slide-animation">
-            <div class="p-4"><img src="/assets/img/badges placeholder.png" class="img-fluid float-end w-50 h-50"
-                                  alt="Kon de foto niet laden.">
+    <div class="slide-animation mt-3">
+        <div class="card">
+            <div class="p-4">
 
                 <h3 class="year"></h3>
-                <h4 class="card-title">yaassss</h4>
-                <a class="btn btn-secondary username" href=""></a>
-                <p class="mb-0">
+                <h4 class="card-title"></h4>
             <span class="card-body">
-                blablaabla
 
             </span>
 
             </div>
             <a>
-                <div class="btn btn-primary mt-2 btn-black">Wijzig verhaal</div>
+                <div class="btn btn-primary m-2 btn-black">Wijzig verhaal</div>
             </a>
-
         </div>
+    </div>
 
 </template>

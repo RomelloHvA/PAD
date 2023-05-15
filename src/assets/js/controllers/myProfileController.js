@@ -91,14 +91,11 @@ export class myProfileController extends Controller {
         if (storyData){
             this.#showStoriesHeader();
             let storiesContainer = this.#myProfileView.querySelector("#stories-holder");
-            let storyTemplate = this.#storyTemplate;
-            console.log(storyTemplate);
+            let storyTemplate = this.#storyTemplate.content;
 
 
             for (let i = 0; i < storyData.length; i++) {
                 let usedTemplate = storyTemplate.cloneNode(true);
-                let story = document.createElement("div");
-                story.className = "story w-auto";
 
                 let storyId = storyData[i].storyID;
                 let storyTitle = storyData[i].title;
@@ -106,20 +103,14 @@ export class myProfileController extends Controller {
                 let storyDay = storyData[i].day;
                 let storyMonth = storyData[i].month;
                 let storyYear = storyData[i].year;
-                let storyImage = storyData[i].image;
                 let storyDate = storyDay + "-" + storyMonth + "-" + storyYear;
 
-                usedTemplate.querySelectorAll(".card-title").value = storyTitle;
-                usedTemplate.querySelectorAll(".card-body").innerText = storyBody;
-                usedTemplate.querySelectorAll(".year").innerText = storyDate;
-                // storyTemplate.querySelector()
-                // storyTemplate.querySelector()
-                // storyTemplate.querySelector()
-                // storyTemplate.querySelector()
+                usedTemplate.querySelector(".card-title").innerText = storyTitle;
+                usedTemplate.querySelector(".card-body").innerText = storyBody;
+                usedTemplate.querySelector(".year").innerText = storyDate;
 
-                story.innerHTML = usedTemplate.innerHTML;
 
-                storiesContainer.append(story);
+                storiesContainer.append(usedTemplate);
 
 
 
