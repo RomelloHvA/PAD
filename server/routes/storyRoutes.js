@@ -16,6 +16,7 @@ class storyRoutes {
         this.#getSingleStory();
         this.#getMaxUpvotesForStory();
         this.#getTotalUpvotesForUser();
+        this.#getAllForUser();
     }
 
     /**
@@ -234,10 +235,32 @@ class storyRoutes {
                     values: [userID]
                 })
                 if (data) {
-                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
                 }
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
+
+    #getAllForUser(){
+        this.#app.get("/story/getAllForUser", async (req, res) => {
+            let userID = req.query.userId;
+
+            if (userID){
+                try {
+                    const data = await this.#databaseHelper.handleQuery({
+                        query: "SELECT storyID, title, body, day, month, year, created_at, image FROM story WHERE userID = ?",
+                        values: [userID]
+                    })
+                    if (data){
+                        res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                    }
+                } catch (e) {
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+                }
+            } else {
+                res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({reason: "User doesn't exist."});
             }
         })
     }

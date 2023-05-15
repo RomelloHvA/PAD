@@ -3,86 +3,106 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
 
 
-    <div class="story m-4 float-start">
-        <div class="slide-animation">
-            <h1>Uw gegevens</h1>
-            <form>
-                <!--            Email field           -->
-                <div class="form-group">
-                    <label for="user-email">Email address</label>
-                    <input type="email" class="form-control" id="user-email" aria-describedby="emailHelp"
-                           placeholder="" disabled>
-                    <small id="emailHelp" class="form-text text-muted">Uw email en inlog naam</small>
-                </div>
-                <!--            Change password field-->
-                <div class="form-group">
-                    <label for="change-password">Password</label>
-                    <a><button type="submit" class="btn btn-primary" id="change-password">Wijzig uw wachtwoord</button></a>
+<div class="story m-4 float-start">
+    <div class="slide-animation">
+        <h1>Uw gegevens</h1>
+        <form>
+            <!--            Email field           -->
+            <div class="form-group">
+                <label for="user-email">Email address</label>
+                <input type="email" class="form-control" id="user-email" aria-describedby="emailHelp"
+                       placeholder="" disabled>
+                <small id="emailHelp" class="form-text text-muted">Uw email en inlog naam</small>
+            </div>
+            <!--            Change password field-->
+            <div class="form-group">
+                <label for="change-password">Password</label>
+                <a>
+                    <button type="submit" class="btn btn-primary" id="change-password">Wijzig uw wachtwoord</button>
+                </a>
 
-                </div>
+            </div>
 
-                <!--            Firstname Field-->
-                <div class="form-group">
-                    <label for="first-name">Voornaam</label>
-                    <input type="text" class="form-control" id="first-name" placeholder="" disabled>
-                    <small id="first-name-help" class="form-text text-danger"></small>
+            <!--            Firstname Field-->
+            <div class="form-group">
+                <label for="first-name">Voornaam</label>
+                <input type="text" class="form-control" id="first-name" placeholder="" disabled>
+                <small id="first-name-help" class="form-text text-danger"></small>
 
-                </div>
-                <!--            Lastname field-->
-                <div class="form-group">
-                    <label for="last-name">Achternaam</label>
-                    <input type="text" class="form-control" id="last-name" placeholder="" disabled>
-                    <small id="last-name-help" class="form-text text-danger"></small>
+            </div>
+            <!--            Lastname field-->
+            <div class="form-group">
+                <label for="last-name">Achternaam</label>
+                <input type="text" class="form-control" id="last-name" placeholder="" disabled>
+                <small id="last-name-help" class="form-text text-danger"></small>
 
-                </div>
-<!--                Phone number field-->
-                <div class="form-group">
-                    <label for="phone-number">Telefoonnummer</label>
-                    <input type="text" class="form-control" id="phone-number" placeholder="" disabled>
-                    <small id="phone-number-help" class="form-text text-danger"></small>
-                    <button type="submit" class="btn btn-primary mt-1">Wijzigen</button>
-                </div>
-<!--                Total likes field-->
-                <div class="form-group">
-                    <label for="total-likes">Totale likes</label>
-                    <div class="ui labeled button mt-5 ml-5" tabindex="0">
-                        <div class="ui blue button">
-                            <i class="fas fa-thumbs-up"></i>
-                        </div>
-                        <span class="ui basic blue label" id="total-likes"></span>
+            </div>
+            <!--                Phone number field-->
+            <div class="form-group">
+                <label for="phone-number">Telefoonnummer</label>
+                <input type="text" class="form-control" id="phone-number" placeholder="" disabled>
+                <small id="phone-number-help" class="form-text text-danger"></small>
+                <button type="submit" class="btn btn-primary mt-1">Wijzigen</button>
+            </div>
+            <!--                Total likes field-->
+            <div class="form-group">
+                <label for="total-likes">Totale likes</label>
+                <div class="ui labeled button mt-5 ml-5" tabindex="0">
+                    <div class="ui blue button">
+                        <i class="fas fa-thumbs-up"></i>
                     </div>
+                    <span class="ui basic blue label" id="total-likes"></span>
                 </div>
-            </form>
-
-        </div>
-
+            </div>
+        </form>
 
     </div>
 
-    <!--    Stories should go in this div -->
-
-<div class="story m-4 w-75 h-25 bg-dark shadow-none row" id="stories-holder">
-
-    <!--        Actual story is going to be a template.-->
-    <div class="story w-auto justify-content-center row" id="no-stories">
-        <h2 class="justify-content-center"> U heeft nog geen stories!</h2>
-
-        <a href="#addStory"><div class="btn btn-primary h-auto w-auto"><h1>Verhaal toevoegen!</h1></div></a>
-    </div>
 
 </div>
 
 
+<!--    Stories should go in this div -->
+
+<div class="story m-4 w-50 h-25 bg-dark shadow-none row overflow-auto container-fluid" id="stories-holder">
+
+    <!--        Actual story is going to be a template.-->
+    <div class="story w-auto justify-content-center row visually-hidden" id="no-stories">
+        <h2 class="justify-content-center"> U heeft nog geen stories!</h2>
+
+        <a href="#addStory">
+            <div class="btn btn-primary h-auto w-auto"><h1>Verhaal toevoegen!</h1></div>
+        </a>
+    </div>
+
+    <div class="story w-auto justify-content-center row visually-hidden" id="stories-header">
+        <h2 class="justify-content-center"> Uw Stories</h2>
+
+        <a href="#addStory">
+            <div class="btn btn-primary h-auto w-auto"><h1>Nog meer verhalen toevoegen!</h1></div>
+        </a>
+    </div>
+
+</div>
+
+<div class="card w-25 m-4 visually-hidden" id="sorting-menu">
+    <div class="form-group">
+        <label for="post-select" class="h-25 text-primary">Sorteer</label>
+        <select class="form-select" id="post-select">
+            <option>Meest recente post</option>
+            <option>Oudste post</option>
+        </select>
+    </div>
+</div>
 
 
 <template id="story-template">
-    <div class="story w-auto">
         <div class="slide-animation">
             <div class="p-4"><img src="/assets/img/badges placeholder.png" class="img-fluid float-end w-50 h-50"
                                   alt="Kon de foto niet laden.">
 
                 <h3 class="year"></h3>
-                <h4 class="card-title"></h4>
+                <h4 class="card-title">yaassss</h4>
                 <a class="btn btn-secondary username" href=""></a>
                 <p class="mb-0">
             <span class="card-body">
@@ -91,21 +111,10 @@
             </span>
 
             </div>
-
-
-        </div>
-        <!--            Like and change story button-->
-        <div class="buttons">
-            <div class="ui labeled button mt-5 ml-5" tabindex="0">
-                <div class="ui blue button" id="like">
-                    <i class="fas fa-thumbs-up"></i>
-                </div>
-                <span id="counter" class="ui basic blue label">0</span>
-            </div>
-<!--            Change story button-->
             <a>
                 <div class="btn btn-primary mt-2 btn-black">Wijzig verhaal</div>
             </a>
+
         </div>
-    </div>
+
 </template>
