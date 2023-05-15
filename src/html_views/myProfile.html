@@ -3,8 +3,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
 
 
-<div class="row h-auto w-auto">
-    <div class="story m-4">
+    <div class="story m-4 float-start">
         <div class="slide-animation">
             <h1>Uw gegevens</h1>
             <form>
@@ -61,18 +60,19 @@
     </div>
 
     <!--    Stories should go in this div -->
-    <div class="story m-4 w-75 h-25 bg-dark shadow-none row" id="stories-holder">
 
-        <!--        Actual story is going to be a template.-->
-        <div class="story w-auto justify-content-center row" id="no-stories">
-            <h2 class="justify-content-center"> U heeft nog geen stories!</h2>
+<div class="story m-4 w-75 h-25 bg-dark shadow-none row" id="stories-holder">
 
-            <a href="#addStory"><div class="btn btn-primary h-auto w-auto"><h1>Verhaal toevoegen!</h1></div></a>
-        </div>
+    <!--        Actual story is going to be a template.-->
+    <div class="story w-auto justify-content-center row" id="no-stories">
+        <h2 class="justify-content-center"> U heeft nog geen stories!</h2>
 
-
+        <a href="#addStory"><div class="btn btn-primary h-auto w-auto"><h1>Verhaal toevoegen!</h1></div></a>
     </div>
+
 </div>
+
+
 
 
 <template id="story-template">
