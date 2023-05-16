@@ -1,14 +1,27 @@
-//Context: Login
+/**
+ * @description Cypress test suite for the login functionality.
+ * @memberof Cypress.Test
+ * @name Login
+ * @author Othaim Iboualaisen
+ */
 describe("Login",  () => {
     const endpoint = "/users/login";
 
-    //Run before each test in this context
+    /**
+     * @description Run before each test in the login context.
+     * @memberof Cypress.Test.Login
+     * @function beforeEach
+     */
     beforeEach(() => {
         //Go to the specified URL
         cy.visit("http://localhost:8080/#login");
     });
 
-    //Test: Validate login form
+    /**
+     * @description Test case to validate the login form.
+     * @memberof Cypress.Test.Login
+     * @function itValidLoginForm
+     */
     it("Valid login form", () => {
         //Find the field for the username, check if it exists.
         cy.get("#email").should("exist");
@@ -20,7 +33,11 @@ describe("Login",  () => {
         cy.get("#btn").should("exist");
     });
 
-    //Test: Successful login
+    /**
+     * @description Test case for successful login.
+     * @memberof Cypress.Test.Login
+     * @function itSuccessfulLogin
+     */
     it("Successful login",  () => {
         //Start a fake server
         cy.server();
@@ -52,9 +69,21 @@ describe("Login",  () => {
         cy.get("@login").should((xhr) => {
             //The username should match what we typed earlier
             const body = xhr.request.body;
+
+            /**
+             * @description The username should match what was typed earlier.
+             * @memberof Cypress.Test.Login.itSuccessfulLogin
+             * @param {string} body.email - The email value from the request body.
+             * @returns {void}
+             */
             expect(body.email).equals("test");
 
-            //The password should match what we typed earlier
+            /**
+             * @description The password should match what was typed earlier.
+             * @memberof Cypress.Test.Login.itSuccessfulLogin
+             * @param {string} body.psw - The password value from the request body.
+             * @returns {void}
+             */
             expect(body.psw).equals("test");
         });
 
@@ -62,38 +91,43 @@ describe("Login",  () => {
         cy.url().should("contain", "#welcome");
     });
 
-    //Test: Failed login
-    it("Failed login",  () => {
-        //Start a fake server
+    /**
+     * @description Test case for failed login.
+     * @memberof Cypress.Test.Login
+     * @function itFailedLogin
+     */
+    it("Failed login", () => {
+        // Start a fake server
         cy.server();
 
-
         const mockedResponse = {
-            reason: ["ERROR", "ERROR"]
+            reason: [{ field: "email", message: "Incorrecte email en/of wachtwoord" }],
         };
 
-        //Add a stub with the URL /users/login as a POST
-        //Respond with a JSON-object when requested and set the status-code tot 429.
-        //Give the stub the alias: @login
-        cy.intercept('POST', '/users/login', {
+        // Add a stub with the URL /users/login as a POST
+        // Respond with a JSON object when requested and set the status code to 401.
+        // Give the stub the alias: @login
+        cy.intercept("POST", "/users/login", {
             statusCode: 401,
             body: mockedResponse,
-        }).as('login');
+        }).as("login");
 
-
-        //Find the field for the username and type the text "test".
+        // Find the field for the username and type the text "test".
         cy.get("#email").type("test");
 
-        //Find the field for the password and type the text "test".
+        // Find the field for the password and type the text "test".
         cy.get("#psw").type("test");
 
-        //Find the button to login and click it.
+        // Find the button to login and click it.
         cy.get("#btn").click();
 
-        //Wait for the @login-stub to be called by the click-event.
+        // Wait for the @login-stub to be called by the click event.
         cy.wait("@login");
 
-        //After a failed login, an element containing our error-message should be shown.
-        cy.get(".message").should("exist").should("contain", "ERROR");
+        // After a failed login, an element containing our error message should be shown.
+        cy.get(".message")
+            .should("exist")
+            .should("contain", "Incorrecte email en/of wachtwoord");
     });
+
 });
