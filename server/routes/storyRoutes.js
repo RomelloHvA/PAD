@@ -68,7 +68,7 @@ class storyRoutes {
         try {
             // Add the story to the database
             await this.#databaseHelper.handleQuery({
-                query: "CALL UpdateStory(?, ?, ?, ?, ?, ?)",
+                query: "CALL UpdateStory(?, ?, ?, ?, ?, ?, ?)",
                 values: [newStory.story, newStory.subject, newStory.year, newStory.fileUrl, newStory.month, newStory.day, newStory.userID],
             });
         } catch (e) {

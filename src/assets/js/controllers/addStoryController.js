@@ -167,7 +167,7 @@ export class addStoryController extends Controller {
 
             confirm.addEventListener("click", event => {
                 modal.style.display = "none";
-                App.setCurrentController(new StoryboardController())
+                App.loadController(App.CONTROLLER_STORYBOARD);
             });
 
             await this.#storyRepository.addNewStory(formData);

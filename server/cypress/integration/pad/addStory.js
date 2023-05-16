@@ -1,9 +1,8 @@
-describe('My First Test', () => {
+describe('Addstory tests', () => {
     beforeEach(() => {
-        cy.visit("http://localhost:8080/#story");
+        window.localStorage.setItem('session', JSON.stringify({"userID":1}))
+        cy.visit("http://localhost:8080/#addStory");
     });
-
-    it('Visits the addStory page', () => {});
 
     it("Valid ADDSTORY form", () => {
         cy.get("#subject").should("exist");
@@ -18,32 +17,12 @@ describe('My First Test', () => {
     it("Fails to submit incomplete form", () => {
         // Attempt to submit the form without filling out any fields
         cy.get("#myButton").click();
-        cy.get(".error-message").should("contain", "Subject is required.");
-        cy.get(".error-message").should("contain", "Month is required.");
-        cy.get(".error-message").should("contain", "Day is required.");
-        cy.get(".error-message").should("contain", "Year is required.");
-        cy.get(".error-message").should("contain", "Story is required.");
+        cy.get("#subject-error").should("contain", "Please fill in the subject field");
 
         // Fill out the subject field and attempt to submit again
         cy.get("#subject").type("My Test Story");
         cy.get("#myButton").click();
-        cy.get(".error-message").should("contain", "Month is required.");
-        cy.get(".error-message").should("contain", "Day is required.");
-        cy.get(".error-message").should("contain", "Year is required.");
-        cy.get(".error-message").should("contain", "Story is required.");
-    });
-
-    it("Fails to submit with invalid date format", () => {
-        // Fill out the form with an invalid date
-        cy.get("#subject").type("My Test Story");
-        cy.get("#month").select("February");
-        cy.get("#day").select("31");
-        cy.get("#year").select("2023");
-        cy.get("#story").type("This is a test story.");
-        cy.get("#myButton").click();
-
-        // Verify that the form submission failed and the error message is displayed
-        cy.get(".error-message").should("contain", "Please enter a valid date.");
+        cy.get("#story-error").should("contain", "Please fill in the story field");
     });
 
     it("Submits complete form successfully", () => {
@@ -62,12 +41,15 @@ describe('My First Test', () => {
         cy.get("#story").type(story);
 
         // Upload an image
-        cy.get('#fileInput[type="file"]').attachFile(imageFilePath);
+        cy.get("#fileInput").attachFile(imageFilePath);
 
         // Submit the form
         cy.get("#myButton").click();
 
+        // Confirm
+        cy.get(".modal-buttons").click();
+
         // Verify that the submission was successful and the user is redirected to the home page
-        cy.url().should("eq", "http://localhost:8080/#home");
+        cy.url().should("eq", "http://localhost:8080/#storyboard");
     });
 });

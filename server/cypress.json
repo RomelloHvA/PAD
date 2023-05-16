@@ -1,4 +1,6 @@
 {
   "integrationFolder": "cypress/integration/pad",
-  "video": false
+  "video": false,
+  "experimentalSessionAndOrigin": true
 }
+

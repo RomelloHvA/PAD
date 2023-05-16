@@ -208,6 +208,7 @@ export class App {
     }
     /**
      * Removes username via sessionManager and loads the login screen
+     * @author Othaim Iboualaisen
      */
     static loginReload() {
         //go to login screen
