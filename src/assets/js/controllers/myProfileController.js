@@ -9,16 +9,17 @@ import {UsersRepository} from "../repositories/usersRepository.js";
 export class myProfileController extends Controller {
 
     #userId;
+    #CHARACTER_LIMIT = 500;
     #myProfileView;
     #storyData;
     #userData;
     #storyRepository;
     #usersRepository;
     #editStoryUrl;
+    #singleStoryUrl = "#singleStory?storyId="
     #storyTemplate;
     #selectedSortingOrder;
     #sortingASC = "Meest recente post";
-    #sortingDES = "Oudste Post";
     #selectMenu;
 
 
@@ -30,6 +31,11 @@ export class myProfileController extends Controller {
         this.#setupView().then();
     }
 
+    /**
+     * Setups the view for the logged in person their profile page adds the stories sorted by creation date ASC first time.
+     * @returns {Promise<void>}
+     * @author Romello ten Broeke
+     */
     async #setupView() {
         this.#myProfileView = await this.loadHtmlIntoContent("html_views/myProfile.html");
         this.#storyTemplate = await this.#myProfileView.querySelector("#story-template");
@@ -40,7 +46,7 @@ export class myProfileController extends Controller {
         //Sorts the stories ascending when loading the page.
         this.#sortStoriesData(this.#selectedSortingOrder, this.#storyData);
 
-        //Sorts the stories depending on the option
+        //Sorts the stories depending on the option and adds eventlistener to the sorting menu.
         this.#selectMenu.addEventListener("change", async (event) =>{
             const selectValue = event.target.value;
             this.#sortStoriesData(selectValue, this.#storyData);
@@ -52,14 +58,30 @@ export class myProfileController extends Controller {
 
     }
 
+    /**
+     *
+     * @returns {Promise<void>} When the promise is fulfilled it should give the userData for the given userID
+     * @author Romello ten Broeke
+     */
+
     async #getUserData() {
         this.#userData = await this.#usersRepository.getUserById(this.#userId);
     }
 
+    /**
+     *
+     * @returns {Promise<void>} Returns all the stories for one specific userID.
+     * @author Romello ten Broeke
+     */
     async #getAllUserStories (){
         this.#storyData = await this.#storyRepository.getAllForUser(this.#userId);
     }
 
+    /**
+     * Fills in all the userdata in the corresponding fields.
+     * @returns {Promise<void>}
+     * @author Romello ten Broeke
+     */
     async #setUserFields() {
 
         await this.#getUserData();
@@ -78,24 +100,42 @@ export class myProfileController extends Controller {
         phoneNumberField.value = this.#userData[0].phoneNr;
     }
 
+    /**
+     * Gets the total amount of likes for a given userID
+     * @returns {Promise<*>}
+     * @author Romello ten Broeke
+     */
     async #getTotalLikesForUser(){
         return await this.#storyRepository.getTotalUpvotesForUser(this.#userId);
     }
 
+    /**
+     * Sets the total likes in the view.
+     * @param totalLikes
+     * @author Romello ten Broeke
+     */
     #setTotalLikesInView(totalLikes){
         this.#myProfileView.querySelector("#total-likes").innerText = totalLikes;
     }
 
+    /**
+     * Sets all the stories into the view. First it removes any older stories and then readds the stories if they were sorted.
+     * @param storyData is all the story data one would need to fill in the story.
+     * @author Romello ten Broeke
+     */
     #setStoriesIntoView(storyData) {
 
         if (storyData){
             this.#showStoriesHeader();
             let storiesContainer = this.#myProfileView.querySelector("#stories-holder");
             let storyTemplate = this.#storyTemplate.content;
+            let readButtonTemplate = this.#myProfileView.querySelector(".buttonTemplate").content;
 
+            this.#removeOldStories(storiesContainer);
 
             for (let i = 0; i < storyData.length; i++) {
                 let usedTemplate = storyTemplate.cloneNode(true);
+                let usedButton = readButtonTemplate.cloneNode(true);
 
                 let storyId = storyData[i].storyID;
                 let storyTitle = storyData[i].title;
@@ -105,14 +145,18 @@ export class myProfileController extends Controller {
                 let storyYear = storyData[i].year;
                 let storyDate = storyDay + "-" + storyMonth + "-" + storyYear;
 
+                if (storyBody.length > this.#CHARACTER_LIMIT) {
+                    storyBody = storyBody.slice(0, this.#CHARACTER_LIMIT) + "...";
+                }
+
+                usedButton.querySelector(".read-button").href = this.#singleStoryUrl + storyId
                 usedTemplate.querySelector(".card-title").innerText = storyTitle;
+
                 usedTemplate.querySelector(".card-body").innerText = storyBody;
+                usedTemplate.querySelector(".card-body").append(usedButton);
                 usedTemplate.querySelector(".year").innerText = storyDate;
 
-
                 storiesContainer.append(usedTemplate);
-
-
 
             }
 
@@ -122,6 +166,10 @@ export class myProfileController extends Controller {
 
     }
 
+    /**
+     * Method for showing a different html element depending on when it is called upon.
+     * @author Romello ten Broeke
+     */
     #showStoriesHeader(){
         let noStoriesDiv = this.#myProfileView.querySelector("#no-stories");
         if (noStoriesDiv) {
@@ -131,7 +179,10 @@ export class myProfileController extends Controller {
         this.#myProfileView.querySelector("#stories-header").classList.remove("visually-hidden");
         this.#myProfileView.querySelector("#sorting-menu").classList.remove("visually-hidden")
     }
-
+    /**
+     * Method for showing a different html element depending on when it is called upon.
+     * @author Romello ten Broeke
+     */
     #showNoStoriesHeader(){
 
         let storiesDiv = this.#myProfileView.querySelector("#stories-header");
@@ -146,7 +197,15 @@ export class myProfileController extends Controller {
         this.#myProfileView.querySelector("#no-stories").classList.remove("visually-hidden");
     }
 
+    /**
+     * This method sorts the stories and adds them back into the view after they have been sorted.
+     * @param sortingOrder is the selected sorting order
+     * @param stories array of all the stories to be sorted.
+     * @returns {number}
+     * @author Romello ten Broeke
+     */
     #sortStoriesData(sortingOrder, stories){
+
 
         if (stories.length < 2){
             console.log("not sorted too little stories");
@@ -178,13 +237,15 @@ export class myProfileController extends Controller {
 
         }
 
-        #getSelectedSortingOption(){
-        let selectedItem = this.#selectMenu.value;
-        console.log(selectedItem);
+    /**
+     * Removes all the older stories.
+     * @param parentNode should be the container in which the stories are being stored.
+     */
+    #removeOldStories(parentNode){
+            while (parentNode.firstChild) {
+                parentNode.removeChild(parentNode.firstChild);
+            }
         }
-
-
-
 
 
 }

@@ -60,13 +60,7 @@
 
 
 </div>
-
-
-<!--    Stories should go in this div -->
-
-<div class="story m-4 w-75 h-50 bg-dark shadow-none row overflow-auto" id="stories-holder">
-
-    <!--        Actual story is going to be a template.-->
+<div class="w-75 m-4">
     <div class="story w-auto justify-content-center row visually-hidden" id="no-stories">
         <h2 class="justify-content-center"> U heeft nog geen stories!</h2>
 
@@ -76,14 +70,14 @@
     </div>
 
     <div class="story w-auto row visually-hidden" id="stories-header">
-        <h2 class=""> Uw Stories</h2>
 
         <a href="#addStory">
             <div class="btn btn-primary h-auto w-auto"><h1>Nog meer verhalen toevoegen!</h1></div>
         </a>
         <div class=" w-25 m-4 visually-hidden" id="sorting-menu">
             <div class="form-group">
-                <label for="post-select" class="h-25 text-primary"></label>
+                <h2 class=""> Uw Stories</h2>
+                <label for="post-select" class="text-primary"></label>
                 <select class="form-select" id="post-select">
                     <option>Meest recente post</option>
                     <option>Oudste post</option>
@@ -91,28 +85,43 @@
             </div>
         </div>
     </div>
+</div>
+
+<!--    Stories should go in this div -->
+
+<div class="story m-0 p-0 w-75 h-50 bg-dark shadow-none row overflow-auto" id="stories-holder">
+
+    <!--        Actual story is going to be a template.-->
+
 
 </div>
 
 
-
-
 <template id="story-template">
-    <div class="slide-animation mt-3">
+    <div class="slide-animation mt-3 p-0">
         <div class="card">
             <div class="p-4">
 
                 <h3 class="year"></h3>
+
                 <h4 class="card-title"></h4>
-            <span class="card-body">
+
+                <span class="card-body">
 
             </span>
 
             </div>
-            <a>
+            <a class="edit-button">
                 <div class="btn btn-primary m-2 btn-black">Wijzig verhaal</div>
             </a>
+
         </div>
     </div>
 
+</template>
+
+<template class="buttonTemplate">
+    <a class="read-button">
+        <div class="btn btn-primary m-2 btn-black">Bekijk alles</div>
+    </a>
 </template>
