@@ -212,6 +212,30 @@ class UsersRoutes {
     }
 
 
+    #getUserData(){
+        this.#app.get("/users/getUserData", async (req, res)=> {
+            let userID = req.query.userID;
+            let query = `
+                        SELECT user.*, story.storyID, COUNT(like.storyID) AS likes
+                        FROM user
+                        LEFT JOIN story ON user.userID = story.userID
+                        LEFT JOIN \`like\` ON story.storyID = like.storyID
+                        WHERE user.userID = ${userID}
+                        GROUP BY user.userID, story.storyID
+                    `
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: query,
+                });
+
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
 }
 
 module.exports = UsersRoutes

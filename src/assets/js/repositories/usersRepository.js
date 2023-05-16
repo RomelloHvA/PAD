@@ -42,17 +42,11 @@ export class UsersRepository {
 
     }
 
-    async update(id, values = {}) {
-
+    async getUserData(id){
+        return await this.#networkManager.doRequest(`${this.#route}/getUserData?userID=${id}`,"GET");
     }
 
-    async getUserById(query){
-        return await this.#networkManager.doRequest(`${this.#route}/getSingleUser?userID=${query}`,"GET");
-    }
-
-
-
-    async delete() {
-
+    async getUserStories(id){
+        return await this.#networkManager.doRequest(`${this.#route}/getUserStories?userID=${id}`,"GET");
     }
 }
