@@ -29,9 +29,6 @@ export class StoryboardController extends Controller {
         this.#MIN_YEAR = 1870;
         this.#MAX_YEAR = new Date().getFullYear();
 
-        // Get the ID from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-
         const controller = App.getCurrentController();
         let year;
         if (controller.data) {
@@ -49,16 +46,6 @@ export class StoryboardController extends Controller {
         const selectOrder = this.#storyboardView.querySelector("#selectOrder");
         const selectYear = this.#storyboardView.querySelector("#selectYear");
 
-        // const slider = this.#storyboardView.querySelector("#myRange");
-        // const valueLabel = this.#storyboardView.querySelector("#valueLabel");
-        //
-        // this.setupSlider(slider);
-
-        // this.updateSliderValue(slider, valueLabel);
-
-        // Update the value label position and value on input change
-        // slider.addEventListener("input", () => this.updateSliderValue(slider, valueLabel));
-
         this.populateSelect(selectYear);
 
         this.selectSort(selectOrder);
@@ -74,12 +61,12 @@ export class StoryboardController extends Controller {
             let sortData = this.getSortAndFilterData(selectedOption);
 
             // get array of all stories
-            const data = await this.#storyboardRepository.getAll();
-            const sessionID = App.sessionManager.get("userID");
+            const data = await this.#storyboardRepository.getAll(sortData);
 
             let template = this.#storyboardView.querySelector('#storyTemp').content;
 
             this.removeNodes();
+
 
             if (data.length > 0) {
                 this.toggleMessage(false);
@@ -101,36 +88,18 @@ export class StoryboardController extends Controller {
                     storyTemp.querySelector("#link").href = this.#storyURL + storyId;
                     storyTemp.querySelector("#counter").innerHTML = likes || 0;
 
-                    if (userId === sessionID) {
-                        storyTemp.querySelector(".editButtons").style.visibility = 'inherit';
-                    }
+                    this.toggleButtons(userId, storyTemp);
 
-                    // create a new FileReader object
-                    let reader = new FileReader();
-
-                    // define a function to be called when the FileReader has finished reading the image file
-                    reader.onload = function () {
-                        // set the source of the 'img' element to the data URL obtained from reading the image file
-                        storyTemp.querySelector("#img").src = reader.result;
+                    if (image) {
+                        storyTemp.querySelector("#img").src = image;
+                    } else {
+                        storyTemp.querySelector("#img").src = "https://picsum.photos/300/200";
                     }
 
                     this.#storyboardView.querySelector("#stories").append(storyTemp);
-                    console.log(this.#storyboardView.querySelector("#stories").lastChild.querySelector(".icon-pencil"))
-                    this.#storyboardView.querySelector("#stories").lastChild.querySelector(
-                        ".icon-pencil").addEventListener("click", () => {
-                        new EditStoryController(data[i])
-                    })
+
+                    this.getEditStory(data[i]);
                 }
-
-                if (image && image.type) {
-                    reader.readAsDataURL(image);
-                } else {
-                    storyTemp.querySelector("#img").src = "https://picsum.photos/300/200";
-                }
-
-
-                this.#storyboardView.querySelector("#stories").append(storyTemp);
-
             } else {
                 this.toggleMessage(true);
             }
@@ -157,6 +126,18 @@ export class StoryboardController extends Controller {
         }
     }
 
+    toggleButtons(userId, storyTemp) {
+        const sessionID = App.sessionManager.get("userID");
+        if (userId === sessionID) {
+            storyTemp.querySelector(".editButtons").style.visibility = 'inherit';
+        }
+    }
+    getEditStory(story) {
+        this.#storyboardView.querySelector("#stories").lastChild.querySelector(".icon-pencil").addEventListener("click", () => {
+            new EditStoryController(story)
+        })
+    }
+
 
     /**
      * Toggles the message display.
@@ -172,16 +153,6 @@ export class StoryboardController extends Controller {
         } else {
             this.#storyboardView.querySelector(".message").innerHTML = "";
             this.#storyboardView.querySelector(".message").style.display = "none";
-        }
-    }
-    setupSlider(slider) {
-        slider.min = this.#MIN_YEAR;
-        slider.max = this.#MAX_YEAR;
-        if (this.#display_year === "*") {
-            slider.disabled = true;
-
-        } else {
-            slider.value = this.#display_year;
         }
     }
 
@@ -239,6 +210,8 @@ export class StoryboardController extends Controller {
         });
     }
 
+
+
     /**
      * Returns an object containing the sort field and order properties based on the selected option and year.
      *
@@ -246,16 +219,6 @@ export class StoryboardController extends Controller {
      * @returns {Object} - An object with the "year", "field", and "order" properties based on the selected option and year.
      * @author Othaim Iboualaisen
      */
-    async disableLikes() {
-        const likeBtns = this.#storyboardView.querySelectorAll("#like");
-        likeBtns.forEach(btn => {
-            btn.className = "ui grey button";
-            btn.addEventListener('mouseover', () => {
-                btn.style.cursor = 'not-allowed';r
-            });
-        });
-    }
-
     getSortAndFilterData(selectedOption) {
         let sortData = {};
         let selectedYear = this.#storyboardView.querySelector("#selectYear").value;
@@ -323,7 +286,6 @@ export class StoryboardController extends Controller {
      @author Tygo Geervliet
      */
     async likeStory() {
-
         let likeBtn = this.#storyboardView.querySelectorAll("#like");
         let likeError = this.#storyboardView.querySelectorAll("#likeError");
 
@@ -369,15 +331,12 @@ export class StoryboardController extends Controller {
         return alreadyLikedObject[key];
     }
 
-
     async addNewLike(userID, storyID) {
         await this.#storyboardRepository.addLike(userID, storyID);
     }
 
     async removeLike(userID, storyID) {
-
         await this.#storyboardRepository.removeLike(userID, storyID);
-
     }
 
     /**
@@ -434,19 +393,9 @@ export class StoryboardController extends Controller {
         }
     }
 
-
-
-
-
-
-
-
     retrieveStoryIDsValue(getStoryByUserID, userID) {
         let StoryByUserIDObject = getStoryByUserID[0];
         let key = 'getStorysByUser(' + userID + ')';
         return StoryByUserIDObject[key];
     }
-
-
-
 }

@@ -2,24 +2,23 @@
     <link href="../assets/css/pages/storyboard.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../assets/css/modal.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/css/modal.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-
 </head>
 <body>
 
 
 <div class="filter-bar">
     <select id="selectOrder">
-        <option value="newest" selected>Meest recente</option>
+        <option selected value="newest">Meest recente</option>
         <option value="oldest">Oudste eerst</option>
         <option value="most_likes">Meeste likes</option>
         <option value="least_likes">Minste likes</option>
     </select>
 
     <select id="selectYear">
-        <option value="*" selected>Alle jaren</option>
+        <option selected value="*">Alle jaren</option>
     </select>
 </div>
 <div class="board">
@@ -34,40 +33,39 @@
 </div>
 
 <template id="storyTemp">
-        <div class="story">
-            <div class="story-info">
+    <div class="story">
+        <div class="story-info">
             <a id="link">
                 <h2 id="title"></h2>
             </a>
             <p id="author"></p>
             <p id="body"></p>
-            </div>
-            <div class="story-image">
-            <img id="img" alt="Story Image">
+        </div>
+        <div class="story-image">
+            <img alt="Story Image" id="img">
         </div>
         <div class="flex">
             <div class="editButtons">
                 <i class="icon-pencil"></i>
-                <i id="deleteBtn" class="icon-remove"></i>
+                <i class="icon-remove" id="deleteBtn"></i>
             </div>
             <div class="buttons">
-            <p id="likeError">Login om een verhaal te kunnen liken.</p>
-            <div class="ui labeled button mt-5 ml-5" tabindex="0">
-
-                <div class="ui blue button" id="like">
-                    <i class="fas fa-thumbs-up"></i>
+                <p id="likeError">Login om een verhaal te kunnen liken.</p>
+                <div class="ui labeled button mt-5 ml-5" tabindex="0">
+                    <div class="ui blue button" id="like">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <span class="ui basic blue label" id="counter">0</span>
                 </div>
-                <span id="counter" class="ui basic blue label">0</span>
             </div>
-       </div>
-   </div>
+        </div>
 </template>
 
-<div id="myModal" class="modal">
+<div class="modal" id="myModal">
     <div class="modal-content">
         <p>Weet je zeker dat je dit verhaal wilt verwijderen?</p>
-            <button  id="modal-yes" class="modal-buttons">Ja</button>
-            <button  id="modal-no" class="modal-buttons">Nee</button>
+        <button class="modal-buttons" id="modal-yes">Ja</button>
+        <button class="modal-buttons" id="modal-no">Nee</button>
     </div>
 </div>
 </body>
