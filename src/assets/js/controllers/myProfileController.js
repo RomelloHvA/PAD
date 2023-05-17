@@ -42,20 +42,22 @@ export class myProfileController extends Controller {
         this.#selectMenu = this.#myProfileView.querySelector("#post-select");
         await this.#setUserFields();
         await this.#getAllUserStories();
-        this.#selectedSortingOrder = this.#sortingASC;
-        //Sorts the stories ascending when loading the page.
-        this.#sortStoriesData(this.#selectedSortingOrder, this.#storyData);
-
-        //Sorts the stories depending on the option and adds eventlistener to the sorting menu.
-        this.#selectMenu.addEventListener("change", async (event) =>{
-            const selectValue = event.target.value;
-            this.#sortStoriesData(selectValue, this.#storyData);
-            console.log(selectValue);
-        })
+        this.#loadStoriesHeader();
+        this.#addAllEventHandlers();
 
 
 
+    }
 
+    #loadStoriesHeader() {
+        if (this.#storyData.length === 0) {
+            this.#showNoStoriesHeader();
+        } else {
+            this.#selectedSortingOrder = this.#sortingASC;
+            //Sorts the stories ascending when loading the page.
+            this.#sortStoriesData(this.#selectedSortingOrder, this.#storyData);
+
+        }
     }
 
     /**
@@ -73,7 +75,7 @@ export class myProfileController extends Controller {
      * @returns {Promise<void>} Returns all the stories for one specific userID.
      * @author Romello ten Broeke
      */
-    async #getAllUserStories (){
+    async #getAllUserStories() {
         this.#storyData = await this.#storyRepository.getAllForUser(this.#userId);
     }
 
@@ -105,7 +107,7 @@ export class myProfileController extends Controller {
      * @returns {Promise<*>}
      * @author Romello ten Broeke
      */
-    async #getTotalLikesForUser(){
+    async #getTotalLikesForUser() {
         return await this.#storyRepository.getTotalUpvotesForUser(this.#userId);
     }
 
@@ -114,7 +116,7 @@ export class myProfileController extends Controller {
      * @param totalLikes
      * @author Romello ten Broeke
      */
-    #setTotalLikesInView(totalLikes){
+    #setTotalLikesInView(totalLikes) {
         this.#myProfileView.querySelector("#total-likes").innerText = totalLikes;
     }
 
@@ -125,7 +127,7 @@ export class myProfileController extends Controller {
      */
     #setStoriesIntoView(storyData) {
 
-        if (storyData){
+        if (storyData) {
             this.#showStoriesHeader();
             let storiesContainer = this.#myProfileView.querySelector("#stories-holder");
             let storyTemplate = this.#storyTemplate.content;
@@ -170,7 +172,7 @@ export class myProfileController extends Controller {
      * Method for showing a different html element depending on when it is called upon.
      * @author Romello ten Broeke
      */
-    #showStoriesHeader(){
+    #showStoriesHeader() {
         let noStoriesDiv = this.#myProfileView.querySelector("#no-stories");
         if (noStoriesDiv) {
             noStoriesDiv.parentNode.removeChild(noStoriesDiv);
@@ -179,16 +181,17 @@ export class myProfileController extends Controller {
         this.#myProfileView.querySelector("#stories-header").classList.remove("visually-hidden");
         this.#myProfileView.querySelector("#sorting-menu").classList.remove("visually-hidden")
     }
+
     /**
      * Method for showing a different html element depending on when it is called upon.
      * @author Romello ten Broeke
      */
-    #showNoStoriesHeader(){
+    #showNoStoriesHeader() {
 
         let storiesDiv = this.#myProfileView.querySelector("#stories-header");
         let storiesFilter = this.#myProfileView.querySelector("#sorting-menu");
 
-        if (storiesDiv && storiesFilter){
+        if (storiesDiv && storiesFilter) {
             storiesDiv.parentNode.removeChild(storiesDiv);
             storiesFilter.parentNode.removeChild(storiesFilter);
 
@@ -204,17 +207,17 @@ export class myProfileController extends Controller {
      * @returns {number}
      * @author Romello ten Broeke
      */
-    #sortStoriesData(sortingOrder, stories){
+    #sortStoriesData(sortingOrder, stories) {
 
 
-        if (stories.length < 2){
+        if (stories.length < 2) {
             console.log("not sorted too little stories");
             this.#setStoriesIntoView(stories);
             return 0;
         }
 
-        if (sortingOrder === this.#sortingASC){
-            stories.sort(function(a, b) {
+        if (sortingOrder === this.#sortingASC) {
+            stories.sort(function (a, b) {
                 console.log("Sorted stories ASC");
                 let firstStoryDate = new Date(a.created_at);
                 let secondStoryDate = new Date(b.created_at);
@@ -223,7 +226,7 @@ export class myProfileController extends Controller {
             console.log("Sorted ASC");
             console.log(stories);
         } else {
-            stories.sort(function(a, b) {
+            stories.sort(function (a, b) {
                 console.log("Sorted stories DES");
                 let firstStoryDate = new Date(a.created_at);
                 let secondStoryDate = new Date(b.created_at);
@@ -235,17 +238,87 @@ export class myProfileController extends Controller {
 
         this.#setStoriesIntoView(stories);
 
-        }
+    }
 
     /**
      * Removes all the older stories.
      * @param parentNode should be the container in which the stories are being stored.
+     * @author Romello ten Broeke
      */
-    #removeOldStories(parentNode){
-            while (parentNode.firstChild) {
-                parentNode.removeChild(parentNode.firstChild);
-            }
+    #removeOldStories(parentNode) {
+        while (parentNode.firstChild) {
+            parentNode.removeChild(parentNode.firstChild);
         }
+    }
 
+    #unlockUserDataFields() {
+        this.#myProfileView.querySelector("#user-email").removeAttribute("disabled");
+        this.#myProfileView.querySelector("#first-name").removeAttribute("disabled");
+        this.#myProfileView.querySelector("#last-name").removeAttribute("disabled");
+        this.#myProfileView.querySelector("#phone-number").removeAttribute("disabled");
+        this.#myProfileView.querySelector("#save-changes-button").classList.remove("visually-hidden");
+        this.#myProfileView.querySelector("#save-changes-button").classList.add("slide-animation");
+    }
 
+    #showConfirmationAlert() {
+        this.#myProfileView.querySelector("#myModal").style.display = "block";
+    }
+
+    #isValidUserData() {
+        return this.#isValidEmail() && this.#isValidFirstName() && this.#isValidLastName() && this.#isValidPhoneNumber();
+
+    }
+
+    #isValidEmail() {
+        let emailHelp = this.#myProfileView.querySelector("#emailHelp");
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(this.#myProfileView.querySelector("#user-email").value)){
+            emailHelp.classList.remove("text-muted");
+            emailHelp.classList.add("text-danger");
+            emailHelp.innerText = "Voer een geldige email in.";
+            return false;
+        } else {
+            emailHelp.classList.remove("text-danger");
+            emailHelp.classList.add("text-muted");
+            emailHelp.innerText = "Uw email en inlog naam";
+            return true;
+        }
+    }
+
+    #isValidFirstName() {
+        const nameRegex = /^[a-zA-Z]+$/;
+        return nameRegex.test(this.#myProfileView.querySelector("#first-name").value);
+    }
+
+    #isValidLastName() {
+        const lastNameRegex = /^[a-zA-Z]+(-[a-zA-Z]+)*$/;
+        return lastNameRegex.test(this.#myProfileView.querySelector("#last-name").value);
+    }
+
+    #isValidPhoneNumber() {
+        const phoneNumberRegex = /^(\+|00)?(49|33|41|43|32|30|31)[\d]{8,10}$/;
+        return phoneNumberRegex.test(this.#myProfileView.querySelector("#phone-number").value);
+    }
+
+    #addAllEventHandlers(){
+
+        //Adds event handler to the "wijzig" button.
+        this.#myProfileView.querySelector("#change-userdata-button").addEventListener("click", async () => {
+            this.#unlockUserDataFields();
+        })
+        //Adds event handler to the "opslaan" knop.
+        this.#myProfileView.querySelector("#save-changes-button").addEventListener("click", async () => {
+            if (this.#isValidUserData()) {
+                this.#showConfirmationAlert();
+            }
+        })
+
+        //Sorts the stories depending on the option and adds eventlistener to the sorting menu.
+        this.#selectMenu.addEventListener("change", async (event) => {
+            const selectValue = event.target.value;
+            this.#sortStoriesData(selectValue, this.#storyData);
+            console.log(selectValue);
+        });
+    }
 }
