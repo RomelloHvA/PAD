@@ -14,11 +14,11 @@ export class EditStoryController extends Controller {
     constructor(selectedStory) {
         super();
         this.#selectedStory = selectedStory;
-        this.#setupView();
-        this.#updateStory(selectedStory)
+        this.#storyboardRepository = new storyboardRepository();
         this.#storyRepository = new storyRepository();
         this.#route = "/story"
-        this.#storyboardRepository = new storyboardRepository();
+        this.#setupView();
+
     }
 
     /**
@@ -46,12 +46,14 @@ export class EditStoryController extends Controller {
      * @author Roos
      */
     #setFields() {
+        console.log(this.#addStoryView)
         const id = this.#selectedStory.storyID;
         const idField = this.#addStoryView.querySelector("#idInput");
         idField.value = id;
 
         const title = this.#selectedStory.title;
         const subjectField = this.#addStoryView.querySelector("#subject");
+        console.log(subjectField)
         subjectField.value = title;
 
         const storyBody = this.#selectedStory.body;
@@ -77,7 +79,8 @@ export class EditStoryController extends Controller {
      * @returns {Promise<void>}
      * @author Roos
      */
-    async #updateStory(event) {
+    async #updateStory() {
+        console.log(this.#addStoryView.querySelector("#subject"));
         const newTitle = this.#addStoryView.querySelector("#subject").value;
         const newBody = this.#addStoryView.querySelector("#story").value;
         const baseId = this.#addStoryView.querySelector("#idInput").value;

@@ -115,7 +115,8 @@ export class StoryboardController extends Controller {
                     }
 
                     this.#storyboardView.querySelector("#stories").append(storyTemp);
-                    this.#storyboardView.querySelector("#stories").lastChild.previousSibling.querySelector(
+                    console.log(this.#storyboardView.querySelector("#stories").lastChild.querySelector(".icon-pencil"))
+                    this.#storyboardView.querySelector("#stories").lastChild.querySelector(
                         ".icon-pencil").addEventListener("click", () => {
                         new EditStoryController(data[i])
                     })
