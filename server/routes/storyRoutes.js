@@ -1,6 +1,5 @@
 const fs = require("fs");
 
-
 class storyRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes");
     #databaseHelper = require("../framework/utils/databaseHelper");
@@ -13,6 +12,7 @@ class storyRoutes {
         this.#addStory();
         this.#getHighestRatedMessageForYear();
         this.#getHighestRatedMessage();
+        this.#updateStory();
         this.#getSingleStory();
         this.#getMaxUpvotesForStory();
     }
@@ -24,8 +24,6 @@ class storyRoutes {
     #addStory() {
         // Handle POST request to add a story
         this.#app.post("/story/add", this.#multer().single("file"), async (req, res) => {
-
-            console.log('req reached');
             try {
                 // Extract data from the request
                 const {body: {subject, story, year, month, day, userID}, file} = req;
@@ -106,7 +104,6 @@ class storyRoutes {
      @author Tygo Geervliet
      */
     async #writeUploadedFileToDisk(file) {
-
 
         const timestamp = new Date().getTime();
         const fileUrl = `uploads/${timestamp}.${this.#getFileExtension(file)}`;
@@ -223,7 +220,39 @@ class storyRoutes {
         })
     }
 
+    /**
+     * This method puts the new data in the database
+     * @author Roos
+     */
+    #updateStory() {
+        this.#app.post("/storyboard/edit",this.#multer().single("image"), async (req, res) => {
+            const {body:{ title, body, year, month, day, id, otherImage }, file} = req;
 
+            try {
+                let fileUrl = '';
+
+                // Check if a file was uploaded and write it to disk
+                if (file != null) {
+                    fileUrl = await this.#writeUploadedFileToDisk(file);
+                    if (!fileUrl) {
+                        // If an error occurred while writing to disk, send a bad request response
+                        return res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: 'Error writing file to disk'});
+                    }
+                } else {
+                    fileUrl = otherImage;
+                }
+
+                const data = await this.#databaseHelper.handleQuery({
+                    query: `UPDATE story SET title = ?, body  = ?, year = ?, month = ?, day = ?, image = ? WHERE storyID = ?`,
+                    values: [title, body ,year, month, day, fileUrl, id]
+
+                });
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
 }
 
 module.exports = storyRoutes;

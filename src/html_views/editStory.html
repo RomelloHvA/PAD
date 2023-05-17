@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>edit story</title>
+    <link rel="stylesheet" href="../assets/css/addStory.css">
+</head>
+<body>
+
+<h1>Verhaal editen</h1>
+
+<form>
+    <div class="mb-4">
+        <label class="form-label">Onderwerp verhaal</label>
+        <input type="text" class="form-control" id="subject" autocomplete="off"/>
+        <p class="error" id="subject-error"></p>
+    </div>
+
+    <div class="mb-4" id="inputfieldsrow">
+        <div class="fields edit_fields">
+            <label>
+                <p>Voer hier de datum in</p>
+                <input type="date" id="date">
+            </label>
+            <!--            <option disabled selected value="">Selecteer hier een datum</option>-->
+            </select>
+        </div>
+
+        <!--    hidden fields-->
+        <div class="fields hidden">
+            <label class="form-label">Dag</label>
+            <input id="idInput" type="hidden"/>
+        </div>
+
+        <div class="fields hidden">
+            <label class="form-label">Jaar</label>
+            <select id="year" type="number"></select>
+        </div>
+    </div>
+    <!--end hidden fields -->
+
+    <div class="mb-4">
+        <label class="form-label">Verhaal</label>
+        <textarea maxlength="2000" class="form-control" rows="10" id="story"
+                  placeholder="Schrijf hier je verhaal wat je wilt plaatsen"></textarea>
+        <p class="error" id="story-error"></p>
+        <p id="characterCount"></p>
+    </div>
+
+    <label class="form-label">Afbeelding</label>
+    <input type="file" class="file-input" id="fileInput">
+    <img id="preview-image" src="">
+    <button id="myButton" type="submit" class="btn btn-primary btn-block mb-4">Pas verhaal aan</button>
+</form>
+
+<!-- The modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+
+        <p>Verhaal is opgeslagen. je kan deze zien op de verhaal pagina</p>
+        <button class="modal-buttons">Confirm</button>
+
+    </div>
+</div>
+
+</body>
+</html>

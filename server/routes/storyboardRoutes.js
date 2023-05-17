@@ -1,12 +1,15 @@
-/**
- * @author Othaim Iboualaisen & Tygo Geervliet
- */
+const fs = require("fs");
 
+/**
+ * this file contains ExpressJS stuff
+ * @author Rosalinde & Othaim Iboualaisen
+ */
 
 class StoryboardRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
     #databaseHelper = require("../framework/utils/databaseHelper")
     #app
+    #multer = require("multer");
 
     /**
      * initialize
@@ -14,7 +17,6 @@ class StoryboardRoutes {
      */
     constructor(app) {
         this.#app = app;
-
         this.#getStory();
         this.#addLike();
         this.#removeLike();
@@ -110,10 +112,9 @@ class StoryboardRoutes {
     }
 
 
-
     /**
      * this method fetches the data from a story
-     * Othaim Iboualaisen
+     * Roos
      */
     #getStory() {
         this.#app.post("/storyboard", async (req, res) => {

@@ -4,6 +4,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/modal.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
 
@@ -19,15 +20,9 @@
     <select id="selectYear">
         <option value="*" selected>Alle jaren</option>
     </select>
-
-    <!--    <div class="slidecontainer">-->
-    <!--        <input type="range" min="1870" max="2023" value="2002" class="slider" id="myRange">-->
-    <!--        <div class="slider-value" id="valueLabel"></div> &lt;!&ndash; Add this for the value label &ndash;&gt;-->
-    <!--    </div>-->
-
 </div>
-
 <div class="board">
+
     <div class="content" style="overflow-x: auto">
 
         <div class="stories" id="stories">
@@ -38,31 +33,37 @@
 </div>
 
 <template id="storyTemp">
-    <div class="story">
-        <div class="story-info">
+        <div class="story">
+            <div class="story-info">
             <a id="link">
                 <h2 id="title"></h2>
             </a>
             <p id="author"></p>
             <p id="body"></p>
-        </div>
-        <div class="story-image">
+            </div>
+            <div class="story-image">
             <img id="img" alt="Story Image">
         </div>
-        <div class="buttons">
+        <div class="flex">
+            <div class="editButtons">
+                <i class="icon-pencil"></i>
+                <i class="icon-remove"></i>
+            </div>
+            <div class="buttons">
             <p id="likeError">Login om een verhaal te kunnen liken.</p>
             <div class="ui labeled button mt-5 ml-5" tabindex="0">
 
-                <div id="deleteBtn">
-                    <button type="button" class="btn btn-link"><span class="bi bi-trash"></span></button>
-                </div>
+<!--                delete button van tygo? -->
+<!--                <div id="deleteBtn">-->
+<!--                    <button type="button" class="btn btn-link"><span class="bi bi-trash"></span></button>-->
+<!--                </div>-->
                 <div class="ui blue button" id="like">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
                 <span id="counter" class="ui basic blue label">0</span>
             </div>
-        </div>
-    </div>
+       </div>
+   </div>
 </template>
 
 <div id="myModal" class="modal">
@@ -72,6 +73,4 @@
             <button  id="modal-no" class="modal-buttons">Nee</button>
     </div>
 </div>
-
-
 </body>

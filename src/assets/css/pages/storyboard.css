@@ -190,3 +190,47 @@
     left: 0;
     transform: translateX(-50%);
 }
+.flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.editButtons{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    visibility: hidden;
+}
+
+.editButtons i {
+    margin-left: 2px;
+    font-size: 20px;
+    background-color: #545454;
+    border: 1px solid #545454;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 400;
+    outline: none;
+    outline: 0;
+    text-align: center;
+    transform: translateY(0);
+    transition: transform 150ms, box-shadow 150ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.editButtons i:hover {
+    box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+    transform: translateY(-2px);
+}
+
+
+@media (min-width: 768px) {
+    .editButtons i {
+        padding: 7px 12px;
+    }
+}

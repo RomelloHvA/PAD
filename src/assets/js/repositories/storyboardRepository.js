@@ -4,9 +4,11 @@ export class storyboardRepository {
     //# is a private field in Javascript
     #route
     #networkManager
+    #editRoute
 
     constructor() {
         this.#route = "/storyboard"
+        this.#editRoute = "/storyboard/edit"
         this.#networkManager = new NetworkManager();
     }
 
@@ -19,6 +21,11 @@ export class storyboardRepository {
             .doRequest(`${this.#route}`, "POST", data);
     }
 
+    async updateStory(data){
+        return await this.#networkManager.doFileRequest(`${this.#editRoute}`, "POST", data, {
+            'Content-Type': `multipart/form-data;`
+        });
+    }
     async addLike(userID, storyID) {
         const body = { userID: userID, storyID: storyID };
         return await this.#networkManager.doRequest(`${this.#route}/addLike`, "POST", body);
