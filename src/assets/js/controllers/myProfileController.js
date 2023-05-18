@@ -134,7 +134,7 @@ export class myProfileController extends Controller {
             let readButtonTemplate = this.#myProfileView.querySelector(".buttonTemplate").content;
 
             this.#removeOldStories(storiesContainer);
-
+            //For loop for adding the data into the header.
             for (let i = 0; i < storyData.length; i++) {
                 let usedTemplate = storyTemplate.cloneNode(true);
                 let usedButton = readButtonTemplate.cloneNode(true);
@@ -272,53 +272,99 @@ export class myProfileController extends Controller {
     #isValidEmail() {
         let emailHelp = this.#myProfileView.querySelector("#emailHelp");
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let emailFieldValue = this.#myProfileView.querySelector("#user-email").value;
+        let emailError = "Ongeldige email";
+        this.#handleInputField(emailRegex, emailHelp, emailFieldValue, emailError);
 
-        if (!emailRegex.test(this.#myProfileView.querySelector("#user-email").value)){
-            emailHelp.classList.remove("text-muted");
-            emailHelp.classList.add("text-danger");
-            emailHelp.innerText = "Voer een geldige email in.";
-            return false;
+        return emailRegex.test(this.#myProfileView.querySelector("#user-email").value);
+    }
+
+    #handleInputField(regex, inputFieldHelp, inputFieldValue, errorText) {
+        if (!regex.test(inputFieldValue)) {
+            inputFieldHelp.classList.remove("text-muted");
+            inputFieldHelp.classList.add("text-danger");
+            inputFieldHelp.innerText = errorText;
         } else {
-            emailHelp.classList.remove("text-danger");
-            emailHelp.classList.add("text-muted");
-            emailHelp.innerText = "Uw email en inlog naam";
-            return true;
+            inputFieldHelp.classList.remove("text-danger");
+            inputFieldHelp.classList.add("text-muted");
+            inputFieldHelp.innerText = "";
         }
     }
 
     #isValidFirstName() {
         const nameRegex = /^[a-zA-Z]+$/;
-        return nameRegex.test(this.#myProfileView.querySelector("#first-name").value);
+        let nameFieldHelp = this.#myProfileView.querySelector("#first-name-help");
+        let nameFieldValue = this.#myProfileView.querySelector("#first-name").value;
+        let errorFirstName = "Voer een geldige naam in";
+
+        this.#handleInputField(nameRegex, nameFieldHelp, nameFieldValue, errorFirstName);
+        return nameRegex.test(nameFieldValue);
     }
 
     #isValidLastName() {
-        const lastNameRegex = /^[a-zA-Z]+(-[a-zA-Z]+)*$/;
-        return lastNameRegex.test(this.#myProfileView.querySelector("#last-name").value);
+        const lastNameRegex = /^[a-zA-Z]+(?:\s{1,2}[a-zA-Z]+(-[a-zA-Z]+)*)*$/;
+        let lastNameHelp = this.#myProfileView.querySelector("#last-name-help");
+        let lastNameValue = this.#myProfileView.querySelector("#last-name").value;
+        let errorLastName = "Ongeldige achternaam";
+
+        this.#handleInputField(lastNameRegex, lastNameHelp, lastNameValue, errorLastName);
+        return lastNameRegex.test(lastNameValue);
+
     }
 
     #isValidPhoneNumber() {
-        const phoneNumberRegex = /^(\+|00)?(49|33|41|43|32|30|31)[\d]{8,10}$/;
-        return phoneNumberRegex.test(this.#myProfileView.querySelector("#phone-number").value);
+        const phoneNumberRegex = /^(\+|00|0[6])?(49|33|41|43|32|30|31|\d{2})[\d]{8,10}$/;
+        let phoneNumberHelp = this.#myProfileView.querySelector("#phone-number-help");
+        let phoneNumberValue = this.#myProfileView.querySelector("#phone-number").value;
+        let errorPhoneNumber = "Ongeldig nummer";
+
+        this.#handleInputField(phoneNumberRegex, phoneNumberHelp, phoneNumberValue, errorPhoneNumber);
+        return phoneNumberRegex.test(phoneNumberValue);
     }
 
-    #addAllEventHandlers(){
 
-        //Adds event handler to the "wijzig" button.
-        this.#myProfileView.querySelector("#change-userdata-button").addEventListener("click", async () => {
-            this.#unlockUserDataFields();
-        })
+    #addAllEventHandlers(){
+        this.#userDataEventHandlers();
+        this.#sortingEventHandler();
+    }
+
+    #userDataEventHandlers() {
+        this.#changeUserDataButton();
+        this.#saveUserDataButtonEvent();
+        this.#confirmUserDataHandler();
+        this.#cancelUserDataHandler();
+
+    }
+
+    #sortingEventHandler() {
+        this.#selectMenu.addEventListener("change", async (event) => {
+            const selectValue = event.target.value;
+            this.#sortStoriesData(selectValue, this.#storyData);
+            console.log(selectValue);
+        });
+    }
+
+    #saveUserDataButtonEvent() {
         //Adds event handler to the "opslaan" knop.
         this.#myProfileView.querySelector("#save-changes-button").addEventListener("click", async () => {
             if (this.#isValidUserData()) {
                 this.#showConfirmationAlert();
             }
         })
+    }
 
-        //Sorts the stories depending on the option and adds eventlistener to the sorting menu.
-        this.#selectMenu.addEventListener("change", async (event) => {
-            const selectValue = event.target.value;
-            this.#sortStoriesData(selectValue, this.#storyData);
-            console.log(selectValue);
-        });
+    #changeUserDataButton() {
+        this.#myProfileView.querySelector("#change-userdata-button").addEventListener("click", async () => {
+            this.#unlockUserDataFields();
+        })
+    }
+
+    #confirmUserDataHandler(){
+        let confirmButton = this.#myProfileView.querySelector(".confirm");
+        //Lock all fields and call for update route.
+    }
+
+    #cancelUserDataHandler(){
+        //Lock all fields and reset the values?
     }
 }
