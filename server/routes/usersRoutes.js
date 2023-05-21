@@ -211,6 +211,28 @@ class UsersRoutes {
         })
     }
 
+    #updateUser(){
+        this.#app.put("/users/updateSingleUser", async (req, res) => {
+            let firstname = req.query.firstName;
+            let lastName = req.query.lastName;
+            let email = req.query.email;
+            let phoneNr = req.query.phoneNr;
+            let userId = req.query.userID;
+
+
+
+            if (userId){
+                try {
+                    const data = await this.#databaseHelper.handleQuery({
+                        query: "UPDATE user SET firstName = ?, lastName = ?, email = ?, phoneNr = ? WHERE userID = ?"
+                    })
+                } catch (e) {
+                    res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE)
+                }
+            }
+        })
+    }
+
 
 }
 

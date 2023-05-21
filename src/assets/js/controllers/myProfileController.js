@@ -40,11 +40,10 @@ export class myProfileController extends Controller {
         this.#myProfileView = await this.loadHtmlIntoContent("html_views/myProfile.html");
         this.#storyTemplate = await this.#myProfileView.querySelector("#story-template");
         this.#selectMenu = this.#myProfileView.querySelector("#post-select");
-        await this.#setUserFields();
+        await this.#setUserFields(true);
         await this.#getAllUserStories();
         this.#loadStoriesHeader();
         this.#addAllEventHandlers();
-
 
 
     }
@@ -84,12 +83,13 @@ export class myProfileController extends Controller {
      * @returns {Promise<void>}
      * @author Romello ten Broeke
      */
-    async #setUserFields() {
+    async #setUserFields(getData) {
+        if (getData) {
+            await this.#getUserData();
+            let maxLikes = await this.#getTotalLikesForUser();
 
-        await this.#getUserData();
-        let maxLikes = await this.#getTotalLikesForUser();
-
-        this.#setTotalLikesInView(maxLikes[0].total_likes);
+            this.#setTotalLikesInView(maxLikes[0].total_likes);
+        }
 
         let emailField = this.#myProfileView.querySelector("#user-email");
         let firstNameField = this.#myProfileView.querySelector("#first-name");
@@ -258,10 +258,17 @@ export class myProfileController extends Controller {
         this.#myProfileView.querySelector("#phone-number").removeAttribute("disabled");
         this.#myProfileView.querySelector("#save-changes-button").classList.remove("visually-hidden");
         this.#myProfileView.querySelector("#save-changes-button").classList.add("slide-animation");
+        this.#myProfileView.querySelector("#cancel-changes-button").classList.remove("visually-hidden");
+        this.#myProfileView.querySelector("#cancel-changes-button").classList.add("slide-animation");
     }
 
     #showConfirmationAlert() {
         this.#myProfileView.querySelector("#myModal").style.display = "block";
+    }
+
+    #hideConfirmationAlert(){
+        this.#myProfileView.querySelector("#myModal").style.display = "none";
+
     }
 
     #isValidUserData() {
@@ -323,7 +330,7 @@ export class myProfileController extends Controller {
     }
 
 
-    #addAllEventHandlers(){
+    #addAllEventHandlers() {
         this.#userDataEventHandlers();
         this.#sortingEventHandler();
     }
@@ -359,12 +366,30 @@ export class myProfileController extends Controller {
         })
     }
 
-    #confirmUserDataHandler(){
+    #confirmUserDataHandler() {
         let confirmButton = this.#myProfileView.querySelector(".confirm");
         //Lock all fields and call for update route.
     }
 
-    #cancelUserDataHandler(){
-        //Lock all fields and reset the values?
+    #cancelUserDataHandler() {
+        let cancelButtons = this.#myProfileView.querySelectorAll(".cancel");
+
+        cancelButtons.forEach((cancelButton) => {
+            cancelButton.addEventListener("click", async () => {
+                await this.#setUserFields(false);
+                this.#lockUserFields();
+                this.#hideConfirmationAlert();
+            });
+        })
     }
+
+    #lockUserFields() {
+        this.#myProfileView.querySelector("#user-email").setAttribute("disabled", "true")
+        this.#myProfileView.querySelector("#first-name").setAttribute("disabled", "true");
+        this.#myProfileView.querySelector("#last-name").setAttribute("disabled", "true");
+        this.#myProfileView.querySelector("#phone-number").setAttribute("disabled", "true");
+        this.#myProfileView.querySelector("#save-changes-button").classList.add("visually-hidden");
+        this.#myProfileView.querySelector("#cancel-changes-button").classList.add("visually-hidden");
+    }
+
 }
