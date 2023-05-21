@@ -368,7 +368,28 @@ export class myProfileController extends Controller {
 
     #confirmUserDataHandler() {
         let confirmButton = this.#myProfileView.querySelector(".confirm");
+
+        confirmButton.addEventListener("click", async () =>{
+            await this.#updateUserData(this.#getUserFieldValues());
+            this.#lockUserFields();
+            this.#hideConfirmationAlert();
+        })
         //Lock all fields and call for update route.
+    }
+
+    #getUserFieldValues(){
+        return {
+            firstName: this.#myProfileView.querySelector("#first-name").value,
+            lastName: this.#myProfileView.querySelector("#last-name").value,
+            email: this.#myProfileView.querySelector("#user-email").value,
+            phoneNr: this.#myProfileView.querySelector("#phone-number").value,
+            userID: this.#userId
+        }
+    }
+
+
+    async #updateUserData(userData) {
+        await this.#usersRepository.updateUserData(userData);
     }
 
     #cancelUserDataHandler() {
