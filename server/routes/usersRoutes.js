@@ -194,13 +194,18 @@ class UsersRoutes {
         message: "Too many login attempts, please try again later."
     });
 
+    /**
+     * Gets the data for a single User by the user ID.
+     * @author Romello ten Broeke
+     */
+
     #getSingleUser(){
         this.#app.get("/users/getSingleUser", async (req, res)=> {
             let userId = req.query.userID;
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
-                    query: "SELECT * FROM user WHERE userID = ?",
+                    query: "SELECT firstName, lastName, email, phoneNr FROM user WHERE userID = ?",
                     values: [userId]
                 })
                 if (data){

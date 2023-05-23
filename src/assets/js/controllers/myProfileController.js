@@ -71,7 +71,7 @@ export class myProfileController extends Controller {
      */
 
     async #getUserData() {
-        this.#userData = await this.#usersRepository.getUserById(this.#userId);
+        this.#userData = await this.#usersRepository.getUserData(this.#userId);
     }
 
     /**

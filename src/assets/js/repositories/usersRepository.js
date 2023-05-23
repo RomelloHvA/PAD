@@ -43,11 +43,7 @@ export class UsersRepository {
     }
 
     async getUserData(id){
-        return await this.#networkManager.doRequest(`${this.#route}/getUserData?userID=${id}`,"GET");
-    }
-
-    async getUserStories(id){
-        return await this.#networkManager.doRequest(`${this.#route}/getUserStories?userID=${id}`,"GET");
+        return await this.#networkManager.doRequest(`${this.#route}/getSingleUser?userID=${id}`,"GET");
     }
 
     async updateUserData(userData){
