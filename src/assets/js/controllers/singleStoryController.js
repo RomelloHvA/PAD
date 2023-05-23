@@ -162,7 +162,11 @@ export class singleStoryController extends Controller {
         let errorTitle = "Error";
         let errorText = "Er is iets misgegaan in het laden van het verhaal. Het verhaal wat u zoekt bestaat niet (meer). Navigeer terug naar de home pagina.";
         this.#setStoryTitle(errorTitle);
-        this.#setStoryText(errorText)
+        this.#setStoryText(errorText);
+
+        this.#singleStoryView.querySelector(".story").removeChild(this.#singleStoryView.querySelector(".buttons"));
+        this.#singleStoryView.querySelector(".p-4").removeChild(this.#singleStoryView.querySelector(".username"));
+        this.#singleStoryView.querySelector(".p-4").removeChild(this.#singleStoryView.querySelector(".img-fluid"));
     }
 
 }

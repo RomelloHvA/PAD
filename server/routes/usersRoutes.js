@@ -24,6 +24,7 @@ class UsersRoutes {
         this.#login()
         this.#signUp()
         this.#getSingleUser();
+        this.#updateSingleUser();
     }
 
     /**
@@ -210,6 +211,30 @@ class UsersRoutes {
             }
         })
     }
+
+    #updateSingleUser() {
+        this.#app.patch("/users/updateSingleUser", async (req, res) => {
+            const userData = req.body; // Parse JSON data from the request body
+
+            if (userData) {
+                try {
+                    const data = await this.#databaseHelper.handleQuery({
+                        query: "UPDATE user SET firstName = ?, lastName = ?, email = ?, phoneNr = ? WHERE userID = ?",
+                        values: [userData.firstName, userData.lastName, userData.email, userData.phoneNr, userData.userID]
+                    });
+
+                    if (data) {
+                        res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                    }
+                } catch (e) {
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({ reason: e });
+                }
+            } else {
+                res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({ reason: "User can't be found" });
+            }
+        });
+    }
+
 
 
     #getUserData(){

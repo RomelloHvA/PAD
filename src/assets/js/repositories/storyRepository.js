@@ -24,7 +24,9 @@ export class storyRepository {
         });
     }
 
-
+    async getAllForUser(query) {
+        return await this.#networkManager.doRequest(`${this.#route}/getAllForUser?userId=${query}`, "GET");
+    }
 
     async getHighestRatedStory() {
         return await this.#networkManager.doRequest(`${this.#route}/highestRated`, "GET");
@@ -43,6 +45,10 @@ export class storyRepository {
 
     async delete() {
 
+    }
+
+    async getTotalUpvotesForUser(query){
+        return await this.#networkManager.doRequest(`${this.#route}/getUpvoteForUserId?userId=${query}`, "GET")
     }
 
 }

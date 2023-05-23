@@ -1,5 +1,6 @@
 const fs = require("fs");
 
+
 class storyRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes");
     #databaseHelper = require("../framework/utils/databaseHelper");
@@ -15,6 +16,8 @@ class storyRoutes {
         this.#updateStory();
         this.#getSingleStory();
         this.#getMaxUpvotesForStory();
+        this.#getTotalUpvotesForUser();
+        this.#getAllForUser();
     }
 
     /**
@@ -24,6 +27,8 @@ class storyRoutes {
     #addStory() {
         // Handle POST request to add a story
         this.#app.post("/story/add", this.#multer().single("file"), async (req, res) => {
+
+            console.log('req reached');
             try {
                 // Extract data from the request
                 const {body: {subject, story, year, month, day, userID}, file} = req;
@@ -250,6 +255,46 @@ class storyRoutes {
                 res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
+    #getTotalUpvotesForUser() {
+        this.#app.get("/story/getUpvoteForUserId", async (req, res) => {
+            let userID = req.query.userId;
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT COUNT(*) AS total_likes FROM `like` WHERE storyID IN (SELECT storyID FROM `story` WHERE userID = ?)",
+                    values: [userID]
+                })
+                if (data) {
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
+
+    #getAllForUser(){
+        this.#app.get("/story/getAllForUser", async (req, res) => {
+            let userID = req.query.userId;
+
+            if (userID){
+                try {
+                    const data = await this.#databaseHelper.handleQuery({
+                        query: "SELECT storyID, title, body, day, month, year, created_at, image FROM story WHERE userID = ?",
+                        values: [userID]
+                    })
+                    if (data){
+                        res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                    }
+                } catch (e) {
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+                }
+            } else {
+                res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({reason: "User doesn't exist."});
             }
         })
     }
