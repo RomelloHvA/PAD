@@ -299,7 +299,7 @@ export class StoryboardController extends Controller {
         });
 
         for (let btn of likeBtn) {
-            let storyId = parseInt(btn.parentElement.parentElement.parentElement.parentElement.id);
+            const storyId = parseInt(btn.closest(".story").id);
             let alreadyLiked = await this.#storyboardRepository.checkAlreadyLiked(this.userID, storyId);
 
             //get return value from alreadyliked from promise
@@ -375,7 +375,7 @@ export class StoryboardController extends Controller {
         const modal = this.#storyboardView.querySelector("#myModal");
 
         for (let btn of removeBtns) {
-            const storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
+            const storyId = parseInt(btn.closest(".story").id);
 
             btn.addEventListener("click", async (event) => {
                 modal.style.display = "block";
