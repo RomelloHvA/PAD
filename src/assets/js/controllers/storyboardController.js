@@ -129,13 +129,17 @@ export class StoryboardController extends Controller {
     toggleButtons(userId, storyTemp) {
         const sessionID = App.sessionManager.get("userID");
         if (userId === sessionID) {
-            storyTemp.querySelector(".editButtons").style.visibility = 'inherit';
+            storyTemp.querySelector(".editButtons").style.display = 'block';
         }
     }
     getEditStory(story) {
-        this.#storyboardView.querySelector("#stories").lastChild.querySelector(".icon-pencil").addEventListener("click", () => {
-            new EditStoryController(story)
-        })
+        let editBtn = this.#storyboardView.querySelectorAll("#editBtn");
+
+        for (let btn of editBtn) {
+            btn.addEventListener("click", () => {
+                new EditStoryController(story);
+            })
+        }
     }
 
 
@@ -295,7 +299,7 @@ export class StoryboardController extends Controller {
         });
 
         for (let btn of likeBtn) {
-            let storyId = parseInt(btn.parentElement.parentElement.parentElement.id);
+            let storyId = parseInt(btn.parentElement.parentElement.parentElement.parentElement.id);
             let alreadyLiked = await this.#storyboardRepository.checkAlreadyLiked(this.userID, storyId);
 
             //get return value from alreadyliked from promise
