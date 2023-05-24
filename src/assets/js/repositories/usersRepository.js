@@ -49,4 +49,7 @@ export class UsersRepository {
     async updateUserData(userData){
         return await this.#networkManager.doRequest(`${this.#route}/updateSingleUser`,"PATCH", userData);
     }
+    async getEmail(){
+        return await this.#networkManager.doRequest(`${this.#route}/editPassword`, "GET");
+    }
 }
