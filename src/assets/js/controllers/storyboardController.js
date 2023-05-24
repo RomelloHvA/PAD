@@ -1,6 +1,6 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester & Othaim Iboualaisen
+ * @author  Othaim Iboualaisen & Tygo Geervliet & Rosalinde Vester
  */
 
 import {Controller} from "./controller.js";
@@ -98,8 +98,10 @@ export class StoryboardController extends Controller {
 
                     this.#storyboardView.querySelector("#stories").append(storyTemp);
 
-                    this.getEditStory(data[i]);
                 }
+
+                this.getEditStory(data);
+
             } else {
                 this.toggleMessage(true);
             }
@@ -136,8 +138,13 @@ export class StoryboardController extends Controller {
         let editBtn = this.#storyboardView.querySelectorAll("#editBtn");
 
         for (let btn of editBtn) {
+            const storyID = parseInt(btn.closest(".story").id);
             btn.addEventListener("click", () => {
-                new EditStoryController(story);
+                for (let i = 0; i < story.length; i++) {
+                    if (story[i].storyID === storyID) {
+                        new EditStoryController(story[i]);
+                    }
+                }
             })
         }
     }
