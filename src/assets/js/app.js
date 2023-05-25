@@ -19,6 +19,7 @@ import {addStoryController} from "./controllers/addStoryController.js";
 import {StoryboardController} from "./controllers/storyboardController.js";
 import {singleStoryController} from "./controllers/singleStoryController.js";
 import {myProfileController} from "./controllers/myProfileController.js";
+import {editProfileController} from "./controllers/editProfileController.js";
 
 export class App {
     //we only need one instance of the sessionManager, thus static use here
@@ -38,6 +39,8 @@ export class App {
     static CONTROLLER_STORYBOARD = "storyboard";
     static CONTROLLER_SINGLESTORY = "singleStory";
     static CONTROLLER_MYPROFILE = "myProfile";
+    static CONTROLLER_EDITPROFILE = "editProfile";
+
 
     constructor(name, controllerData) {
         //Always load the navigation
@@ -89,7 +92,9 @@ export class App {
             case App.CONTROLLER_SIGNUP:
                 App.isLoggedIn(() => new WelcomeController(), () => new SignupController());
                 break;
-
+            case App.CONTROLLER_EDITPROFILE:
+                App.isLoggedIn(() => new editProfileController(), () => new editProfileController());
+                break;
             case App.CONTROLLER_TIMELINE:
                 App.setCurrentController(name);
                 new TimelineController();
