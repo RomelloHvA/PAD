@@ -7,6 +7,8 @@
 
 const rateLimit = require("express-rate-limit");
 const jwt = require("jsonwebtoken");
+const {query} = require("express");
+const cors = require('cors');
 
 class UsersRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
@@ -28,6 +30,7 @@ class UsersRoutes {
         this.#getSingleUser();
         this.#updateSingleUser();
         this.#setRecoveryCode();
+        this.#getRecoveryCode();
     }
 
     /**
@@ -254,6 +257,24 @@ class UsersRoutes {
                     query: "UPDATE user SET recoveryCode = ? WHERE email =?",
                     values: [code, email]
                 });
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
+    //post van gemaakt omdat een get geen data mee mocht geven. dan zou ik de mail dus niet mee kunnen geven. Bedoeling
+    //is dat het de code die hier boven in de databas is gezet, teruggeven wordt om het te checken in de controller
+    #getRecoveryCode() {
+        this.#app.post("/users/getRecoveryCode",cors(), async (req, res) => {
+            const mail = req.body;
+            res.send(mail);
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT recoveryCode FROM user WHERE email =?",
+                    values: [mail]
+                });
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }

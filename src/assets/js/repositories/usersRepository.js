@@ -49,7 +49,12 @@ export class UsersRepository {
     async updateUserData(userData){
         return await this.#networkManager.doRequest(`${this.#route}/updateSingleUser`,"PATCH", userData);
     }
+
     async setRecoveryCode(data){
         return await this.#networkManager.doRequest(`${this.#route}/setRecoveryCode`, "POST", data);
+    }
+
+    async getRecoveryCode(mail){
+        return await this.#networkManager.doRequest(`${this.#route}/getRecoveryCode`, "POST", mail);
     }
 }
