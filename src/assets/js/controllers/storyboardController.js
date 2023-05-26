@@ -1,6 +1,6 @@
 /**
  * controller responsible for all events on the storyboard view
- * @author  Rosalinde Vester & Othaim Iboualaisen & Tygo Geervliet
+ * @author  Othaim Iboualaisen & Tygo Geervliet & Rosalinde Vester
  */
 
 import {Controller} from "./controller.js";
@@ -117,10 +117,6 @@ export class StoryboardController extends Controller {
         }
     }
 
-    /**
-     * Disables and hides all remove buttons in the storyboard view.
-     * @author Tygp Geervliet
-     */
     disableRemoveBtn() {
         let removeBtns = this.#storyboardView.querySelectorAll("#deleteBtn");
 
@@ -312,7 +308,6 @@ export class StoryboardController extends Controller {
             let likeCounter = btn.parentElement.querySelector("#counter");
 
             btn.addEventListener("click", async (event) => {
-                //if story isnt liked yet
                 if (alreadyLikedValue === 0) {
                     likeCounter.textContent = parseInt(likeCounter.textContent) + 1;
                     await this.addNewLike(this.userID, storyId);
@@ -323,32 +318,22 @@ export class StoryboardController extends Controller {
                         likeCounter.textContent = parseInt(likeCounter.textContent) - 1;
                     }
                     this.removeLike(this.userID, storyId);
-                    //reset alreadyliked
                     alreadyLikedValue = 0;
                     btn.classList.remove("liked");
                 }
             });
+
             if (alreadyLikedValue === 1) {
                 btn.classList.add("liked");
             }
         }
     }
 
-    /**
-     * Retrieves the value of a specific liked status from the alreadyLiked object.
-     *
-     * @param {Object[]} alreadyLiked - An array of already liked objects.
-     * @param {string} alreadyLiked[].AlreadyLiked(userID, storyId) - The key representing the liked status.
-     * @param {string} userID - The ID of the user.
-     * @param {string} storyId - The ID of the story.
-     * @returns {*} The value of the specified liked status.
-     * @author Tygo Geervliet
-     */
-        retrieveAlreadyLikedValue(alreadyLiked, userID, storyId) {
-            let alreadyLikedObject = alreadyLiked[0];
-            let key = 'AlreadyLiked(' + userID + ',' + storyId + ')';
-            return alreadyLikedObject[key];
-        }
+    retrieveAlreadyLikedValue(alreadyLiked, userID, storyId) {
+        let alreadyLikedObject = alreadyLiked[0];
+        let key = 'AlreadyLiked(' + userID + ',' + storyId + ')';
+        return alreadyLikedObject[key];
+    }
 
     async addNewLike(userID, storyID) {
         await this.#storyboardRepository.addLike(userID, storyID);
@@ -381,12 +366,7 @@ export class StoryboardController extends Controller {
             }
         }
     }
-    /**
-     Asynchronously removes a story from the storyboard.
-     * Updates the visibility of remove buttons based on the user's stories.
-     * Shows a confirmation modal before deleting the story.
-     * @author Tygo Geervliet
-     */
+
     async removeStory() {
         const removeBtns = this.#storyboardView.querySelectorAll("#deleteBtn");
         const storiesFromThisUser = await this.#storyboardRepository.getStoryByUserID(this.userID);
@@ -417,13 +397,6 @@ export class StoryboardController extends Controller {
         }
     }
 
-    /**
-     * retrieves all storyID's from the story from the current user
-     * @param getStoryByUserID
-     * @param userID
-     * @returns {*}
-     * @author Tygo Geervliet
-     */
     retrieveStoryIDsValue(getStoryByUserID, userID) {
         let StoryByUserIDObject = getStoryByUserID[0];
         let key = 'getStorysByUser(' + userID + ')';
