@@ -5,6 +5,7 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {UsersRepository} from "../repositories/usersRepository.js";
+import {App} from "../app.js";
 
 export class myProfileController extends Controller {
 
@@ -44,8 +45,14 @@ export class myProfileController extends Controller {
         await this.#getAllUserStories();
         this.#loadStoriesHeader();
         this.#addAllEventHandlers();
+        this.#EditbtnClick();
+    }
 
-
+    #EditbtnClick() {
+        let editBtn = document.querySelector("#editProfileBtn");
+        editBtn.addEventListener("click", () => {
+            App.loadController(App.CONTROLLER_EDITPROFILE);
+        });
     }
 
     /**
@@ -213,7 +220,6 @@ export class myProfileController extends Controller {
      * @author Romello ten Broeke
      */
     #sortStoriesData(sortingOrder, stories) {
-
 
         if (stories.length < 2) {
             console.log("not sorted too little stories");

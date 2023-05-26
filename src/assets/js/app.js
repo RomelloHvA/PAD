@@ -19,6 +19,7 @@ import {addStoryController} from "./controllers/addStoryController.js";
 import {StoryboardController} from "./controllers/storyboardController.js";
 import {singleStoryController} from "./controllers/singleStoryController.js";
 import {myProfileController} from "./controllers/myProfileController.js";
+import {editProfileController} from "./controllers/editProfileController.js";
 import {profileController} from "./controllers/profileController.js";
 
 export class App {
@@ -40,6 +41,8 @@ export class App {
     static CONTROLLER_SINGLESTORY = "singleStory";
     static CONTROLLER_MYPROFILE = "myProfile";
     static CONTROLLER_PROFILE = "profile";
+    static CONTROLLER_EDITPROFILE = "editProfile";
+
 
     constructor(name, controllerData) {
         //Always load the navigation
@@ -91,7 +94,9 @@ export class App {
             case App.CONTROLLER_SIGNUP:
                 App.isLoggedIn(() => new WelcomeController(), () => new SignupController());
                 break;
-
+            case App.CONTROLLER_EDITPROFILE:
+                App.isLoggedIn(() => new editProfileController(), () => new editProfileController());
+                break;
             case App.CONTROLLER_TIMELINE:
                 App.setCurrentController(name);
                 new TimelineController();
