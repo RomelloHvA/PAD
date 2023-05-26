@@ -6,12 +6,14 @@
  */
 
 const rateLimit = require("express-rate-limit");
+const jwt = require("jsonwebtoken");
 
 class UsersRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
     #databaseHelper = require("../framework/utils/databaseHelper")
     #cryptoHelper = require("../framework/utils/cryptoHelper");
     #app
+
 
     /**
      * @param app - ExpressJS instance(web application) we get passed automatically via app.js
@@ -25,6 +27,7 @@ class UsersRoutes {
         this.#signUp()
         this.#getSingleUser();
         this.#updateSingleUser();
+        this.#setRecoveryCode();
     }
 
     /**
@@ -81,7 +84,7 @@ class UsersRoutes {
                     //wrong username
                     messages.push({field: "*", message: "Incorrecte email en/of wachtwoord"});
                     res.status(this.#errorCodes.AUTHORIZATION_ERROR_CODE).json({
-                            reason: messages
+                        reason: messages
                     });
                 }
             } catch (e) {
@@ -148,31 +151,31 @@ class UsersRoutes {
             });
 
             if (!countError) {
-                const { email, psw, pswRepeat } = body;
+                const {email, psw, pswRepeat} = body;
 
                 // Check if email is a proper email
                 const emailRegex = /\S+@\S+\.\S+/;
                 if (!emailRegex.test(email)) {
                     countError = true;
-                    messages.push({ field: 'email', message: "Voer een geldige email in" });
+                    messages.push({field: 'email', message: "Voer een geldige email in"});
                 }
 
                 // Check if password is at least 6 characters long
                 if (psw.length < 6) {
                     countError = true;
-                    messages.push({ field: 'psw', message: "Wachtwoord moet bestaan uit minimaal 6 karakters" });
+                    messages.push({field: 'psw', message: "Wachtwoord moet bestaan uit minimaal 6 karakters"});
                 }
 
                 // Check if password & passwordRepeat match
                 if (psw !== pswRepeat) {
                     countError = true;
-                    messages.push({ field: 'pswRepeat', message: "Wachtwoord komt niet overeen" });
+                    messages.push({field: 'pswRepeat', message: "Wachtwoord komt niet overeen"});
                 }
 
                 // Check if email already exists
                 if (await this.#emailExist(email)) {
                     countError = true;
-                    messages.push({ field: 'email', message: "Dit email adres is al in gebruik, probeer in te loggen" });
+                    messages.push({field: 'email', message: "Dit email adres is al in gebruik, probeer in te loggen"});
                 }
             }
 
@@ -199,8 +202,8 @@ class UsersRoutes {
      * @author Romello ten Broeke
      */
 
-    #getSingleUser(){
-        this.#app.get("/users/getSingleUser", async (req, res)=> {
+    #getSingleUser() {
+        this.#app.get("/users/getSingleUser", async (req, res) => {
             let userId = req.query.userID;
 
             try {
@@ -208,7 +211,7 @@ class UsersRoutes {
                     query: "SELECT firstName, lastName, email, phoneNr FROM user WHERE userID = ?",
                     values: [userId]
                 })
-                if (data){
+                if (data) {
                     res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
                 }
             } catch (e) {
@@ -232,12 +235,29 @@ class UsersRoutes {
                         res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
                     }
                 } catch (e) {
-                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({ reason: e });
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
                 }
             } else {
-                res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({ reason: "User can't be found" });
+                res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({reason: "User can't be found"});
             }
         });
+    }
+
+    #setRecoveryCode() {
+        this.#app.post("/users/setRecoveryCode", async (req, res) => {
+            const code = req.body.code;
+            const email = req.body.email;
+            res.send(req.body)
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "UPDATE user SET recoveryCode = ? WHERE email =?",
+                    values: [code, email]
+                });
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
     }
 
 
