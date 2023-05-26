@@ -120,7 +120,7 @@ export class profileController extends Controller {
         const userInfo = this.#profileView.querySelector("#userInfo");
         if (this.#isCurrentUser) {
             editBtn.addEventListener("click", () => {
-                // App.loadController(App.CONTROLLER_EDITPROFILE);
+                App.loadController(App.CONTROLLER_EDITPROFILE);
             })
             userInfo.style.display = "block"
         } else {
