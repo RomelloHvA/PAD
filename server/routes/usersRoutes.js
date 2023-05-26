@@ -25,6 +25,9 @@ class UsersRoutes {
         this.#signUp()
         this.#getSingleUser();
         this.#updateSingleUser();
+
+        this.#getUserInfo();
+        this.#getUserStories();
     }
 
     /**
@@ -240,6 +243,68 @@ class UsersRoutes {
         });
     }
 
+    #getUserInfo(){
+        this.#app.get("/users/getUserInfo", async (req, res)=> {
+            let userID = req.query.userID;
+
+            let query = `
+                SELECT u.*,
+                       COUNT(DISTINCT s.storyID) AS total_stories,
+                       COUNT(l.storyID) AS total_likes_given,
+                       SUM(CASE WHEN l.userID = u.userID THEN 1 ELSE 0 END) AS total_likes_received
+                FROM user u
+                         LEFT JOIN story s ON u.userID = s.userID
+                         LEFT JOIN \`like\` l ON s.storyID = l.storyID
+                WHERE u.userID = ${userID}
+                GROUP BY u.userID`
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: query
+                })
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data)
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
+
+    #getUserStories(){
+        this.#app.post("/users/getUserStories", async (req, res)=> {
+            try {
+                let data;
+                let query;
+
+                let sortOrder = req.body.order;
+                let sortField = req.body.field;
+                let year = req.body.year;
+                let userID = req.body.userID;
+
+                if (!sortOrder) sortOrder = "DESC";
+                if (!sortField || sortField === "") sortField = "s.created_at";
+                let whereClause = year ? `WHERE s.year = ${year} AND u.userID = ${userID}` : `WHERE u.userID = ${userID}`;
+
+                query = `
+                    SELECT s.*, COUNT(l.storyID) AS likes, CONCAT(u.firstname, ' ', u.lastname) AS author
+                    FROM story AS s
+                             LEFT JOIN \`like\` AS l ON s.storyID = l.storyID
+                             LEFT JOIN user AS u ON s.userID = u.userID
+                        ${whereClause}
+                    GROUP BY s.storyID
+                    ORDER BY ${sortField} ${sortOrder}`;
+
+
+                data = await this.#databaseHelper.handleQuery({query});
+
+
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
 
 }
 

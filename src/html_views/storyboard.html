@@ -34,10 +34,10 @@
 <template id="storyTemp">
     <div class="story">
         <div class="story-info">
-            <a id="link">
+            <a id="link" href="#">
                 <h2 id="title">Title of the story</h2>
             </a>
-            <p id="author">Author name</p>
+            <a id="author">Author name</a>
             <p id="body">Some text because this is a story</p>
         </div>
         <div class="story-image">
@@ -51,19 +51,17 @@
                     </div>
                     <span class="ui basic blue label" id="counter">0</span>
                 </div>
-
-                <div class="editButtons">
-                    <div class="ui green button" id="editBtn">
-                        <i class="fas fa-pencil-alt"></i>
-                    </div>
-                    <div class="ui red button" id="deleteBtn">
-                        <i class="fas fa-trash"></i>
-                    </div>
+            </div>
+            <div class="editButtons">
+                <div class="ui green button" id="editBtn">
+                    <i class="fas fa-pencil-alt"></i>
+                </div>
+                <div class="ui red button" id="deleteBtn">
+                    <i class="fas fa-trash"></i>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <div class="modal" id="myModal">

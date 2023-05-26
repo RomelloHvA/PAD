@@ -47,7 +47,7 @@ describe("Login",  () => {
         //Add a stub with the URL /users/login as a POST
         //Respond with a JSON-object when requested
         //Give the stub the alias: @login
-        cy.intercept('POST', '/users/login', {
+        cy.intercept('POST', endpoint, {
             statusCode: 200,
             body: mockedResponse,
         }).as('login');
@@ -107,7 +107,7 @@ describe("Login",  () => {
         // Add a stub with the URL /users/login as a POST
         // Respond with a JSON object when requested and set the status code to 401.
         // Give the stub the alias: @login
-        cy.intercept("POST", "/users/login", {
+        cy.intercept("POST", endpoint, {
             statusCode: 401,
             body: mockedResponse,
         }).as("login");
