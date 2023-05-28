@@ -10,7 +10,7 @@ const morgan = require("morgan");
 const app = express();
 const errorcodes = require("./framework/utils/httpErrorCodes")
 const path = require("path");
-const jwt = require("jsonwebtoken");
+
 
 //front-end as static directory
 app.use(express.static(path.join(__dirname, '../src')));
