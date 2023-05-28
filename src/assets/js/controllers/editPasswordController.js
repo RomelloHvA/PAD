@@ -1,9 +1,8 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {UsersRepository} from "../repositories/usersRepository.js";
-import {App} from "../app.js";
 
-export class EditPasswordController extends Controller{
+export class EditPasswordController extends Controller {
     #loginView
     #storyRepository;
     #usersRepository;
@@ -20,14 +19,17 @@ export class EditPasswordController extends Controller{
         this.#loginView = await super.loadHtmlIntoContent("html_views/editPassword.html");
 
         const mailButton = document.querySelector("#btn");
-        mailButton.addEventListener("click",() => {this.#generateCode()});
+        mailButton.addEventListener("click", () => {
+            this.#generateCode()
+        });
 
         const codeButton = document.querySelector("#btnTwo");
-        codeButton.addEventListener("click", async () => {await this.#checkCode()
+        codeButton.addEventListener("click", async () => {
+            await this.#checkCode()
         })
     }
 
-    async #generateCode(){
+    async #generateCode() {
         //geneer de code
         const recoveryCode = Math.floor(Math.random() * 90000000) + 10000000;
         const email = this.#loginView.querySelector("#email");
@@ -42,29 +44,26 @@ export class EditPasswordController extends Controller{
         await this.#usersRepository.setRecoveryCode(data);
     }
 
-    async #checkCode(){
+    async #checkCode() {
         console.log("check code is aangeroepen")
 
         const emaill = this.#loginView.querySelector("#email").value;
         console.log(emaill + "iehfwi");
 
-       // geef email mee voor de juiste gebruiker
-       // console.log(await this.#usersRepository.getRecoveryCode(emaill));
+        // geef email mee voor de juiste gebruiker
+        // console.log(await this.#usersRepository.getRecoveryCode(emaill));
 
-        const juisteTestCode = 79254963;
-        const fouteTestCode = 12345678;
+        const givenCode = this.#loginView.querySelector("#psw").value;
+        const parsedCode = Number.parseFloat(givenCode);
 
-        const givenCode = this.#loginView.querySelector("#psw");
-        console.log(givenCode + " given code");
-
-        if (givenCode === juisteTestCode){
-            console.log("code klopt");
-
-        } else {
-            this.setErrorMessage()
-            console.log("code klopt niet");
-
-        }
+            //moet eerst nog gecheckt worden op null
+            if (parsedCode === 79254963) {
+                console.log("code klopt");
+                this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
+            } else {
+                this.setErrorMessage()
+                console.log("code klopt niet");
+            }
     }
 
     setErrorMessage() {
