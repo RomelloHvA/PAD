@@ -32,14 +32,14 @@ export class EditPasswordController extends Controller {
         // recoverButton.addEventListener("click", () => {this.#validateNewPassword()});
     }
 
-    #validateNewPassword(){
+    async #validateNewPassword() {
         const newPasswordOne = this.#loginView.querySelector("#newPsw").value;
-        const newPasswordTwo =this.#loginView.querySelector("#newPswRepeat").value;
-        console.log(newPasswordOne + " A " + newPasswordTwo)
+        const newPasswordTwo = this.#loginView.querySelector("#newPswRepeat").value;
+        console.log(newPasswordOne + " A " + newPasswordTwo);
 
-        if(newPasswordOne === newPasswordTwo){
-        //    roep stuff aan
-            console.log("wowoohohoho")
+        if (newPasswordOne === newPasswordTwo) {
+            await this.#usersRepository.setNewPassword(newPasswordOne);
+
         } else {
             this.setErrorMessage();
         }

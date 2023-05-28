@@ -250,13 +250,26 @@ class UsersRoutes {
         this.#app.post("/users/setRecoveryCode", async (req, res) => {
             const code = req.body.code;
             const email = req.body.email;
-            res.send(req.body)
+
 
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "UPDATE user SET recoveryCode = ? WHERE email =?",
                     values: [code, email]
                 });
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
+    #setNewPassword(){
+        this.#app.post("/users/setNewPassword", async (req, res) => {
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "UPDATE user SET password = ? WHERE email = ?",
+                    values: [req.body, "appell@hva.nl"]
+                })
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
