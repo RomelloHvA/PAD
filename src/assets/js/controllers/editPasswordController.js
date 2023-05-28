@@ -23,7 +23,8 @@ export class EditPasswordController extends Controller{
         mailButton.addEventListener("click",() => {this.#generateCode()});
 
         const codeButton = document.querySelector("#btnTwo");
-        codeButton.addEventListener("click", () => {this.#checkCode()})
+        codeButton.addEventListener("click", async () => {await this.#checkCode()
+        })
     }
 
     async #generateCode(){
@@ -42,11 +43,37 @@ export class EditPasswordController extends Controller{
     }
 
     async #checkCode(){
+        console.log("check code is aangeroepen")
 
         const emaill = this.#loginView.querySelector("#email").value;
         console.log(emaill + "iehfwi");
 
        // geef email mee voor de juiste gebruiker
-       console.log(await this.#usersRepository.getRecoveryCode(emaill));
+       // console.log(await this.#usersRepository.getRecoveryCode(emaill));
+
+        const juisteTestCode = 79254963;
+        const fouteTestCode = 12345678;
+
+        const givenCode = this.#loginView.querySelector("#psw");
+        console.log(givenCode + " given code");
+
+        if (givenCode === juisteTestCode){
+            console.log("code klopt");
+
+        } else {
+            this.setErrorMessage()
+            console.log("code klopt niet");
+
+        }
+    }
+
+    setErrorMessage() {
+        console.log("set errror code is aangeroepen")
+        this.#loginView.querySelector('.message').style.display = "flex";
+        this.#loginView.querySelector('.message').style.color = "red";
+        this.#loginView.querySelector('.message').innerHTML = "De ingevulde velden komen niet overeen";
+        this.#loginView.querySelector('#email').style.borderColor = "red";
+        this.#loginView.querySelector('#psw').style.borderColor = "red";
+
     }
 }
