@@ -26,7 +26,25 @@ export class EditPasswordController extends Controller {
         const codeButton = document.querySelector("#btnTwo");
         codeButton.addEventListener("click", async () => {
             await this.#checkCode()
-        })
+        });
+
+        // const recoverButton = document.querySelector("#recoveryBtn");
+        // recoverButton.addEventListener("click", () => {this.#validateNewPassword()});
+    }
+
+    #validateNewPassword(){
+        const newPasswordOne = this.#loginView.querySelector("#newPsw").value;
+        const newPasswordTwo =this.#loginView.querySelector("#newPswRepeat").value;
+        console.log(newPasswordOne + " A " + newPasswordTwo)
+
+        if(newPasswordOne === newPasswordTwo){
+        //    roep stuff aan
+            console.log("wowoohohoho")
+        } else {
+            this.setErrorMessage();
+        }
+
+
     }
 
     async #generateCode() {
@@ -61,6 +79,9 @@ export class EditPasswordController extends Controller {
         if (parsedCode === 79254963) {
             console.log("code klopt");
             this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
+
+            const recoverButton = document.querySelector("#recoveryBtn");
+            recoverButton.addEventListener("click", () => {this.#validateNewPassword()});
         } else {
             this.setErrorMessage()
             console.log("code klopt niet");
@@ -72,8 +93,6 @@ export class EditPasswordController extends Controller {
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "red";
         this.#loginView.querySelector('.message').innerHTML = "De ingevulde velden komen niet overeen";
-        this.#loginView.querySelector('#email').style.borderColor = "red";
-        this.#loginView.querySelector('#psw').style.borderColor = "red";
 
     }
 }
