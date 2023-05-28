@@ -52,7 +52,7 @@ export class profileController extends Controller {
 
         this.#display_year = year ? year : "*";
 
-        this.#storyURL = "#singleStory?storyId=";
+        this.#storyURL = "#storyPage?storyId=";
 
         this.#MIN_YEAR = 1870;
         this.#MAX_YEAR = new Date().getFullYear();

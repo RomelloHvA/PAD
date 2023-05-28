@@ -18,6 +18,8 @@ class storyRoutes {
         this.#getMaxUpvotesForStory();
         this.#getTotalUpvotesForUser();
         this.#getAllForUser();
+        this.#getTopThree();
+        this.#getMoreFromUser();
     }
 
     /**
@@ -169,19 +171,33 @@ class storyRoutes {
     /**
      * API endpoint for getting a single story by its ID and the author first and last name. Checks is if there is a storyID
      * If the storyID can't be found in the database responds with a 404 error-code And if the storyID is empty it wil give a bad request.
-     * @author Romello ten Broeke
+     * @author Romello ten Broeke && Othaim Iboualaisen
      */
 
     #getSingleStory() {
         this.#app.get("/story/singleStory", async (req, res) => {
             let storyId = req.query.storyId;
+            let query = `
+                SELECT 
+                    s.*, 
+                    u.image AS profileImg,
+                    CONCAT(u.firstName, ' ', u.lastName) AS author,
+                    COALESCE(l.likeCount, 0) AS likes
+                FROM story s
+                         LEFT JOIN user u ON s.userID = u.userID
+                         LEFT JOIN (
+                    SELECT storyID, COUNT(*) AS likeCount
+                    FROM \`like\`
+                    GROUP BY storyID
+                ) l ON s.storyID = l.storyID
+                WHERE s.storyID = ${storyId}
+            `
 
             if (storyId.length >= 1) {
 
                 try {
                     const data = await this.#databaseHelper.handleQuery({
-                        query: "SELECT s.title, s.body, s.day, s.month, s.year, s.visible, s.image, u.firstName, u.lastName FROM story s LEFT JOIN user u ON s.userID = u.userID WHERE storyID = ?",
-                        values: [storyId]
+                        query: query
                     })
 
                     if (Object.keys(data).length === 0) {
@@ -295,6 +311,66 @@ class storyRoutes {
                 }
             } else {
                 res.status(this.#errorCodes.ROUTE_NOT_FOUND_CODE).json({reason: "User doesn't exist."});
+            }
+        })
+    }
+
+    #getTopThree(){
+        this.#app.get("/story/getTopThree", async (req, res) => {
+            let query = `
+                SELECT 
+                    s.*,
+                    CONCAT(u.firstName, ' ', u.lastName) AS author
+                FROM story s
+                LEFT JOIN user u ON s.userID = u.userID
+                INNER JOIN (
+                    SELECT storyID, COUNT(*) AS like_count
+                    FROM \`like\`
+                    GROUP BY storyID
+                    ORDER BY like_count DESC
+                    LIMIT 3
+                ) AS top_stories ON s.storyID = top_stories.storyID
+                ORDER BY top_stories.like_count DESC;
+            `
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: query
+                })
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
+            }
+        })
+    }
+
+    #getMoreFromUser(){
+        this.#app.get("/story/getMoreFromUser", async (req, res) => {
+            let userID = req.query.userId;
+            let storyID = req.query.storyId;
+
+            let query = `
+                SELECT 
+                    s.*, 
+                    CONCAT(u.firstName, ' ', u.lastName) AS author
+                FROM story s
+                    JOIN user u ON s.userID = u.userID
+                WHERE s.userID = ${userID} AND s.storyID != ${storyID}
+                ORDER BY s.created_at DESC
+                LIMIT 3;
+            `
+
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: query
+                })
+                if (data){
+                    res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                }
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e})
             }
         })
     }

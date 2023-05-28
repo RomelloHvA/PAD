@@ -25,7 +25,7 @@ export class StoryboardController extends Controller {
         this.userID = App.sessionManager.get("userID");
 
         this.#storyboardRepository = new storyboardRepository();
-        this.#storyURL = "#singleStory?storyId=";
+        this.#storyURL = "#storyPage?storyId=";
         this.#profileURL = "#profile?userId=";
 
         this.#MIN_YEAR = 1870;

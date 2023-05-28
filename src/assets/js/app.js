@@ -21,6 +21,7 @@ import {singleStoryController} from "./controllers/singleStoryController.js";
 import {myProfileController} from "./controllers/myProfileController.js";
 import {editProfileController} from "./controllers/editProfileController.js";
 import {profileController} from "./controllers/profileController.js";
+import {storyPageController} from "./controllers/storyPageController.js";
 
 export class App {
     //we only need one instance of the sessionManager, thus static use here
@@ -42,6 +43,7 @@ export class App {
     static CONTROLLER_MYPROFILE = "myProfile";
     static CONTROLLER_PROFILE = "profile";
     static CONTROLLER_EDITPROFILE = "editProfile";
+    static CONTROLLER_STORYPAGE = "storyPage";
 
 
     constructor(name, controllerData) {
@@ -124,6 +126,9 @@ export class App {
                 break;
             case App.CONTROLLER_PROFILE:
                 App.isLoggedIn(() => new profileController(), () => new profileController());
+                break;
+            case App.CONTROLLER_STORYPAGE:
+                App.isLoggedIn(() => new storyPageController(), () => new storyPageController());
                 break;
 
             default:
