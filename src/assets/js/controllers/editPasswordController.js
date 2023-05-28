@@ -32,8 +32,11 @@ export class EditPasswordController extends Controller {
     async #validateNewPassword(email) {
         const newPasswordOne = this.#loginView.querySelector("#newPsw").value;
         const newPasswordTwo = this.#loginView.querySelector("#newPswRepeat").value;
-        console.log(newPasswordOne + " A " + newPasswordTwo);
 
+        await this.setNewPassword(newPasswordOne, newPasswordTwo, email);
+    }
+
+    async setNewPassword(newPasswordOne, newPasswordTwo, email) {
         if (newPasswordOne === newPasswordTwo) {
 
             const data = {
@@ -42,13 +45,10 @@ export class EditPasswordController extends Controller {
             }
 
             await this.#usersRepository.setNewPassword(data);
-            await this.#usersRepository.removeRecoveryCode(data.email);
 
         } else {
             this.setErrorMessage();
         }
-
-
     }
 
     async #generateCode() {
@@ -56,6 +56,10 @@ export class EditPasswordController extends Controller {
         const recoveryCode = Math.floor(Math.random() * 90000000) + 10000000;
         const email = this.#loginView.querySelector("#email");
 
+        await this.setRecoveryCode(recoveryCode, email);
+    }
+
+    async setRecoveryCode(recoveryCode, email) {
         const data = {
             code: recoveryCode,
             email: email.value
@@ -72,17 +76,19 @@ export class EditPasswordController extends Controller {
         // geef email mee voor de juiste gebruiker
         // console.log(await this.#usersRepository.getRecoveryCode(emaill));
 
+        //hier komt dan de recoverycode opgehaald uit de database
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
 
-        //moet eerst nog gecheckt worden op null
+        //moet eerst nog gecheckt worden op null & geef code uit database mee
         await this.checkGivenCode(parsedCode, mail);
 
     }
 
     async checkGivenCode(parsedCode, mail) {
-        if (parsedCode === 79254963) {
+        //hardcode getal wordt meegegeven database code
+        if (parsedCode === 46967888) {
             this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
 
             const recoverButton = document.querySelector("#recoveryBtn");

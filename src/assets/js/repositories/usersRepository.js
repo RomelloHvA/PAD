@@ -5,7 +5,7 @@
  * @author Pim Meijer
  */
 
-import { NetworkManager } from "../framework/utils/networkManager.js";
+import {NetworkManager} from "../framework/utils/networkManager.js";
 
 export class UsersRepository {
     //# is a private field in Javascript
@@ -42,25 +42,23 @@ export class UsersRepository {
 
     }
 
-    async getUserData(id){
-        return await this.#networkManager.doRequest(`${this.#route}/getSingleUser?userID=${id}`,"GET");
+    async getUserData(id) {
+        return await this.#networkManager.doRequest(`${this.#route}/getSingleUser?userID=${id}`, "GET");
     }
 
-    async updateUserData(userData){
-        return await this.#networkManager.doRequest(`${this.#route}/updateSingleUser`,"PATCH", userData);
+    async updateUserData(userData) {
+        return await this.#networkManager.doRequest(`${this.#route}/updateSingleUser`, "PATCH", userData);
     }
 
-    async setRecoveryCode(data){
+    async setRecoveryCode(data) {
         return await this.#networkManager.doRequest(`${this.#route}/setRecoveryCode`, "POST", data);
     }
 
-    async getRecoveryCode(mail){
+    async getRecoveryCode(mail) {
         return await this.#networkManager.doRequest(`${this.#route}/getRecoveryCode`, "POST", mail);
     }
-    async setNewPassword(data){
+
+    async setNewPassword(data) {
         return await this.#networkManager.doRequest(`${this.#route}/setNewPassword`, "POST", data);
-    }
-    async removeRecoveryCode(email){
-        return await this.#networkManager.doRequest(`${this.#route}/removeRecoveryCode`, "POST", email)
     }
 }

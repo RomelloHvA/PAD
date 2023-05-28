@@ -248,6 +248,10 @@ class UsersRoutes {
         });
     }
 
+    /**
+     * set field recovery code selected person
+     * @author roos
+     */
     #setRecoveryCode() {
         this.#app.post("/users/setRecoveryCode", async (req, res) => {
             const code = req.body.code;
@@ -264,7 +268,11 @@ class UsersRoutes {
         })
     }
 
-    #setNewPassword(){
+    /**
+     * set new password & remove recovery code so it cant be used again
+     * @author roos
+     */
+    #setNewPassword() {
         this.#app.post("/users/setNewPassword", async (req, res) => {
             const password = req.body.password;
             const email = req.body.email;
@@ -273,29 +281,25 @@ class UsersRoutes {
                     query: "UPDATE user SET password = ? WHERE email = ?",
                     values: [password, email]
                 })
+                try {
+                    const otherData = await this.#databaseHelper.handleQuery({
+                        query: "UPDATE user SET recoveryCode = ? WHERE email = ?",
+                        values: [null, email]
+                    })
+                } catch (e) {
+                    res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+                }
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
         })
     }
 
-    #removeRecoveryCode(){
-        this.#app.post("/users/removeRecoveryCode", async (req, res) => {
-            try {
-                const data = await this.#databaseHelper.handleQuery({
-                   query: "UPDATE user SET recoveryCode = ? WHERE email = ?",
-                   values: [null, req.body]
-                })
-            }catch (e) {
-                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
-            }
-        })
-    }
 
     //post van gemaakt omdat een get geen data mee mocht geven. dan zou ik de mail dus niet mee kunnen geven. Bedoeling
     //is dat het de code die hier boven in de databas is gezet, teruggeven wordt om het te checken in de controller
     #getRecoveryCode() {
-        this.#app.post("/users/getRecoveryCode",cors(), async (req, res) => {
+        this.#app.post("/users/getRecoveryCode", cors(), async (req, res) => {
             const mail = req.body;
             try {
                 const data = await this.#databaseHelper.handleQuery({
