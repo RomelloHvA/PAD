@@ -40,8 +40,9 @@ export class EditPasswordController extends Controller {
                 password: newPasswordOne,
                 email: email
             }
-            //cors error
+
             await this.#usersRepository.setNewPassword(data);
+            await this.#usersRepository.removeRecoveryCode(data.email);
 
         } else {
             this.setErrorMessage();

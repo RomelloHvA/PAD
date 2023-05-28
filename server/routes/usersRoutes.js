@@ -32,6 +32,7 @@ class UsersRoutes {
         this.#setRecoveryCode();
         this.#getRecoveryCode();
         this.#setNewPassword();
+        this.#removeRecoveryCode();
     }
 
     /**
@@ -273,6 +274,19 @@ class UsersRoutes {
                     values: [password, email]
                 })
             } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
+    #removeRecoveryCode(){
+        this.#app.post("/users/removeRecoveryCode", async (req, res) => {
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                   query: "UPDATE user SET recoveryCode = ? WHERE email = ?",
+                   values: [null, req.body]
+                })
+            }catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
         })

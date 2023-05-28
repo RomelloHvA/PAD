@@ -60,4 +60,7 @@ export class UsersRepository {
     async setNewPassword(data){
         return await this.#networkManager.doRequest(`${this.#route}/setNewPassword`, "POST", data);
     }
+    async removeRecoveryCode(email){
+        return await this.#networkManager.doRequest(`${this.#route}/removeRecoveryCode`, "POST", email)
+    }
 }
