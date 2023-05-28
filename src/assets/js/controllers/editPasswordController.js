@@ -45,10 +45,7 @@ export class EditPasswordController extends Controller {
     }
 
     async #checkCode() {
-        console.log("check code is aangeroepen")
-
         const emaill = this.#loginView.querySelector("#email").value;
-        console.log(emaill + "iehfwi");
 
         // geef email mee voor de juiste gebruiker
         // console.log(await this.#usersRepository.getRecoveryCode(emaill));
@@ -56,14 +53,18 @@ export class EditPasswordController extends Controller {
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
-            //moet eerst nog gecheckt worden op null
-            if (parsedCode === 79254963) {
-                console.log("code klopt");
-                this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
-            } else {
-                this.setErrorMessage()
-                console.log("code klopt niet");
-            }
+        //moet eerst nog gecheckt worden op null
+        await this.checkGivenCode(parsedCode);
+    }
+
+    async checkGivenCode(parsedCode) {
+        if (parsedCode === 79254963) {
+            console.log("code klopt");
+            this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
+        } else {
+            this.setErrorMessage()
+            console.log("code klopt niet");
+        }
     }
 
     setErrorMessage() {
