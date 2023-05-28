@@ -179,12 +179,12 @@ export class EditStoryController extends Controller {
         const errorTextStory = this.#addStoryView.querySelector("#story-error");
 
         // Validate the input fields
-        if (!newTitle) {
+        if (!newTitle || newTitle === "") {
             return errorTextSubject.innerHTML = "Please fill in the subject field", false;
         }
         errorTextSubject.innerHTML = "";
 
-        if (!newBody) {
+        if (!newBody || newBody === "") {
             return errorTextStory.innerHTML = "Please fill in the story field", false;
         }
         errorTextStory.innerHTML = "";

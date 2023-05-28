@@ -24,8 +24,10 @@ describe('editStory tests', () => {
 
     it("vul verkeerde dingen in", () => {
         cy.get(".fa-pencil-alt").first().should("be.visible").click({force: true});
-        cy.get("#subject").type(" ");
-        cy.get("#story").type(" ");
-        cy.get("myButton").click({force: true});
+        // cy.get("#subject").type("{backspace}");
+        cy.get("#subject").click().type("een verhaal")
+        // cy.get("#story").type("{backspace}");
+        cy.get("myButton").click()
+        cy.get("#subject-error").should("contain", "Please fill in the subject field");
     })
 })
