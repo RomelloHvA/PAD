@@ -61,4 +61,7 @@ export class UsersRepository {
     async setNewPassword(data) {
         return await this.#networkManager.doRequest(`${this.#route}/setNewPassword`, "POST", data);
     }
+    async sendEmail(data){
+        return await this.#networkManager.doRequest(`${this.#route}/sendMail`, "POST", data);
+    }
 }

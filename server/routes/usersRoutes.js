@@ -8,6 +8,7 @@
 const rateLimit = require("express-rate-limit");
 const {query} = require("express");
 const cors = require('cors');
+const nodemailer = require("nodemailer");
 
 class UsersRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
@@ -29,9 +30,9 @@ class UsersRoutes {
         this.#getSingleUser();
         this.#updateSingleUser();
         this.#setRecoveryCode();
-        this.#getRecoveryCode();
+        // this.#getRecoveryCode();
         this.#setNewPassword();
-        this.#removeRecoveryCode();
+        this.#sendMail();
     }
 
     /**
@@ -266,6 +267,39 @@ class UsersRoutes {
             }
         })
     }
+
+     #sendMail() {
+        this.#app.post("/users/sendMail",  async (req, res) => {
+            const code = req.body.code;
+            const email = req.body.email;
+            try {
+                await fetch("https://api.hbo-ict.cloud/mail", {
+                    method: "post",
+                    headers: {
+                        "Authorization": "Bearer pad_flo_4.lAhLBSjeNsJZEBhW",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        from: {
+                            name: 'AAA',
+                            address: 'roosv4@hotmail.com'
+                        },
+                        to: [
+                            {
+                                name: 'honk',
+                                address: 'roosv4@hotmail.com'
+                            }
+                        ],
+                        subject: 'Bonjour',
+                        html: 'Test'
+                    })
+                })
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
+
 
     /**
      * set new password & remove recovery code so it cant be used again
