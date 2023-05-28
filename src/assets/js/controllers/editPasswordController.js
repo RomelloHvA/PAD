@@ -27,18 +27,21 @@ export class EditPasswordController extends Controller {
         codeButton.addEventListener("click", async () => {
             await this.#checkCode()
         });
-
-        // const recoverButton = document.querySelector("#recoveryBtn");
-        // recoverButton.addEventListener("click", () => {this.#validateNewPassword()});
     }
 
-    async #validateNewPassword() {
+    async #validateNewPassword(email) {
         const newPasswordOne = this.#loginView.querySelector("#newPsw").value;
         const newPasswordTwo = this.#loginView.querySelector("#newPswRepeat").value;
         console.log(newPasswordOne + " A " + newPasswordTwo);
 
         if (newPasswordOne === newPasswordTwo) {
-            await this.#usersRepository.setNewPassword(newPasswordOne);
+
+            const data = {
+                password: newPasswordOne,
+                email: email
+            }
+            //cors error
+            await this.#usersRepository.setNewPassword(data);
 
         } else {
             this.setErrorMessage();
@@ -63,7 +66,7 @@ export class EditPasswordController extends Controller {
     }
 
     async #checkCode() {
-        const emaill = this.#loginView.querySelector("#email").value;
+        const mail = this.#loginView.querySelector("#email").value;
 
         // geef email mee voor de juiste gebruiker
         // console.log(await this.#usersRepository.getRecoveryCode(emaill));
@@ -71,28 +74,28 @@ export class EditPasswordController extends Controller {
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
+
         //moet eerst nog gecheckt worden op null
-        await this.checkGivenCode(parsedCode);
+        await this.checkGivenCode(parsedCode, mail);
+
     }
 
-    async checkGivenCode(parsedCode) {
+    async checkGivenCode(parsedCode, mail) {
         if (parsedCode === 79254963) {
-            console.log("code klopt");
             this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
 
             const recoverButton = document.querySelector("#recoveryBtn");
-            recoverButton.addEventListener("click", () => {this.#validateNewPassword()});
+            recoverButton.addEventListener("click", () => {
+                this.#validateNewPassword(mail)
+            });
         } else {
             this.setErrorMessage()
-            console.log("code klopt niet");
         }
     }
 
     setErrorMessage() {
-        console.log("set errror code is aangeroepen")
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "red";
         this.#loginView.querySelector('.message').innerHTML = "De ingevulde velden komen niet overeen";
-
     }
 }

@@ -31,6 +31,7 @@ class UsersRoutes {
         this.#updateSingleUser();
         this.#setRecoveryCode();
         this.#getRecoveryCode();
+        this.#setNewPassword();
     }
 
     /**
@@ -251,7 +252,6 @@ class UsersRoutes {
             const code = req.body.code;
             const email = req.body.email;
 
-
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "UPDATE user SET recoveryCode = ? WHERE email =?",
@@ -265,10 +265,12 @@ class UsersRoutes {
 
     #setNewPassword(){
         this.#app.post("/users/setNewPassword", async (req, res) => {
+            const password = req.body.password;
+            const email = req.body.email;
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "UPDATE user SET password = ? WHERE email = ?",
-                    values: [req.body, "appell@hva.nl"]
+                    values: [password, email]
                 })
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
@@ -281,7 +283,6 @@ class UsersRoutes {
     #getRecoveryCode() {
         this.#app.post("/users/getRecoveryCode",cors(), async (req, res) => {
             const mail = req.body;
-            res.send(mail);
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT recoveryCode FROM user WHERE email =?",
