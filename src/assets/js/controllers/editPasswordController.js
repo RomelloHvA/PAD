@@ -2,6 +2,11 @@ import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {UsersRepository} from "../repositories/usersRepository.js";
 
+
+/**
+ * edit password including checks
+ * @author roos
+ */
 export class EditPasswordController extends Controller {
     #loginView
     #storyRepository;
@@ -52,7 +57,6 @@ export class EditPasswordController extends Controller {
     }
 
     async #generateCode() {
-        //geneer de code
         const recoveryCode = Math.floor(Math.random() * 90000000) + 10000000;
         const email = this.#loginView.querySelector("#email");
 
@@ -66,6 +70,9 @@ export class EditPasswordController extends Controller {
         }
         //stuur de code naar de database
         //stuurt later ook de mail
+
+
+
         console.log(recoveryCode)
         await this.#usersRepository.setRecoveryCode(data);
     }
@@ -73,15 +80,14 @@ export class EditPasswordController extends Controller {
     async #checkCode() {
         const mail = this.#loginView.querySelector("#email").value;
 
-        // geef email mee voor de juiste gebruiker
-        // console.log(await this.#usersRepository.getRecoveryCode(emaill));
 
-        //hier komt dan de recoverycode opgehaald uit de database
+    //hier komt dan de recoverycode opgehaald uit de database
+        //const databaseCode = await this.#usersRepository.getRecoveryCode(mail));
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
 
-        //moet eerst nog gecheckt worden op null & geef code uit database mee
+        //geef code uit database mee
         await this.checkGivenCode(parsedCode, mail);
 
     }
