@@ -149,12 +149,6 @@ export class singleStoryController extends Controller {
     }
 
     /**
-     * This is the method for liking a story. Will be implemented at a later time.
-     */
-    // #likeStory() {
-    // }
-
-    /**
      * function for that should be called upon when there is an error. Sets an error message for the enduser.
      * @author Romello ten Broeke
      */
