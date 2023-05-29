@@ -5,6 +5,7 @@
 import {Controller} from "./controller.js";
 import {storyRepository} from "../repositories/storyRepository.js";
 import {UsersRepository} from "../repositories/usersRepository.js";
+import {EditStoryController} from "./editStoryController.js";
 
 export class myProfileController extends Controller {
 
@@ -15,7 +16,6 @@ export class myProfileController extends Controller {
     #userData;
     #storyRepository;
     #usersRepository;
-    #editStoryUrl;
     #singleStoryUrl = "#singleStory?storyId="
     #storyTemplate;
     #selectedSortingOrder;
@@ -162,6 +162,9 @@ export class myProfileController extends Controller {
                 usedTemplate.querySelector(".card-body").innerText = storyBody;
                 usedTemplate.querySelector(".card-body").append(usedButton);
                 usedTemplate.querySelector(".year").innerText = storyDate;
+                usedTemplate.querySelector(".edit-button").addEventListener("click", ()=>{
+                    new EditStoryController(storyData[i])
+                })
 
                 storiesContainer.append(usedTemplate);
 
