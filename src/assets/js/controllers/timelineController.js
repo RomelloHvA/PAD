@@ -157,6 +157,7 @@ export class TimelineController extends Controller {
         let data = await this.#storyRepository.getHighestStoryPerYear(this.#currentScrollYear);
         let storyBody;
         let storyTitle;
+        let storyImage;
         let storyID = "";
 
         const cardBodies = this.#timelineView.querySelectorAll(".card-body");
@@ -167,6 +168,10 @@ export class TimelineController extends Controller {
 
         const storyYears = this.#timelineView.querySelectorAll(".year");
         const lastStoryYear = storyYears[storyYears.length - 1];
+
+        const storyImages = this.#timelineView.querySelectorAll(".card-image");
+        const laststoryImage = storyImages[storyImages.length - 1];
+
         const yearButtons = this.#timelineView.querySelectorAll(".year-button");
         const lastYearButton = yearButtons[yearButtons.length - 1];
 
@@ -183,6 +188,7 @@ export class TimelineController extends Controller {
             storyTitle = data[dataIndex].title;
             storyID = data[dataIndex].storyID;
             lastLeesVerhaalButton.href = this.#singleStoryUrl + storyID;
+             storyImage = data[dataIndex].image;
 
         }
 
@@ -190,6 +196,7 @@ export class TimelineController extends Controller {
         lastCardTitle.innerText = storyTitle;
         lastCardBody.innerText = storyBody;
         lastStoryYear.innerText = this.#currentScrollYear;
+        laststoryImage.src = storyImage;
         this.#changeYearButton(lastYearButton, this.#currentScrollYear);
 
     }
