@@ -12,6 +12,7 @@ import {storyRepository} from "../repositories/storyRepository.js";
 export class WelcomeController extends Controller{
     #welcomeView
     #storyRepository;
+    #CHARACTER_LIMIT = 500;
     #singleStoryURL = "#singleStory?storyId=";
 
     constructor() {
@@ -70,9 +71,14 @@ export class WelcomeController extends Controller{
         let storyTitle = this.#welcomeView.querySelector("#storyTitle");
         let storyBody = this.#welcomeView.querySelector(".story-text");
         let storyButton = this.#welcomeView.querySelector("#hottestStory");
+        let storyText = storyData[0].body;
 
         storyTitle.innerText = storyData[0].title;
-        storyBody.innerText = storyData[0].body;
+
+        if (storyText.length > this.#CHARACTER_LIMIT) {
+            storyText = storyText.slice(0, this.#CHARACTER_LIMIT) + "...";
+        }
+        storyBody.innerText = storyText;
         storyButton.href = this.#singleStoryURL + storyData[0].storyID;
         }
 
