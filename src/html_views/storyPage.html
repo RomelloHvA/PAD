@@ -1,0 +1,148 @@
+<link href="../assets/css/modal.css" rel="stylesheet">
+<link href="../assets/css/pages/storyPage.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet">
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="blog-single gray-bg">
+    <div class="container">
+        <div class="row align-items-start">
+            <div class="col-lg-8 m-15px-tb">
+                <article class="article">
+                    <div class="article-title">
+                        <h2 id="title"></h2>
+
+                        <div class="containerSection">
+                            <div class="left-section">
+                                <div class="avatar">
+                                    <img alt="" id="profileImg" title="">
+                                </div>
+                                <div class="text-section">
+                                    <a id="author">John Doe</a>
+                                    <span id="post_date">12-02-2002</span>
+                                </div>
+                            </div>
+                            <div class="right-section">
+                                <div class="buttons">
+                                    <div class="flex">
+                                        <div class="ui labeled button mt-5 ml-5" tabindex="0">
+                                            <div class="ui blue button" id="like">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </div>
+                                            <span class="ui basic blue label" id="counter">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="editButtons">
+                                        <div class="ui green button" id="editBtn">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </div>
+                                        <div class="ui red button" id="deleteBtn">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="article-content">
+                        <p id="body"></p>
+                    </div>
+                    <br/>
+                    <div class="article-img">
+                        <img alt="" id="image" title="">
+                    </div>
+                    <hr/>
+                    <div class="media-body">
+                        <span id="date"></span>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4 m-15px-tb blog-aside">
+                <!-- Latest Post -->
+                <div class="widget widget-latest-post" id="mostLiked">
+                    <div class="widget-title">
+                        <h3>Most liked stories</h3>
+                    </div>
+                    <div class="widget-body" id="topStories">
+
+                    </div>
+                </div>
+                <!-- End Latest Post -->
+
+
+                <!-- Latest Post -->
+                <div class="widget widget-latest-post" id="sameUser">
+                    <div class="widget-title">
+                        <h3>More from this user</h3>
+                    </div>
+                    <div class="widget-body" id="userStories">
+
+                    </div>
+                </div>
+                <!-- End Latest Post -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myModal">
+    <div class="modal-content">
+        <p>Weet je zeker dat je dit verhaal wilt verwijderen?</p>
+        <button class="modal-buttons" id="modal-yes">Ja</button>
+        <button class="modal-buttons" id="modal-no">Nee</button>
+    </div>
+</div>
+
+<template id="topStory">
+
+    <a id="link_topStory">
+        <div class="latest-post-aside media" style="display: inline-table;">
+            <div class="lpa-left media-body">
+                <div class="lpa-title">
+                    <h5 id="title_topStory"></h5>
+                </div>
+                <div class="lpa-meta" style="display: flex; flex-direction: column;">
+                    <a class="name" id="author_topStory">
+                    </a>
+                    <a class="date" id="date_topStory">
+                    </a>
+                </div>
+            </div>
+
+            <div class="lpa-right">
+                <img alt="" id="image_topStory" title="">
+            </div>
+        </div>
+    </a>
+
+</template>
+
+<template id="userStory">
+
+    <a id="link_userStory">
+        <div class="latest-post-aside media" style="display: inline-table;">
+            <div class="lpa-left media-body">
+                <div class="lpa-title">
+                    <h5 id="title_userStory"></h5>
+                </div>
+                <div class="lpa-meta" style="display: flex; flex-direction: column;">
+                    <a class="name" id="author_userStory">
+                    </a>
+                    <a class="date" id="date_userStory">
+                    </a>
+                </div>
+            </div>
+
+            <div class="lpa-right">
+                <img alt="" id="image_userStory" title="">
+            </div>
+        </div>
+    </a>
+
+</template>

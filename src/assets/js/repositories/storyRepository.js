@@ -51,4 +51,12 @@ export class storyRepository {
         return await this.#networkManager.doRequest(`${this.#route}/getUpvoteForUserId?userId=${query}`, "GET")
     }
 
+
+    async getTopThree() {
+        return await this.#networkManager.doRequest(`${this.#route}/getTopThree`, "GET");
+    }
+    async getMoreFromUser(userID, storyID) {
+        return await this.#networkManager.doRequest(`${this.#route}/getMoreFromUser?userId=${userID}&storyId=${storyID}`, "GET");
+    }
+
 }

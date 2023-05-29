@@ -12,6 +12,7 @@ export class StoryboardController extends Controller {
     #storyboardView
     #storyboardRepository
     #storyURL
+    #profileURL
 
     #MIN_YEAR
     #MAX_YEAR
@@ -24,7 +25,8 @@ export class StoryboardController extends Controller {
         this.userID = App.sessionManager.get("userID");
 
         this.#storyboardRepository = new storyboardRepository();
-        this.#storyURL = "#singleStory?storyId=";
+        this.#storyURL = "#storyPage?storyId=";
+        this.#profileURL = "#profile?userId=";
 
         this.#MIN_YEAR = 1870;
         this.#MAX_YEAR = new Date().getFullYear();
@@ -84,6 +86,7 @@ export class StoryboardController extends Controller {
                     storyTemp.querySelector(".story").id = storyId;
                     storyTemp.querySelector("#title").innerHTML = title;
                     storyTemp.querySelector("#author").innerHTML = author;
+                    storyTemp.querySelector("#author").href = this.#profileURL + userId;
                     storyTemp.querySelector("#body").innerHTML = body;
                     storyTemp.querySelector("#link").href = this.#storyURL + storyId;
                     storyTemp.querySelector("#counter").innerHTML = likes || 0;
@@ -129,7 +132,7 @@ export class StoryboardController extends Controller {
     toggleButtons(userId, storyTemp) {
         const sessionID = App.sessionManager.get("userID");
         if (userId === sessionID) {
-            storyTemp.querySelector(".editButtons").style.display = 'block';
+            storyTemp.querySelector(".editButtons").style.display = 'flex';
         }
     }
     getEditStory(story) {
