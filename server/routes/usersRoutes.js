@@ -9,6 +9,7 @@ const rateLimit = require("express-rate-limit");
 const {query} = require("express");
 const cors = require('cors');
 const nodemailer = require("nodemailer");
+const fetch = require("node-fetch").default;
 
 class UsersRoutes {
     #errorCodes = require("../framework/utils/httpErrorCodes")
@@ -272,8 +273,9 @@ class UsersRoutes {
         this.#app.post("/users/sendMail",  async (req, res) => {
             const code = req.body.code;
             const email = req.body.email;
+
             try {
-                await fetch("https://api.hbo-ict.cloud/mail", {
+                const response = await fetch("https://api.hbo-ict.cloud/mail", {
                     method: "post",
                     headers: {
                         "Authorization": "Bearer pad_flo_4.lAhLBSjeNsJZEBhW",
@@ -293,7 +295,11 @@ class UsersRoutes {
                         subject: 'Bonjour',
                         html: 'Test'
                     })
-                })
+                });
+
+                const result = await response.json();
+
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(result);
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }
