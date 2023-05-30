@@ -283,17 +283,17 @@ class UsersRoutes {
                     },
                     body: JSON.stringify({
                         from: {
-                            name: 'AAA',
-                            address: 'roosv4@hotmail.com'
+                            name: 'Florijn Friends',
+                            address: 'group@hbo-ict.cloud'
                         },
                         to: [
                             {
-                                name: 'honk',
-                                address: 'roosv4@hotmail.com'
+                                name: 'Beste Meneer/Mevrouw',
+                                address: email
                             }
                         ],
-                        subject: 'Bonjour',
-                        html: 'Test'
+                        subject: 'Wachtwoord wijzigen',
+                        html: 'Met deze code kunt u uw wachtwoord aanpassen: ' + code
                     })
                 });
 

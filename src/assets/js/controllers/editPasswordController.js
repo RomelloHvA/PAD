@@ -72,7 +72,7 @@ export class EditPasswordController extends Controller {
         //stuurt later ook de mail
 
 
-        // await this.#usersRepository.sendEmail(data);
+        await this.#usersRepository.sendEmail(data);
         console.log(recoveryCode)
         await this.#usersRepository.setRecoveryCode(data);
         console.log("jahoe");
