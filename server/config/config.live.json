@@ -5,7 +5,7 @@
     "timeout": 30000,
     "username": "pad_flo_4",
     "password": "hjZX1nazZ3uUx0a0",
-    "database": "pad_flo_4_",
+    "database": "pad_flo_4_live",
     "connectionLimit": 10
   }
 }
