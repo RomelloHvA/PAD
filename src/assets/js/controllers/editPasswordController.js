@@ -68,35 +68,35 @@ export class EditPasswordController extends Controller {
             code: recoveryCode,
             email: email.value
         }
-        //stuur de code naar de database
-        //stuurt later ook de mail
-
 
         await this.#usersRepository.sendEmail(data);
-        console.log(recoveryCode)
+        console.log(recoveryCode);
         await this.#usersRepository.setRecoveryCode(data);
-        console.log("jahoe");
 
     }
 
-    async #checkCode() {
+    async #checkCode(data) {
+        const codeButton = document.querySelector("#btnTwo");
+        codeButton.addEventListener("click", async () => {
+            await this.#checkCode()
+        });
         const mail = this.#loginView.querySelector("#email").value;
-
+        const code = data.code;
 
     //hier komt dan de recoverycode opgehaald uit de database
-        //const databaseCode = await this.#usersRepository.getRecoveryCode(mail));
+        const databaseCode = await this.#usersRepository.getRecoveryCode(mail);
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
 
         //geef code uit database mee
-        await this.checkGivenCode(parsedCode, mail);
+        await this.checkGivenCode(parsedCode, mail, databaseCode);
 
     }
 
-    async checkGivenCode(parsedCode, mail) {
+    async checkGivenCode(parsedCode, mail, code) {
         //hardcode getal wordt meegegeven database code
-        if (parsedCode === 46967888) {
+        if (parsedCode === code) {
             this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
 
             const recoverButton = document.querySelector("#recoveryBtn");
