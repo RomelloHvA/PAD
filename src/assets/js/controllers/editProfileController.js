@@ -61,7 +61,7 @@ export class editProfileController extends Controller {
                 let UpdatedUserData = this.#CreateNewUserObject();
                 await this.#usersRepository.updateUserData(UpdatedUserData);
                 //load profile page
-              App.loadController(App.CONTROLLER_MYPROFILE);
+              App.loadController(App.CONTROLLER_PROFILE);
             }
         })
     }
