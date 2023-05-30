@@ -94,7 +94,7 @@ export class profileController extends Controller {
 
         const profileInfo = userData[0];
 
-        image.src = profileInfo.image || "https://bootdey.com/img/Content/avatar/avatar7.png";
+        image.src = "../uploads/profileimg.png";
         name.innerHTML = profileInfo.firstName + " " + profileInfo.lastName;
         email.innerHTML = profileInfo.email;
         phone.innerHTML = profileInfo.phoneNr;
