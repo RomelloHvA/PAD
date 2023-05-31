@@ -34,6 +34,7 @@ class UsersRoutes {
         // this.#getRecoveryCode();
         this.#setNewPassword();
         this.#sendMail();
+        this.#getRecoveryCode();
     }
 
     /**
@@ -338,14 +339,16 @@ class UsersRoutes {
     // post van gemaakt omdat een get geen data mee mocht geven. dan zou ik de mail dus niet mee kunnen geven. Bedoeling
     // is dat het de code die hier boven in de databas is gezet, teruggeven wordt om het te checken in de controller
     #getRecoveryCode() {
-        this.#app.post("/users/getRecoveryCode", cors(), async (req, res) => {
-            const mail = req.body;
+        this.#app.post("/users/getRecoveryCode", async (req, res) => {
+            const mail = req.body.mail;
+
             try {
                 const data = await this.#databaseHelper.handleQuery({
                     query: "SELECT recoveryCode FROM user WHERE email =?",
                     values: [mail]
                 });
-                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                // res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
+                res.send(data);
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }

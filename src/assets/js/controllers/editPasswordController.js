@@ -57,6 +57,7 @@ export class EditPasswordController extends Controller {
     }
 
     async #generateCode() {
+
         const recoveryCode = Math.floor(Math.random() * 90000000) + 10000000;
         const email = this.#loginView.querySelector("#email");
 
@@ -70,23 +71,22 @@ export class EditPasswordController extends Controller {
         }
 
         await this.#usersRepository.sendEmail(data);
+        this.sendEmailMessage();
+
         console.log(recoveryCode);
         await this.#usersRepository.setRecoveryCode(data);
 
     }
 
-    async #checkCode(data) {
-        const codeButton = document.querySelector("#btnTwo");
-        codeButton.addEventListener("click", async () => {
-            await this.#checkCode()
-        });
-        const mail = this.#loginView.querySelector("#email").value;
-        const code = data.code;
 
-    //hier komt dan de recoverycode opgehaald uit de database
+
+    async #checkCode() {
+        const mail = this.#loginView.querySelector("#email").value;
+
         const databaseCode = await this.#usersRepository.getRecoveryCode(mail);
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
+
 
 
         //geef code uit database mee
@@ -94,9 +94,12 @@ export class EditPasswordController extends Controller {
 
     }
 
-    async checkGivenCode(parsedCode, mail, code) {
-        //hardcode getal wordt meegegeven database code
-        if (parsedCode === code) {
+    async checkGivenCode(parsedCode, mail, databaseCode) {
+
+        console.log(databaseCode + " database "+ typeof databaseCode);
+        console.log(JSON.stringify(databaseCode + " AAA"));
+
+        if (parsedCode === databaseCode) {
             this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
 
             const recoverButton = document.querySelector("#recoveryBtn");
@@ -106,6 +109,12 @@ export class EditPasswordController extends Controller {
         } else {
             this.setErrorMessage()
         }
+    }
+
+    sendEmailMessage() {
+        this.#loginView.querySelector('.message').style.display = "flex";
+        this.#loginView.querySelector('.message').style.color = "green";
+        this.#loginView.querySelector('.message').innerHTML = "Email is verstuurd. Zie u mail voor de herstelcode";
     }
 
     setErrorMessage() {

@@ -54,13 +54,14 @@ export class UsersRepository {
         return await this.#networkManager.doRequest(`${this.#route}/setRecoveryCode`, "POST", data);
     }
 
-    async getRecoveryCode(mail) {
-        return await this.#networkManager.doRequest(`${this.#route}/getRecoveryCode`, "POST", mail);
+    async getRecoveryCode(mail){
+        return await this.#networkManager.doRequest(`${this.#route}/getRecoveryCode`, "POST", {"mail": mail});
     }
 
     async setNewPassword(data) {
         return await this.#networkManager.doRequest(`${this.#route}/setNewPassword`, "POST", data);
     }
+
     async sendEmail(data){
         return await this.#networkManager.doRequest(`${this.#route}/sendMail`, "POST", data);
     }
