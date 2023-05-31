@@ -271,6 +271,12 @@ body {
 .form_wrapper input.input-error {
     border-color: red;
 }
+.code_field{
+    display: none;
+}
+#btnTwo{
+    display: none;
+}
 
 
 @-webkit-keyframes check {

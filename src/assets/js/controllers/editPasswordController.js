@@ -118,13 +118,16 @@ export class EditPasswordController extends Controller {
     sendMailNotExistMessage(){
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "red";
-        this.#loginView.querySelector('.message').innerHTML = "Email bestaat niet, maak een account aan";
+        this.#loginView.querySelector('.message').innerHTML = "Email bestaat niet, registreer eerst";
     }
 
     sendEmailMessage() {
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "green";
         this.#loginView.querySelector('.message').innerHTML = "Email is verstuurd. Zie u mail voor de herstelcode";
+
+        this.#loginView.querySelector('.code_field').style.display = "inherit";
+        this.#loginView.querySelector('#btnTwo').style.display = "inherit";
     }
 
     setErrorMessage() {
