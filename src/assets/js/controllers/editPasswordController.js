@@ -57,11 +57,23 @@ export class EditPasswordController extends Controller {
     }
 
     async #generateCode() {
+        const data = await this.#usersRepository.getEmails();
 
-        const recoveryCode = Math.floor(Math.random() * 90000000) + 10000000;
         const email = this.#loginView.querySelector("#email");
 
-        await this.setRecoveryCode(recoveryCode, email);
+        console.dir(data)
+        for (let i = 0; i < data.length; i++) {
+
+            if(email.value !== data[i].email){
+                this.sendMailNotExistMessage();
+
+            } else {
+                const recoveryCode = Math.floor(Math.random() * 90000000) + 10000000;
+
+                this.sendEmailMessage();
+                await this.setRecoveryCode(recoveryCode, email);
+            }
+        }
     }
 
     async setRecoveryCode(recoveryCode, email) {
@@ -75,10 +87,7 @@ export class EditPasswordController extends Controller {
 
         console.log(recoveryCode);
         await this.#usersRepository.setRecoveryCode(data);
-
     }
-
-
 
     async #checkCode() {
         const mail = this.#loginView.querySelector("#email").value;
@@ -87,11 +96,7 @@ export class EditPasswordController extends Controller {
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
-
-
-        //geef code uit database mee
         await this.checkGivenCode(parsedCode, mail, databaseCode);
-
     }
 
     async checkGivenCode(parsedCode, mail, databaseCode) {
@@ -109,6 +114,11 @@ export class EditPasswordController extends Controller {
         } else {
             this.setErrorMessage()
         }
+    }
+    sendMailNotExistMessage(){
+        this.#loginView.querySelector('.message').style.display = "flex";
+        this.#loginView.querySelector('.message').style.color = "red";
+        this.#loginView.querySelector('.message').innerHTML = "Email bestaat niet, maak een account aan";
     }
 
     sendEmailMessage() {

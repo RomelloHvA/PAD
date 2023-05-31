@@ -35,6 +35,7 @@ class UsersRoutes {
         this.#setNewPassword();
         this.#sendMail();
         this.#getRecoveryCode();
+        this.#getEmails();
     }
 
     /**
@@ -307,7 +308,6 @@ class UsersRoutes {
         })
     }
 
-
     /**
      * set new password & remove recovery code so it cant be used again
      * @author roos
@@ -335,9 +335,6 @@ class UsersRoutes {
         })
     }
 
-
-    // post van gemaakt omdat een get geen data mee mocht geven. dan zou ik de mail dus niet mee kunnen geven. Bedoeling
-    // is dat het de code die hier boven in de databas is gezet, teruggeven wordt om het te checken in de controller
     #getRecoveryCode() {
         this.#app.post("/users/getRecoveryCode", async (req, res) => {
             const mail = req.body.mail;
@@ -355,6 +352,18 @@ class UsersRoutes {
         })
     }
 
+    #getEmails(){
+        this.#app.get("/users/getEmails", async (req, res) => {
+            try {
+                const data = await this.#databaseHelper.handleQuery({
+                    query: "SELECT email FROM user"
+                });
+                res.send(data)
+            } catch (e) {
+                res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
+            }
+        })
+    }
 
 }
 
