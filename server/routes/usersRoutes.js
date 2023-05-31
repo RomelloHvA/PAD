@@ -344,8 +344,7 @@ class UsersRoutes {
                     query: "SELECT recoveryCode FROM user WHERE email =?",
                     values: [mail]
                 });
-                // res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
-                res.send(data);
+                res.status(this.#errorCodes.HTTP_OK_CODE).json(data);
             } catch (e) {
                 res.status(this.#errorCodes.BAD_REQUEST_CODE).json({reason: e});
             }

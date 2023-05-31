@@ -61,7 +61,6 @@ export class EditPasswordController extends Controller {
 
         const email = this.#loginView.querySelector("#email");
 
-        console.dir(data)
         for (let i = 0; i < data.length; i++) {
 
             if(email.value !== data[i].email){
@@ -96,13 +95,10 @@ export class EditPasswordController extends Controller {
         const givenCode = this.#loginView.querySelector("#psw").value;
         const parsedCode = Number.parseFloat(givenCode);
 
-        await this.checkGivenCode(parsedCode, mail, databaseCode);
+        await this.checkGivenCode(parsedCode, mail, databaseCode[0].recoveryCode);
     }
 
     async checkGivenCode(parsedCode, mail, databaseCode) {
-
-        console.log(databaseCode + " database "+ typeof databaseCode);
-        console.log(JSON.stringify(databaseCode + " AAA"));
 
         if (parsedCode === databaseCode) {
             this.#loginView = await super.loadHtmlIntoContent("html_views/resetPassword.html");
