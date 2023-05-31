@@ -65,6 +65,7 @@ export class UsersRepository {
     async sendEmail(data){
         return await this.#networkManager.doRequest(`${this.#route}/sendMail`, "POST", data);
     }
+
     async getEmails(){
         return await this.#networkManager.doRequest(`${this.#route}/getEmails`, "GET");
     }

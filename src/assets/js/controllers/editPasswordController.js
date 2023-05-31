@@ -38,18 +38,21 @@ export class EditPasswordController extends Controller {
         const newPasswordOne = this.#loginView.querySelector("#newPsw").value;
         const newPasswordTwo = this.#loginView.querySelector("#newPswRepeat").value;
 
-        await this.setNewPassword(newPasswordOne, newPasswordTwo, email);
+        await this.newPassword(newPasswordOne, newPasswordTwo, email);
     }
 
-    async setNewPassword(newPasswordOne, newPasswordTwo, email) {
+    async newPassword(newPasswordOne, newPasswordTwo, email) {
         if (newPasswordOne === newPasswordTwo) {
 
             const data = {
                 password: newPasswordOne,
                 email: email
             }
+            window.alert("wachtwoord is aangepast");
+            this.#loginView = await super.loadHtmlIntoContent("html_views/login.html");
 
             await this.#usersRepository.setNewPassword(data);
+
 
         } else {
             this.setErrorMessage();
@@ -61,9 +64,13 @@ export class EditPasswordController extends Controller {
 
         const email = this.#loginView.querySelector("#email");
 
+        await this.checkGivenMail(data, email);
+    }
+
+    async checkGivenMail(data, email) {
         for (let i = 0; i < data.length; i++) {
 
-            if(email.value !== data[i].email){
+            if (email.value !== data[i].email) {
                 this.sendMailNotExistMessage();
 
             } else {
@@ -111,6 +118,7 @@ export class EditPasswordController extends Controller {
             this.setErrorMessage()
         }
     }
+
     sendMailNotExistMessage(){
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "red";
