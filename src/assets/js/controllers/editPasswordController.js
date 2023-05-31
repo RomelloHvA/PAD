@@ -34,6 +34,11 @@ export class EditPasswordController extends Controller {
         });
     }
 
+    /**
+     * get the two given passwords
+     * @param email to link the passwords to the right user
+     * @returns {Promise<void>}
+     */
     async #validateNewPassword(email) {
         const newPasswordOne = this.#loginView.querySelector("#newPsw").value;
         const newPasswordTwo = this.#loginView.querySelector("#newPswRepeat").value;
@@ -41,6 +46,13 @@ export class EditPasswordController extends Controller {
         await this.newPassword(newPasswordOne, newPasswordTwo, email);
     }
 
+    /**
+     * checks the given passwords and sets when right
+     * @param newPasswordOne
+     * @param newPasswordTwo
+     * @param email
+     * @returns {Promise<void>}
+     */
     async newPassword(newPasswordOne, newPasswordTwo, email) {
         if (newPasswordOne === newPasswordTwo) {
 
@@ -59,6 +71,10 @@ export class EditPasswordController extends Controller {
         }
     }
 
+    /**
+     * gets all mails from database and the given mail
+     * @returns {Promise<void>}
+     */
     async #generateCode() {
         const data = await this.#usersRepository.getEmails();
 
@@ -67,6 +83,12 @@ export class EditPasswordController extends Controller {
         await this.checkGivenMail(data, email);
     }
 
+    /**
+     * checks if the mail exists in the database
+     * @param data
+     * @param email
+     * @returns {Promise<void>}
+     */
     async checkGivenMail(data, email) {
         for (let i = 0; i < data.length; i++) {
 
@@ -82,6 +104,12 @@ export class EditPasswordController extends Controller {
         }
     }
 
+    /**
+     * sends mail with recoverycode and puts the code into the database
+     * @param recoveryCode
+     * @param email
+     * @returns {Promise<void>}
+     */
     async setRecoveryCode(recoveryCode, email) {
         const data = {
             code: recoveryCode,
@@ -95,6 +123,10 @@ export class EditPasswordController extends Controller {
         await this.#usersRepository.setRecoveryCode(data);
     }
 
+    /**
+     * gets the mail and code given and gets the code from the database
+     * @returns {Promise<void>}
+     */
     async #checkCode() {
         const mail = this.#loginView.querySelector("#email").value;
 
@@ -105,6 +137,13 @@ export class EditPasswordController extends Controller {
         await this.checkGivenCode(parsedCode, mail, databaseCode[0].recoveryCode);
     }
 
+    /**
+     * checks if code given and code from database are the same
+     * @param parsedCode
+     * @param mail
+     * @param databaseCode
+     * @returns {Promise<void>}
+     */
     async checkGivenCode(parsedCode, mail, databaseCode) {
 
         if (parsedCode === databaseCode) {
@@ -119,12 +158,18 @@ export class EditPasswordController extends Controller {
         }
     }
 
+    /**
+     * gives message when email is not known in database
+     */
     sendMailNotExistMessage(){
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "red";
         this.#loginView.querySelector('.message').innerHTML = "Email bestaat niet, registreer eerst";
     }
 
+    /**
+     * gives message that email has been send
+     */
     sendEmailMessage() {
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "green";
@@ -135,6 +180,9 @@ export class EditPasswordController extends Controller {
         this.#loginView.querySelector('.vulCodeIn').style.display = "inherit";
     }
 
+    /**
+     * gives message that the fields are not correctly filled
+     */
     setErrorMessage() {
         this.#loginView.querySelector('.message').style.display = "flex";
         this.#loginView.querySelector('.message').style.color = "red";

@@ -271,6 +271,9 @@ class UsersRoutes {
         })
     }
 
+    /**
+     * sends email to the given mail with the code they need to change their password
+     */
      #sendMail() {
         this.#app.post("/users/sendMail",  async (req, res) => {
             const code = req.body.code;
@@ -335,6 +338,9 @@ class UsersRoutes {
         })
     }
 
+    /**
+     * gets recoverycode from the database and sends it to front end
+     */
     #getRecoveryCode() {
         this.#app.post("/users/getRecoveryCode", async (req, res) => {
             const mail = req.body.mail;
@@ -351,6 +357,9 @@ class UsersRoutes {
         })
     }
 
+    /**
+     * gets all emails in the database and sends them to front end
+     */
     #getEmails(){
         this.#app.get("/users/getEmails", async (req, res) => {
             try {
