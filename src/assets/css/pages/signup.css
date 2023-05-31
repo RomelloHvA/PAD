@@ -277,6 +277,9 @@ body {
 #btnTwo{
     display: none;
 }
+.vulCodeIn{
+    display: none;
+}
 
 
 @-webkit-keyframes check {

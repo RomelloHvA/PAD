@@ -128,6 +128,7 @@ export class EditPasswordController extends Controller {
 
         this.#loginView.querySelector('.code_field').style.display = "inherit";
         this.#loginView.querySelector('#btnTwo').style.display = "inherit";
+        this.#loginView.querySelector('.vulCodeIn').style.display = "inherit";
     }
 
     setErrorMessage() {
