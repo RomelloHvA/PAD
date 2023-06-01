@@ -154,9 +154,16 @@ export class singleStoryController extends Controller {
         this.#setStoryTitle(errorTitle);
         this.#setStoryText(errorText);
 
-        this.#singleStoryView.querySelector(".story").removeChild(this.#singleStoryView.querySelector(".buttons"));
-        this.#singleStoryView.querySelector(".p-4").removeChild(this.#singleStoryView.querySelector(".username"));
-        this.#singleStoryView.querySelector(".p-4").removeChild(this.#singleStoryView.querySelector(".img-fluid"));
+        this.#removeChildElement(this.#singleStoryView.querySelector(".story"),this.#singleStoryView.querySelector(".buttons"));
+        this.#removeChildElement(this.#singleStoryView.querySelector(".p-4"),this.#singleStoryView.querySelector(".username"));
+        this.#removeChildElement(this.#singleStoryView.querySelector(".p-4"), this.#singleStoryView.querySelector(".img-fluid"));
     }
 
+    /**
+     * Method for removing the child element from a parent.
+     * @author Romello ten Broeke
+     */
+    #removeChildElement(parentElement, childElement){
+        parentElement.removeChild(childElement);
+    }
 }

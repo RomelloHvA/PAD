@@ -58,9 +58,7 @@ export class TimelineController extends Controller {
         this.#currentScrollYear = new Date().getFullYear();
         do {
             await this.#addAndSetStory();
-            console.log(this.#currentScrollYear);
         } while (this.#timelineView.scrollHeight < window.outerHeight)
-        console.log(this.#currentScrollYear);
 
         window.addEventListener("scroll", async () => {
             await this.#handleScroll();

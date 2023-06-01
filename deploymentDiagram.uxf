@@ -88,7 +88,11 @@ app.js
 GET /story/highestRatedPerYear
 GET /story/highestRated
 GET /story/singleStory
-GET /story/getUpvoteForStoryId</panel_attributes>
+GET /story/getUpvoteForStoryId
+GET /story/getUpvoteForUserId
+GET /story/getAllForUser
+GET /users/getSingleUser
+PATCH /users/updateSingleUser</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
