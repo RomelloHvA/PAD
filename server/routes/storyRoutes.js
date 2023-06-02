@@ -169,11 +169,16 @@ class storyRoutes {
     }
 
     /**
-     * API endpoint for getting a single story by its ID and the author first and last name. Checks is if there is a storyID
-     * If the storyID can't be found in the database responds with a 404 error-code And if the storyID is empty it wil give a bad request.
-     * @author Romello ten Broeke && Othaim Iboualaisen
+     * Retrieves a single story based on the provided story ID.
+     * @author Othaim Iboualaisen && Romello
+     * @description
+     * This function handles a GET request to retrieve a single story based on the provided story ID.
+     * It expects the request to have a query parameter `storyId` that represents the ID of the story to be retrieved.
+     * The function asynchronously performs a database query to fetch the story details.
+     * If the story is found, the response will contain the story details including the author name, profile image, and number of likes.
+     * If the story is not found, the response will have a status code indicating that the route was not found.
+     * If there is an error during the database query, the function will throw an error with a descriptive message.
      */
-
     #getSingleStory() {
         this.#app.get("/story/singleStory", async (req, res) => {
             let storyId = req.query.storyId;
@@ -184,12 +189,12 @@ class storyRoutes {
                     CONCAT(u.firstName, ' ', u.lastName) AS author,
                     COALESCE(l.likeCount, 0) AS likes
                 FROM story s
-                         LEFT JOIN user u ON s.userID = u.userID
-                         LEFT JOIN (
-                    SELECT storyID, COUNT(*) AS likeCount
-                    FROM \`like\`
-                    GROUP BY storyID
-                ) l ON s.storyID = l.storyID
+                    LEFT JOIN user u ON s.userID = u.userID
+                    LEFT JOIN (
+                        SELECT storyID, COUNT(*) AS likeCount
+                        FROM \`like\`
+                        GROUP BY storyID
+                    ) l ON s.storyID = l.storyID
                 WHERE s.storyID = ${storyId}
             `
 
@@ -323,6 +328,10 @@ class storyRoutes {
         })
     }
 
+    /**
+     * Retrieves the top three stories based on the number of likes.
+     * @author Othaim Iboualaisen
+     */
     #getTopThree(){
         this.#app.get("/story/getTopThree", async (req, res) => {
             let query = `
@@ -354,6 +363,10 @@ class storyRoutes {
         })
     }
 
+    /**
+     * Retrieves more stories from the same user.
+     * @author Othaim Iboualaisen
+     */
     #getMoreFromUser(){
         this.#app.get("/story/getMoreFromUser", async (req, res) => {
             let userID = req.query.userId;

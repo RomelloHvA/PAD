@@ -247,6 +247,21 @@ class UsersRoutes {
         });
     }
 
+
+    /**
+     * Retrieves user information based on the provided user ID.
+     *
+     * @author Othaim Iboualaisen
+     *
+     * @description
+     * This function handles a GET request to retrieve user information based on the provided user ID.
+     * It expects the request to have a query parameter `userID` that represents the ID of the user.
+     * The function asynchronously performs a database query to fetch the user's information.
+     * The response will contain details about the user, including the total number of stories authored by the user,
+     * the total number of likes given by the user, and the total number of likes received by the user.
+     * If the user is not found, the response will have a status code indicating that the route was not found.
+     * If there is an error during the database query, the function will throw an error with a descriptive message.
+     */
     #getUserInfo(){
         this.#app.get("/users/getUserInfo", async (req, res)=> {
             let userID = req.query.userID;
@@ -275,6 +290,31 @@ class UsersRoutes {
         })
     }
 
+
+    /**
+     * Retrieves user stories based on the provided parameters.
+     *
+     * @author Othaim Iboualaisen
+     *
+     * @description
+     * This function handles a POST request to retrieve user stories based on the provided parameters.
+     * It expects the request body to have the following properties:
+     * - `order` (optional): The sorting order for the stories. Default is "DESC".
+     * - `field` (optional): The field to sort the stories by. Default is "s.created_at".
+     * - `year` (optional): The year to filter the stories by.
+     * - `userID`: The ID of the user to retrieve stories for.
+     *
+     * The function asynchronously performs a database query to fetch the user stories.
+     * The response will contain an array of story objects, including details such as the story ID, content,
+     * number of likes, and author name.
+     *
+     * If there is no sorting order specified, it will default to descending order.
+     * If there is no sorting field specified, it will default to sorting by the story creation date.
+     * If a year is provided, the query will filter the stories for that year.
+     *
+     * If the user is not found or there are no stories matching the specified criteria, the response will be an empty array.
+     * If there is an error during the database query, the function will throw an error with a descriptive message.
+     */
     #getUserStories(){
         this.#app.post("/users/getUserStories", async (req, res)=> {
             try {

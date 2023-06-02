@@ -2,7 +2,7 @@ const fs = require("fs");
 
 /**
  * this file contains ExpressJS stuff
- * @author Rosalinde & Othaim Iboualaisen
+ * @author Othaim Iboualaisen & Tygo Geervliet & Rosalinde
  */
 
 class StoryboardRoutes {
@@ -113,8 +113,29 @@ class StoryboardRoutes {
 
 
     /**
-     * this method fetches the data from a story
-     * Roos
+     * Retrieves stories from the storyboard based on the provided parameters.
+     *
+     * @author Othaim Iboualaisen
+     *
+     * @description
+     * This function handles a POST request to retrieve stories from the storyboard based on the provided parameters.
+     * It expects the request body to have the following properties:
+     * - `order` (optional): The sorting order for the stories. Default is "DESC".
+     * - `field` (optional): The field to sort the stories by. Default is "s.created_at".
+     * - `year` (optional): The year to filter the stories by.
+     *
+     * The function asynchronously performs a database query to fetch the stories from the storyboard.
+     * The response will contain an array of story objects, including details such as the story ID, content,
+     * number of likes, and author name.
+     *
+     * If there is no sorting order specified, it will default to descending order.
+     * If there is no sorting field specified, it will default to sorting by the story creation date.
+     * If a year is provided, the query will filter the stories for that year.
+     *
+     * If there are no stories in the storyboard or there are no stories matching the specified criteria,
+     * the response will be an empty array.
+     *
+     * If there is an error during the database query, the function will throw an error with a descriptive message.
      */
     #getStory() {
         this.#app.post("/storyboard", async (req, res) => {

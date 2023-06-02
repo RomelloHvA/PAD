@@ -81,6 +81,37 @@ export class profileController extends Controller {
 
     }
 
+
+    /**
+     * Sets up the fields in the profile view with the provided user data.
+     *
+     * @author Othaim Iboualaisen
+     *
+     * @description
+     * This function sets up the fields in the profile view with the provided user data.
+     * It expects an array `userData` containing a single user object.
+     *
+     * The function retrieves the necessary DOM elements from the profile view, such as the image, name, bio, email, and phone fields.
+     * Then, it populates these fields with the corresponding data from the user object.
+     *
+     * The user data object should have the following properties:
+     * - `firstName`: The first name of the user.
+     * - `lastName`: The last name of the user.
+     * - `email`: The email address of the user.
+     * - `phoneNr`: The phone number of the user.
+     * - `total_stories`: The total number of stories by the user.
+     * - `total_likes_received`: The total number of likes received by the user.
+     * - `total_likes_given`: The total number of likes given by the user.
+     * - `biografie` (optional): The biography of the user.
+     *
+     * If the biography is not provided, it checks if the current user is viewing their own profile.
+     * If so, it displays a default message prompting the user to add a biography.
+     * Otherwise, it leaves the bio field empty.
+     *
+     * After setting up the fields, it calls the `toggleInfo()` function to perform any additional necessary actions.
+     *
+     * This function does not return any value.
+     */
     setupFields(userData) {
         let image = this.#profileView.querySelector("#profileImg");
         let name = this.#profileView.querySelector("#fullName");
@@ -115,6 +146,11 @@ export class profileController extends Controller {
         this.toggleInfo();
     }
 
+    /**
+     * Toggles the display of user information and edit button in the profile view.
+     *
+     * @author Othaim Iboualaisen
+     */
     toggleInfo() {
         const editBtn = this.#profileView.querySelector("#editProfile");
         const userInfo = this.#profileView.querySelector("#userInfo");
@@ -128,6 +164,9 @@ export class profileController extends Controller {
         }
     }
 
+    /**
+     * Sets up the story view by loading the storyboard HTML and initializing select elements.
+     */
     async setupStoryView() {
         let storyBody = this.#profileView.querySelector("#storyBody");
         this.#storyboardView = await super.loadHtmlIntoCustomElement("html_views/storyboard.html", storyBody);
@@ -145,7 +184,7 @@ export class profileController extends Controller {
 
     /**
      * this method gets all the story data, clones a template with this info and places in div.
-     * @returns {Promise<void>}
+     * @author Othaim Iboualaisen
      */
     async loadStories(selectedOption) {
         try {
