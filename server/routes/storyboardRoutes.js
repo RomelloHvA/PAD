@@ -25,6 +25,11 @@ class StoryboardRoutes {
         this.#deleteStory();
     }
 
+
+    /**
+     * Handle POST request to add a like.
+     * @author Tygo Geervliet
+     */
     #addLike() {
         // Handle POST request to add a like
         this.#app.post("/storyboard/addLike", async (req, res) => {
@@ -45,6 +50,10 @@ class StoryboardRoutes {
         });
     }
 
+    /**
+     * Handle POST request to remove a like.
+     * @author Tygo Geervliet
+     */
     #removeLike() {
         // Handle POST request to remove a like
         this.#app.post("/storyboard/removeLike", async (req, res) => {
@@ -63,6 +72,11 @@ class StoryboardRoutes {
         });
     }
 
+
+    /**
+     Handle POST request to check if a story is already liked by a user.
+     @author Tygo Geervliet
+     */
     #AlreadyLiked() {
             this.#app.post("/storyboard/getLike", async (req, res) => {
                 const { userID, storyID } = req.body;
@@ -79,6 +93,10 @@ class StoryboardRoutes {
         })
     }
 
+    /**
+     * Handle POST request to retrieve stories by user ID.
+     * @author Tygo Geervliet
+     */
     #getStoryByUserID() {
         this.#app.post("/storyboard/getStoryByUserID", async (req, res) => {
             const { userID } = req.body;
@@ -95,6 +113,10 @@ class StoryboardRoutes {
         })
     }
 
+    /**
+     * Handle POST request to remove a story.
+     * @author Tygo Geervliet
+     */
     #deleteStory() {
         this.#app.post("/storyboard/removeStory", async (req, res) => {
             const { storyID } = req.body;

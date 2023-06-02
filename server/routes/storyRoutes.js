@@ -23,6 +23,7 @@ class storyRoutes {
     }
 
     /**
+     * Handle POST request to add a story.
      * @author Tygo Geervliet
      */
     //Handles a POST request to add a story to the database.
