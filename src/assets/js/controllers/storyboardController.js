@@ -120,6 +120,9 @@ export class StoryboardController extends Controller {
         }
     }
 
+    /**
+     * @author Tygo Geervliet
+     */
     disableRemoveBtn() {
         let removeBtns = this.#storyboardView.querySelectorAll("#deleteBtn");
 
@@ -332,16 +335,40 @@ export class StoryboardController extends Controller {
         }
     }
 
+    /**
+     *
+     * Retrieve the value of whether a story is already liked.
+     * @function retrieveAlreadyLikedValue
+     * @memberof ClassName
+     * @param {Object} alreadyLiked - The object containing the information of already liked stories.
+     * @param {string} userID - The user ID.
+     * @param {string} storyID - The story ID.
+     * @returns {boolean} - The value indicating whether the story is already liked.
+     * @author Tygo Geervliet
+     */
     retrieveAlreadyLikedValue(alreadyLiked, userID, storyId) {
         let alreadyLikedObject = alreadyLiked[0];
         let key = 'AlreadyLiked(' + userID + ',' + storyId + ')';
         return alreadyLikedObject[key];
     }
 
+    /**
+     * add a new like
+     * @param userID
+     * @param storyID
+     * @returns {Promise<void>}
+     * @author Tygo Geervliet
+     */
     async addNewLike(userID, storyID) {
         await this.#storyboardRepository.addLike(userID, storyID);
     }
-
+    /**
+     * removes a like
+     * @param userID
+     * @param storyID
+     * @returns {Promise<void>}
+     * @author Tygo Geervliet
+     */
     async removeLike(userID, storyID) {
         await this.#storyboardRepository.removeLike(userID, storyID);
     }
@@ -370,35 +397,65 @@ export class StoryboardController extends Controller {
         }
     }
 
+    /**
+     * Remove a story.
+     *
+     * @function removeStory
+     * @memberof ClassName
+     * @returns {Promise<void>} - A promise that resolves when the story is removed or rejects with an error.
+     @author Tygo Geervliet
+     */
     async removeStory() {
+        // Get all remove buttons from the storyboard view
         const removeBtns = this.#storyboardView.querySelectorAll("#deleteBtn");
+
+        // Retrieve stories from the current user
         const storiesFromThisUser = await this.#storyboardRepository.getStoryByUserID(this.userID);
+
+        // Update the visibility of remove buttons based on user's stories
         this.#updateRemoveButtonsVisibility(removeBtns, storiesFromThisUser);
 
+        // Get the modal element
         const modal = this.#storyboardView.querySelector("#myModal");
 
         for (let btn of removeBtns) {
             const storyId = parseInt(btn.closest(".story").id);
 
+            // Add event listener to each remove button
             btn.addEventListener("click", async (event) => {
+                // Show the modal
                 modal.style.display = "block";
 
                 const yesBtn = modal.querySelector("#modal-yes");
                 const noBtn = modal.querySelector("#modal-no");
 
+                /**
+                 * Delete the story and update the view.
+                 *
+                 * @function deleteStory
+                 * @returns {Promise<void>} - A promise that resolves when the story is deleted or rejects with an error.
+                 */
                 const deleteStory = async () => {
+                    // Remove the story from the storyboard
                     await this.#storyboardRepository.removeStory(storyId);
+
+                    // Hide the modal
                     modal.style.display = "none";
-                    App.setCurrentController(new StoryboardController())
+
+                    // Update the storyboard controller
+                    App.setCurrentController(new StoryboardController());
                 };
 
+                // Add event listeners to confirm or cancel the deletion
                 yesBtn.addEventListener("click", deleteStory);
                 noBtn.addEventListener("click", () => {
+                    // Hide the modal without deleting the story
                     modal.style.display = "none";
                 });
             });
         }
     }
+
 
     retrieveStoryIDsValue(getStoryByUserID, userID) {
         let StoryByUserIDObject = getStoryByUserID[0];

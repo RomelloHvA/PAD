@@ -62,7 +62,12 @@ export class addStoryController extends Controller {
         this.populateDayField(monthfield, monthDays, dayfield);
     }
 
-
+    /**
+     * @author Tygo Geervliet
+     * @param monthfield
+     * @param monthDays
+     * @param dayfield
+     */
     populateDayField(monthfield, monthDays, dayfield) {
         monthfield.addEventListener("change", (event) => {
             dayfield.disabled = false;
@@ -78,6 +83,12 @@ export class addStoryController extends Controller {
         });
     }
 
+    /**
+     * @author Tygo Geervliet
+     * @param monthDays
+     * @param monthfield
+     * @constructor
+     */
     PopulateMonthField(monthDays, monthfield) {
 
         for (let i = 1; i <= 12; i++) {
@@ -116,6 +127,8 @@ export class addStoryController extends Controller {
      and updates the character count on the page.
      @function storyCharacterCount
      @returns {void}
+
+     @author Tygo Geervliet
      */
     storyCharacterCount() {
         const characterCount = document.getElementById("characterCount");
@@ -132,6 +145,16 @@ export class addStoryController extends Controller {
         });
     }
 
+
+    /**
+     Add a new story.
+     @function addNewStory
+     @memberof ClassName
+     @param {Event} event - The event object triggered by submitting the form.
+     @returns {Promise<void>} - A promise that resolves when the new story is added or rejects with an error.
+
+     @author Tygo Geervliet
+     */
     async addNewStory(event) {
         event.preventDefault();
         const subject = this.#addStoryView.querySelector("#subject").value;
@@ -144,9 +167,6 @@ export class addStoryController extends Controller {
         if (!this.#validateInputFields(subject, story)) {
             return;
         }
-
-
-
         const formData = new FormData();
 
         formData.append("subject", subject);
@@ -158,26 +178,30 @@ export class addStoryController extends Controller {
         formData.append("userID", App.sessionManager.get("userID"));
 
         try {
+            await this.#storyRepository.addNewStory(formData);
             // Get the modal
             const modal = this.#addStoryView.querySelector("#myModal");
             modal.style.display = "block";
 
             const confirm = this.#addStoryView.querySelector(".modal-buttons");
-
-
             confirm.addEventListener("click", event => {
                 modal.style.display = "none";
                 App.loadController(App.CONTROLLER_STORYBOARD);
             });
-
-            await this.#storyRepository.addNewStory(formData);
-
         } catch (error) {
             console.log(error);
         }
     }
 
+    /**
+     Display image preview when a file is selected.
+     @function displayImagePreview
+     @memberof ClassName
+     @param {Event} event - The event object triggered by selecting a file.
+     @returns {void}
 
+     @author Tygo Geervliet
+     */
     displayImagePreview(event) {
 
         const fileInput = event.target;
@@ -205,6 +229,8 @@ export class addStoryController extends Controller {
      * @param {string} subject - The subject of the story.
      * @param {string} story - The body of the story.
      * @returns {boolean} - True if the input fields are valid, false otherwise.
+     *
+     * @author Tygo Geervliet
      */
     #validateInputFields(subject, story) {
         const errorTextSubject = this.#addStoryView.querySelector("#subject-error");
