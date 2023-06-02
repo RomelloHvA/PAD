@@ -39,7 +39,7 @@ export class singleStoryController extends Controller {
         try {
             await this.#getStoryByID();
             this.#setStoryDate(this.#storyData[0].year, this.#storyData[0].month, this.#storyData[0].day);
-            this.#setStoryAuthor(this.#storyData[0].firstName, this.#storyData[0].lastName);
+            this.#setStoryAuthor(this.#storyData[0].author);
             this.#setStoryTitle(this.#storyData[0].title);
             this.#setStoryText(this.#storyData[0].body);
             this.#setStoryPhoto(this.#storyData[0].image);
@@ -93,16 +93,12 @@ export class singleStoryController extends Controller {
      * @author Romello ten Broeke
      */
 
-    #setStoryAuthor(firstName, lastName) {
-
-        let authorFullName;
-        if (firstName === null || lastName === null) {
-            authorFullName = "Onbekend";
-        } else {
-            authorFullName = firstName + " " + lastName;
+    #setStoryAuthor(author) {
+        if (author === null) {
+            author = "Onbekend";
         }
         let storyAuthor = this.#singleStoryView.querySelector(".username");
-        storyAuthor.innerText = authorFullName;
+        storyAuthor.innerText = author;
     }
 
     /**
@@ -158,9 +154,16 @@ export class singleStoryController extends Controller {
         this.#setStoryTitle(errorTitle);
         this.#setStoryText(errorText);
 
-        this.#singleStoryView.querySelector(".story").removeChild(this.#singleStoryView.querySelector(".buttons"));
-        this.#singleStoryView.querySelector(".p-4").removeChild(this.#singleStoryView.querySelector(".username"));
-        this.#singleStoryView.querySelector(".p-4").removeChild(this.#singleStoryView.querySelector(".img-fluid"));
+        this.#removeChildElement(this.#singleStoryView.querySelector(".story"),this.#singleStoryView.querySelector(".buttons"));
+        this.#removeChildElement(this.#singleStoryView.querySelector(".p-4"),this.#singleStoryView.querySelector(".username"));
+        this.#removeChildElement(this.#singleStoryView.querySelector(".p-4"), this.#singleStoryView.querySelector(".img-fluid"));
     }
 
+    /**
+     * Method for removing the child element from a parent.
+     * @author Romello ten Broeke
+     */
+    #removeChildElement(parentElement, childElement){
+        parentElement.removeChild(childElement);
+    }
 }

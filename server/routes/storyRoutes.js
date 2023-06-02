@@ -276,6 +276,10 @@ class storyRoutes {
         })
     }
 
+    /**
+     * Get the total upvotes for a given user
+     * @author Romello ten Broeke
+     */
     #getTotalUpvotesForUser() {
         this.#app.get("/story/getUpvoteForUserId", async (req, res) => {
             let userID = req.query.userId;
@@ -294,6 +298,10 @@ class storyRoutes {
         })
     }
 
+    /**
+     * Gets all the stories data for a given user.
+     * @author Romell0 ten Broeke
+     */
     #getAllForUser(){
         this.#app.get("/story/getAllForUser", async (req, res) => {
             let userID = req.query.userId;

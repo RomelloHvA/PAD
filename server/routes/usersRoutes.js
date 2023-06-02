@@ -220,6 +220,10 @@ class UsersRoutes {
         })
     }
 
+    /**
+     * Updates the data for a given user except the password.
+     * @author Romello ten Broeke
+     */
     #updateSingleUser() {
         this.#app.patch("/users/updateSingleUser", async (req, res) => {
             const userData = req.body; // Parse JSON data from the request body
