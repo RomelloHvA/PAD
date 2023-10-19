@@ -33,3 +33,6 @@ Front-End
     Styling: Bootstrap 5
 # Deployment Diagram
 ![image](https://github.com/RomelloHvA/PAD/assets/148497822/473615b6-e6c2-487d-ae5b-1ab2634b64a3)
+# EER
+![DatabaseEERPad](https://github.com/RomelloHvA/PAD/assets/148497822/b786a83d-6435-4656-8133-3488c935abc2)
+
